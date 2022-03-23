@@ -2,7 +2,7 @@
 Repozitorij za Završni rad
 
 ## test-files
-Tu se nalaze RAW datoteke koje se mogu pokrenuti u Audacityju: File > Import > Raw Data. \
+Tu se nalaze RAW datoteke koje se mogu pokrenuti u Audacityju: File > Import > Raw Data \
 Postavke za pokretanje (ili Detect): 
   - Encoding: Signed 16-bit PCM
   - Byte order: Little-endian
