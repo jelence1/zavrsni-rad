@@ -140,8 +140,8 @@ beamforming_flag = 0;
 # FUNCTIONS
 
 # Printing intro
-def print_intro():
-    print('\n' + INTRO + '\n')
+def print_intro(output_file):
+    output_file.write('\n' + INTRO + '\n')
 
 # INTERFACES
 
@@ -298,9 +298,14 @@ def main(argv):
     global audio_feature
     global audio_sync_feature
     global beamforming_feature
+
+    ###Writing output to file###########################################
+    global OUTPUT_PATH
+    ###Writing output to file###########################################
     
     # Printing intro.
-    print_intro()
+    with open(OUTPUT_PATH, "w") as output_file:
+        print_intro(output_file)
     
     try:
         # Creating Bluetooth Manager.
@@ -310,7 +315,8 @@ def main(argv):
 
         while True:
             # Synchronous discovery of Bluetooth devices.
-            print('Scanning Bluetooth devices...\n')
+            with open(OUTPUT_PATH, "w") as output_file:
+                output_file.write('Scanning Bluetooth devices...\n')
             manager.discover(SCANNING_TIME_s)
 
             # Getting discovered devices.
@@ -318,12 +324,16 @@ def main(argv):
 
             # Listing discovered devices.
             if not devices:
-                print('No Bluetooth devices found. Exiting...\n')
-                sys.exit(0)
-            print('Available Bluetooth devices:')
+                with open(OUTPUT_PATH, "w") as output_file:
+                    output_file.write('No Bluetooth devices found. Exiting...\n')
+                    sys.exit(0)
+            
+            with open(OUTPUT_PATH, "w") as output_file:
+                output_file.write('Available Bluetooth devices:')
             i = 1
             for device in devices:
-                print('%d) %s: [%s]' % (i, device.get_name(), device.get_tag()))
+                with open(OUTPUT_PATH, "w") as output_file:
+                    output_file.write('%d) %s: [%s]' % (i, device.get_name(), device.get_tag()))
                 i += 1
 
             # Selecting a device.
@@ -335,18 +345,23 @@ def main(argv):
             if choice == 0:
                 # Exiting.
                 manager.remove_listener(manager_listener)
-                print()
+                with open(OUTPUT_PATH, "w") as output_file:
+                    print(output_file)
                 sys.exit(0)
             device = devices[choice - 1]
             
             # Connecting to the device.
             node_listener = MyNodeListener()
             device.add_listener(node_listener)
-            print('Connecting to %s...' % (device.get_name()))
+            with open(OUTPUT_PATH, "w") as output_file:
+                output_file.write('Connecting to %s...' % (device.get_name()))
             if not device.connect():
-                print('Connection failed.\n')
+                with open(OUTPUT_PATH, "w") as output_file:
+                    output_file.write('Connection failed.\n')
                 continue
-            print('Connection done.') 
+                
+            with open(OUTPUT_PATH, "w") as output_file:
+                output_file.write('Connection done.') 
 
             has_audio_adpcm_features = [False,False]
             has_audio_opus_features = [False,False]
@@ -403,7 +418,8 @@ def main(argv):
                             number_of_notifications = number_of_seconds * NPS_OPUS
 
                         if number_of_seconds > 0:
-                            print("Streaming Started")
+                            with open(OUTPUT_PATH, "w") as output_file:
+                                output_file.write("Streaming Started")
                             
                             if all(has_audio_adpcm_features):
                                 ###Audio Stream#####################################
@@ -444,13 +460,15 @@ def main(argv):
                                     beamforming_feature.add_listener(beamforming_feature_listener)
                                     device.enable_notifications(beamforming_feature)
                                     device.send_command(b"\x00\x00\x08\x00\xAA\x01")
-                                    print("Beamforming Enabled")
+                                    with open(OUTPUT_PATH, "w") as output_file:
+                                        output_file.write("Beamforming Enabled")
                             
                             n_idx = 0
                             while n_idx < number_of_notifications:
                                 device.wait_for_notifications(0.05)
                                     
-                            print("End of Streaming")
+                            with open(OUTPUT_PATH, "w") as output_file:
+                                output_file.write("End of Streaming")
                             # Disabling notifications.
                             device.disable_notifications(audio_feature)
                             audio_feature.remove_listener(audio_feature_listener)
@@ -458,7 +476,8 @@ def main(argv):
                             audio_sync_feature.remove_listener(audio_sync_feature_listener)
                             if beamforming_flag == 'y' or beamforming_flag == 'Y':
                                 device.send_command(b"\x00\x00\x08\x00\xAA\x00")
-                                print("Beamforming Disabled")
+                                with open(OUTPUT_PATH, "w") as output_file:
+                                    output_file.write("Beamforming Disabled")
                                 device.disable_notifications(beamforming_feature)
                                 beamforming_feature.remove_listener(beamforming_feature_listener)
                             ###Save Audio File##################################
@@ -485,9 +504,11 @@ def main(argv):
                                 audioFile.close()
                             ###Save Audio File##################################
                             # Disconnecting from the device.
-                            print('\nDisconnecting from %s...' % (device.get_name()))
+                            with open(OUTPUT_PATH, "w") as output_file:
+                                output_file.write('\nDisconnecting from %s...' % (device.get_name()))
                             device.disconnect()
-                            print('Disconnection done.')
+                            with open(OUTPUT_PATH, "w") as output_file:
+                                output_file.write('Disconnection done.')
                             device.remove_listener(node_listener)
                             # Reset discovery.
                             manager.reset_discovery()
@@ -495,16 +516,19 @@ def main(argv):
                             break
                     elif save_audio_flag == '0':
                         # Disconnecting from the device.
-                        print('\nDisconnecting from %s...' % (device.get_name()))
+                        with open(OUTPUT_PATH, "w") as output_file:
+                            output_file.write('\nDisconnecting from %s...' % (device.get_name()))
                         device.disconnect()
-                        print('Disconnection done.')
+                        with open(OUTPUT_PATH, "w") as output_file:
+                            output_file.write('Disconnection done.')
                         device.remove_listener(node_listener)
                         # Reset discovery.
                         manager.reset_discovery()
                         # Going back to the list of devices.
                         break
             else:
-                print("No Audio Features are Exposed from your BLE Node!")
+                with open(OUTPUT_PATH, "w") as output_file:
+                    output_file.write("No Audio Features are Exposed from your BLE Node!")
                 while True:
                     restartDiscovery = int(input('\nPress \'1\' to restart scanning for BLE devices '
                                                  '(\'0\' to quit): '))
@@ -514,13 +538,15 @@ def main(argv):
                         break;
                     elif restartDiscovery == 0:
                         # Exiting.
-                        print('\nExiting...\n')
+                        with open(OUTPUT_PATH, "w") as output_file:
+                            output_file.write('\nExiting...\n')
                         sys.exit(0)
                         
     except KeyboardInterrupt:
         try:
             # Exiting.
-            print('\nExiting...\n')
+            with open(OUTPUT_PATH, "w") as output_file:
+                output_file.write('\nExiting...\n')
             sys.exit(0)
         except SystemExit:
             os._exit(0)
