@@ -211,8 +211,7 @@ class MyNodeListener(NodeListener):
     def on_disconnect(self, node, unexpected=False):
         global OUTPUT_PATH
         with open(OUTPUT_PATH, "w") as output_file:
-            output_file.write('Device %s disconnected%s.' % \
-            (node.get_name(), ' unexpectedly' if unexpected else ''))
+            output_file.write('Device {} disconnected{}.'.format(node.get_name(), ' unexpectedly' if unexpected else ''))
 
 
 #
