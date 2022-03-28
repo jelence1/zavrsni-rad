@@ -355,7 +355,7 @@ def main(argv):
             SOCKET.send_string('Available Bluetooth devices:')
             i = 1
             if len(devices) > 0:
-                SOCKET.send(('%d) %s: [%s]' % (i, device.get_name(), device.get_tag())).encode("utf-8"))
+                SOCKET.send(('%d) %s: [%s]' % (i, devices[i].get_name(), devices[i].get_tag())).encode("utf-8"))
                 SOCKET.recv()
             
             '''for device in devices:
