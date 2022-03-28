@@ -11,4 +11,7 @@ FP-AUD-BVLINKWB1 (Function Pack)
 DISCO-WB5MMG Page (kad spojis plocicu to iskoci)
 --> https://os.mbed.com/platforms/DISCO-WB5MMG/#ble-fw-update
 
+Guide to Pyzmq (za TCP)
+--> https://zguide.zeromq.org/
+
 + svi oni pdfovi iz Karlinog foldera
