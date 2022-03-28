@@ -8,7 +8,9 @@ SOCKET.bind("tcp://*:5555")
 
 while True:
     try:
+        print("Waiting...")
         message = SOCKET.recv().decode("utf-8")
+        print("Wait over.")
         print(message)
         if "?" in message:
             SOCKET.send(input().encode("utf-8"))
