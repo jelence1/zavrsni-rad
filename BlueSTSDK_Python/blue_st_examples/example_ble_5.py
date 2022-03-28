@@ -147,7 +147,8 @@ SOCKET.connect("tcp://localhost:5555")
 
 # Printing intro
 def print_intro(socket):
-    socket.send_string('\n' + INTRO + '\n')
+    socket.send(('\n' + INTRO + '\n').encode("utf-8"))
+    socket.recv()
 
 
 # INTERFACES
