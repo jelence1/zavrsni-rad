@@ -458,11 +458,14 @@ def main(argv):
                                 device.enable_notifications(audio_sync_feature)
                             elif all(has_audio_opus_features):
                                 ###Audio Stream#########################################
-                                stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')
-                                stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-                                stream.setchannels(CHANNELS)
-                                stream.setrate(SAMPLING_FREQ_OPUS)
-                                stream.setperiodsize(160)
+                                #Suppress warnings.
+                                with warnings.catch_warnings():
+                                    warnings.simplefilter("ignore")
+                                    stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')
+                                    stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+                                    stream.setchannels(CHANNELS)
+                                    stream.setrate(SAMPLING_FREQ_OPUS)
+                                    stream.setperiodsize(160)
                                 ###Audio Stream#########################################
                                             
                                 #Enabling Notifications
