@@ -106,6 +106,7 @@ AUDIO_DUMPS_PATH = "audioDumps/"
 AUDIO_DUMP_SUFFIX = "_audioDump.raw"
 ADPCM_TAG = "_ADPCM"
 OPUS_TAG = "_Opus"
+OUTPUT_PATH = "output.txt"
 
 # Notifications per second
 NPS_ADPCM = 200
