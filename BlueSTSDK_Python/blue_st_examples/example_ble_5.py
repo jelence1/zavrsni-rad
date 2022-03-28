@@ -146,10 +146,6 @@ beamforming_flag = 0;
 def print_intro(output_file):
     output_file.write('\n' + INTRO + '\n')
 
-#Warning suppression
-def fxn():
-    warnings.warn("(deprecated function warning)", DeprecationWarning)
-
 
 # INTERFACES
 
@@ -326,11 +322,6 @@ def main(argv):
     # Printing intro.
     with open(OUTPUT_PATH, "w") as output_file:
         print_intro(output_file)
-
-    # Suppressing warnings.
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        fxn()
     
     try:
         # Creating Bluetooth Manager.
@@ -477,10 +468,13 @@ def main(argv):
                                 #Enabling Notifications
                                 audio_sync_feature_listener = MyFeatureListenerSync()
                                 audio_sync_feature.add_listener(audio_sync_feature_listener)
-                                device.enable_notifications(audio_sync_feature)
-                                audio_feature_listener = MyFeatureListener()
-                                audio_feature.add_listener(audio_feature_listener)
-                                device.enable_notifications(audio_feature)
+                                # Suppressing warnings.
+                                with warnings.catch_warnings():
+                                    warnings.simplefilter("ignore")
+                                    device.enable_notifications(audio_sync_feature)
+                                    audio_feature_listener = MyFeatureListener()
+                                    audio_feature.add_listener(audio_feature_listener)
+                                    device.enable_notifications(audio_feature)
                             
                             if beamforming_flag == 'y' or beamforming_flag == 'Y' or \
                                 beamforming_flag == 'n' or beamforming_flag == 'N':
