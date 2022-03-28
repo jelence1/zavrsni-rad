@@ -44,6 +44,7 @@ import sys
 import os
 import time
 import datetime
+import warnings
 import click
 from abc import abstractmethod
 from threading import Thread
@@ -106,6 +107,8 @@ AUDIO_DUMPS_PATH = "audioDumps/"
 AUDIO_DUMP_SUFFIX = "_audioDump.raw"
 ADPCM_TAG = "_ADPCM"
 OPUS_TAG = "_Opus"
+
+# My Path name
 OUTPUT_PATH = "output.txt"
 
 # Notifications per second
@@ -158,9 +161,11 @@ class MyManagerListener(ManagerListener):
     # @param enabled True if a new discovery starts, False otherwise.
     #
     def on_discovery_change(self, manager, enabled):
-        print('Discovery %s.' % ('started' if enabled else 'stopped'))
-        if not enabled:
-            print()
+        global OUTPUT_PATH
+        with open(OUTPUT_PATH, "w") as output_file:
+            output_file.write('Discovery %s.' % ('started' if enabled else 'stopped'))
+            if not enabled:
+                print(output_file)
 
     #
     # This method is called whenever a new node is discovered.
@@ -169,7 +174,9 @@ class MyManagerListener(ManagerListener):
     # @param node    New node discovered.
     #
     def on_node_discovered(self, manager, node):
-        print('New device discovered: %s.' % (node.get_name()))
+        global OUTPUT_PATH
+        with open(OUTPUT_PATH, "w") as output_file:
+            output_file.write('New device discovered: %s.' % (node.get_name()))
 
 
 #
@@ -184,7 +191,9 @@ class MyNodeListener(NodeListener):
     # @param node Node that has connected to a host.
     #
     def on_connect(self, node):
-        print('Device %s connected.' % (node.get_name()))
+        global OUTPUT_PATH
+        with open(OUTPUT_PATH, "w") as output_file:
+            output_file.write('Device %s connected.' % (node.get_name()))
 
     #
     # To be called whenever a node disconnects from a host.
@@ -194,7 +203,9 @@ class MyNodeListener(NodeListener):
     #                   (called by the user).
     #
     def on_disconnect(self, node, unexpected=False):
-        print('Device %s disconnected%s.' % \
+        global OUTPUT_PATH
+        with open(OUTPUT_PATH, "w") as output_file:
+            output_file.write('Device %s disconnected%s.' % \
             (node.get_name(), ' unexpectedly' if unexpected else ''))
 
 
@@ -263,7 +274,9 @@ class MyFeatureListenerSync(FeatureListener):
             if isinstance(feature, FeatureAudioADPCMSync):
                 audio_feature.set_audio_sync_parameters(sample)
             elif isinstance(feature, FeatureAudioOpusConf):
-                print("command message received: " + str(sample))  
+                global OUTPUT_PATH
+                with open(OUTPUT_PATH, "w") as output_file:
+                    output_file.write("command message received: " + str(sample))  
                 
 class MyFeatureListenerBeam(FeatureListener):
 
@@ -276,7 +289,9 @@ class MyFeatureListenerBeam(FeatureListener):
     def on_update(self, feature, sample):
         global beamforming_feature
         if beamforming_feature is not None:
-            print(beamforming_feature)
+            global OUTPUT_PATH
+            with open(OUTPUT_PATH, "w") as output_file:
+                output_file(beamforming_feature)
                 
 # MAIN APPLICATION
 
