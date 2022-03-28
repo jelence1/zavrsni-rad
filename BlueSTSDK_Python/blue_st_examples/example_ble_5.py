@@ -146,6 +146,11 @@ beamforming_flag = 0;
 def print_intro(output_file):
     output_file.write('\n' + INTRO + '\n')
 
+#Warning suppression
+def fxn():
+    warnings.warn("(deprecated function warning)", DeprecationWarning)
+
+
 # INTERFACES
 
 #
@@ -321,6 +326,11 @@ def main(argv):
     # Printing intro.
     with open(OUTPUT_PATH, "w") as output_file:
         print_intro(output_file)
+
+    # Suppressing warnings.
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        fxn()
     
     try:
         # Creating Bluetooth Manager.
