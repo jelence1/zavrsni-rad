@@ -18,7 +18,7 @@ while True:
             CONTEXT.term()
             sys.exit(0)
         else:
-            SOCKET.send(str("p").encode("utf-8"))
+            SOCKET.send(str().encode("utf-8"))
 
     except KeyboardInterrupt:
         SOCKET.close()

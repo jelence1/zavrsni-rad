@@ -354,19 +354,20 @@ def main(argv):
             
             SOCKET.send_string('Available Bluetooth devices:')
             i = 1
-            if len(devices) > 0:
+            '''if len(devices) > 0:
                 SOCKET.recv()
                 SOCKET.send(('%d) %s: [%s]' % (i, devices[0].get_name(), devices[0].get_tag())).encode("utf-8"))
-                SOCKET.recv()
+                SOCKET.recv()'''
             
-            '''for device in devices:
+            for device in devices:
+                SOCKET.recv()
                 SOCKET.send(('%d) %s: [%s]' % (i, device.get_name(), device.get_tag())).encode("utf-8"))
                 SOCKET.recv()
-                i += 1'''
+                i += 1
 
             # Selecting a device.
             while True:
-                SOCKET.send(("\nSelect a device to connect to (\'0\' to quit): ").encode("utf-8"))
+                SOCKET.send(("\nWhich device do you want to connect to? (Enter a number, \'0\' to quit) ").encode("utf-8"))
                 choice = int(SOCKET.recv().decode("utf-8"))
                 if choice >= 0 and choice <= len(devices):
                     break
@@ -570,8 +571,7 @@ def main(argv):
                 SOCKET.send(("No Audio Features are Exposed from your BLE Node!".encode("utf-8")))
                 SOCKET.recv()
                 while True:
-                    SOCKET.send(('\nPress \'1\' to restart scanning for BLE devices '
-                                                 '(\'0\' to quit): '.encode("utf-8")))
+                    SOCKET.send(('\nWant to restart scanning for BLE devices? Press \'1\'(\'0\' to quit) '.encode("utf-8")))
                     restartDiscovery = int(SOCKET.recv().decode("utf-8"))
                     if restartDiscovery == 1:
                         # Reset discovery.
