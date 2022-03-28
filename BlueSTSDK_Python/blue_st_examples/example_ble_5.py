@@ -46,6 +46,7 @@ import time
 import datetime
 import warnings
 import click
+import zmq
 from abc import abstractmethod
 from threading import Thread
 
@@ -108,9 +109,6 @@ AUDIO_DUMP_SUFFIX = "_audioDump.raw"
 ADPCM_TAG = "_ADPCM"
 OPUS_TAG = "_Opus"
 
-# My Path name
-OUTPUT_PATH = "output.txt"
-
 # Notifications per second
 NPS_ADPCM = 200
 NPS_OPUS = 50
@@ -140,11 +138,16 @@ beamforming_feature = None
 # Global Beamforming control.
 beamforming_flag = 0;
 
+# Connection to server.
+CONTEXT = zmq.Context()
+SOCKET = CONTEXT.socket(zmq.REQ)
+SOCKET.connect("tcp://localhost:5555")
+
 # FUNCTIONS
 
 # Printing intro
-def print_intro(output_file):
-    output_file.write('\n' + INTRO + '\n')
+def print_intro(socket):
+    socket.send_string('\n' + INTRO + '\n')
 
 
 # INTERFACES
@@ -162,10 +165,9 @@ class MyManagerListener(ManagerListener):
     # @param enabled True if a new discovery starts, False otherwise.
     #
     def on_discovery_change(self, manager, enabled):
-        global OUTPUT_PATH
-        with open(OUTPUT_PATH, "w") as output_file:
-            output_file.write('Discovery %s.' % ('started' if enabled else 'stopped'))
-            if not enabled:
+        global SOCKET
+        SOCKET.send_string('Discovery %s.' % ('started' if enabled else 'stopped'))
+        if not enabled:
                 #print()
                 pass
 
@@ -176,9 +178,8 @@ class MyManagerListener(ManagerListener):
     # @param node    New node discovered.
     #
     def on_node_discovered(self, manager, node):
-        global OUTPUT_PATH
-        with open(OUTPUT_PATH, "w") as output_file:
-            output_file.write('New device discovered: %s.' % (node.get_name()))
+        global SOCKET
+        SOCKET.send_string('New device discovered: %s.' % (node.get_name()))
 
 
 #
@@ -193,9 +194,8 @@ class MyNodeListener(NodeListener):
     # @param node Node that has connected to a host.
     #
     def on_connect(self, node):
-        global OUTPUT_PATH
-        with open(OUTPUT_PATH, "w") as output_file:
-            output_file.write('Device %s connected.' % (node.get_name()))
+        global SOCKET
+        SOCKET.send_string('Device %s connected.' % (node.get_name()))
 
     #
     # To be called whenever a node disconnects from a host.
@@ -205,9 +205,8 @@ class MyNodeListener(NodeListener):
     #                   (called by the user).
     #
     def on_disconnect(self, node, unexpected=False):
-        global OUTPUT_PATH
-        with open(OUTPUT_PATH, "w") as output_file:
-            output_file.write('Device {} disconnected{}.'.format(node.get_name(), ' unexpectedly' if unexpected else ''))
+        global SOCKET
+        SOCKET.send_string('Device {} disconnected{}.'.format(node.get_name(), ' unexpectedly' if unexpected else ''))
 
 
 #
@@ -275,7 +274,7 @@ class MyFeatureListenerSync(FeatureListener):
             if isinstance(feature, FeatureAudioADPCMSync):
                 audio_feature.set_audio_sync_parameters(sample)
             elif isinstance(feature, FeatureAudioOpusConf):
-                global OUTPUT_PATH
+                global SOCKET
                 #with open(OUTPUT_PATH, "w") as output_file:
                 #    output_file.write("command message received: " + str(sample))  
                 
@@ -290,9 +289,8 @@ class MyFeatureListenerBeam(FeatureListener):
     def on_update(self, feature, sample):
         global beamforming_feature
         if beamforming_feature is not None:
-            global OUTPUT_PATH
-            with open(OUTPUT_PATH, "w") as output_file:
-                output_file(beamforming_feature)
+            global SOCKET
+            SOCKET.send_string(beamforming_feature)
                 
 # MAIN APPLICATION
 
@@ -315,13 +313,13 @@ def main(argv):
     global audio_sync_feature
     global beamforming_feature
 
-    ###Writing output to file###########################################
-    global OUTPUT_PATH
-    ###Writing output to file###########################################
+    ###TCP Connection###########################################
+    global CONTEXT
+    global SOCKET
+    ###TCP Connection###########################################
     
     # Printing intro.
-    with open(OUTPUT_PATH, "w") as output_file:
-        print_intro(output_file)
+    print_intro(SOCKET)
     
     try:
         # Creating Bluetooth Manager.
@@ -331,8 +329,7 @@ def main(argv):
 
         while True:
             # Synchronous discovery of Bluetooth devices.
-            with open(OUTPUT_PATH, "w") as output_file:
-                output_file.write('Scanning Bluetooth devices...\n')
+            SOCKET.send_string('Scanning Bluetooth devices...\n')
             manager.discover(SCANNING_TIME_s)
 
             # Getting discovered devices.
@@ -340,48 +337,43 @@ def main(argv):
 
             # Listing discovered devices.
             if not devices:
-                with open(OUTPUT_PATH, "w") as output_file:
-                    output_file.write('No Bluetooth devices found. Exiting...\n')
-                    output_file.write("$")
-                    output_file.write("")
-                    sys.exit(0)
+                SOCKET.send_string('No Bluetooth devices found. Exiting...\n')
+                SOCKET.send_string("$")
+                SOCKET.close()
+                CONTEXT.term()
+                sys.exit(0)
             
-            with open(OUTPUT_PATH, "w") as output_file:
-                output_file.write('Available Bluetooth devices:')
+            SOCKET.send_string('Available Bluetooth devices:')
             i = 1
             for device in devices:
-                with open(OUTPUT_PATH, "w") as output_file:
-                    output_file.write('%d) %s: [%s]' % (i, device.get_name(), device.get_tag()))
+                SOCKET.send_string('%d) %s: [%s]' % (i, device.get_name(), device.get_tag()))
                 i += 1
 
             # Selecting a device.
             while True:
-                choice = int(
-                    input("\nSelect a device to connect to (\'0\' to quit): "))
+                SOCKET.send_string("\nSelect a device to connect to (\'0\' to quit): ")
+                choice = int(SOCKET.recv())
                 if choice >= 0 and choice <= len(devices):
                     break
             if choice == 0:
                 # Exiting.
                 manager.remove_listener(manager_listener)
-                with open(OUTPUT_PATH, "w") as output_file:
-                    #print(output_file)
-                    output_file.write("$")
-                    output_file.write("")
+                SOCKET.send_string("Exiting...")
+                SOCKET.send_string("$")
+                SOCKET.close()
+                CONTEXT.term()
                 sys.exit(0)
             device = devices[choice - 1]
             
             # Connecting to the device.
             node_listener = MyNodeListener()
             device.add_listener(node_listener)
-            with open(OUTPUT_PATH, "w") as output_file:
-                output_file.write('Connecting to %s...' % (device.get_name()))
+            SOCKET.send_string('Connecting to %s...' % (device.get_name()))
             if not device.connect():
-                with open(OUTPUT_PATH, "w") as output_file:
-                    output_file.write('Connection failed.\n')
+                SOCKET.send_string('Connection failed.\n')
                 continue
                 
-            with open(OUTPUT_PATH, "w") as output_file:
-                output_file.write('Connection done.') 
+            SOCKET.send_string('Connection done.') 
 
             has_audio_adpcm_features = [False,False]
             has_audio_opus_features = [False,False]
@@ -409,8 +401,9 @@ def main(argv):
             
             if all(has_audio_adpcm_features) or all(has_audio_opus_features):
                 while True:
-                    save_audio_flag = input('\nDo you want to save the audio stream?'
+                    SOCKET.send_string('\nDo you want to save the audio stream?'
                                             '\'y\' - Yes, \'n\' - No (\'0\' to quit): ')
+                    save_audio_flag = SOCKET.recv()
                     
                     if save_audio_flag == 'y' or save_audio_flag == 'Y' or \
                         save_audio_flag == 'n' or save_audio_flag == 'N':
@@ -426,11 +419,13 @@ def main(argv):
                             audioFile = open(fileName,"wb+")
                         
                         if(has_beamforming_feature):
-                            beamforming_flag = input('\nDo you want to enable beamforming?'
+                            SOCKET.send_string('\nDo you want to enable beamforming?'
                                              '\'y\' - Yes, \'n\' - No (\'0\' to quit): ')
+                            beamforming_flag = SOCKET.recv()
                         
-                        number_of_seconds = int(input('\nHow many seconds do you want to stream?'
-                                                      ' Value must be > 0 (\'0\' to quit): '))
+                        SOCKET.send_string('\nHow many seconds do you want to stream?'
+                                                      ' Value must be > 0 (\'0\' to quit): ')
+                        number_of_seconds = int(SOCKET.recv())
                         
                         if all(has_audio_adpcm_features):
                             number_of_notifications = number_of_seconds * NPS_ADPCM
@@ -438,8 +433,7 @@ def main(argv):
                             number_of_notifications = number_of_seconds * NPS_OPUS
 
                         if number_of_seconds > 0:
-                            with open(OUTPUT_PATH, "w") as output_file:
-                                output_file.write("Streaming Started")
+                            SOCKET.send_string("Streaming Started")
                             
                             if all(has_audio_adpcm_features):
                                 ###Audio Stream#####################################
@@ -458,7 +452,7 @@ def main(argv):
                                 device.enable_notifications(audio_sync_feature)
                             elif all(has_audio_opus_features):
                                 ###Audio Stream#########################################
-                                #Suppress warnings.
+                                #SuppressING warnings.
                                 with warnings.catch_warnings():
                                     warnings.simplefilter("ignore")
                                     stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')
@@ -486,15 +480,13 @@ def main(argv):
                                     beamforming_feature.add_listener(beamforming_feature_listener)
                                     device.enable_notifications(beamforming_feature)
                                     device.send_command(b"\x00\x00\x08\x00\xAA\x01")
-                                    with open(OUTPUT_PATH, "w") as output_file:
-                                        output_file.write("Beamforming Enabled")
+                                    SOCKET.send_string("Beamforming Enabled")
                             
                             n_idx = 0
                             while n_idx < number_of_notifications:
                                 device.wait_for_notifications(0.05)
                                     
-                            with open(OUTPUT_PATH, "w") as output_file:
-                                output_file.write("End of Streaming")
+                            SOCKET.send_string("End of Streaming")
                             # Disabling notifications.
                             device.disable_notifications(audio_feature)
                             audio_feature.remove_listener(audio_feature_listener)
@@ -502,8 +494,7 @@ def main(argv):
                             audio_sync_feature.remove_listener(audio_sync_feature_listener)
                             if beamforming_flag == 'y' or beamforming_flag == 'Y':
                                 device.send_command(b"\x00\x00\x08\x00\xAA\x00")
-                                with open(OUTPUT_PATH, "w") as output_file:
-                                    output_file.write("Beamforming Disabled")
+                                SOCKET.send_string("Beamforming Disabled")
                                 device.disable_notifications(beamforming_feature)
                                 beamforming_feature.remove_listener(beamforming_feature_listener)
                             ###Save Audio File##################################
@@ -530,11 +521,9 @@ def main(argv):
                                 audioFile.close()
                             ###Save Audio File##################################
                             # Disconnecting from the device.
-                            with open(OUTPUT_PATH, "w") as output_file:
-                                output_file.write('\nDisconnecting from %s...' % (device.get_name()))
+                            SOCKET.send_string('\nDisconnecting from %s...' % (device.get_name()))
                             device.disconnect()
-                            with open(OUTPUT_PATH, "w") as output_file:
-                                output_file.write('Disconnection done.')
+                            SOCKET.send_string('Disconnection done.')
                             device.remove_listener(node_listener)
                             # Reset discovery.
                             manager.reset_discovery()
@@ -542,47 +531,45 @@ def main(argv):
                             break
                     elif save_audio_flag == '0':
                         # Disconnecting from the device.
-                        with open(OUTPUT_PATH, "w") as output_file:
-                            output_file.write('\nDisconnecting from %s...' % (device.get_name()))
+                        SOCKET.send_string('\nDisconnecting from %s...' % (device.get_name()))
                         device.disconnect()
-                        with open(OUTPUT_PATH, "w") as output_file:
-                            output_file.write('Disconnection done.')
+                        SOCKET.send_string('Disconnection done.')
                         device.remove_listener(node_listener)
                         # Reset discovery.
                         manager.reset_discovery()
                         # Going back to the list of devices.
                         break
             else:
-                with open(OUTPUT_PATH, "w") as output_file:
-                    output_file.write("No Audio Features are Exposed from your BLE Node!")
+                SOCKET.send_string("No Audio Features are Exposed from your BLE Node!")
                 while True:
-                    restartDiscovery = int(input('\nPress \'1\' to restart scanning for BLE devices '
-                                                 '(\'0\' to quit): '))
+                    SOCKET.send_string('\nPress \'1\' to restart scanning for BLE devices '
+                                                 '(\'0\' to quit): ')
+                    restartDiscovery = int(SOCKET.recv())
                     if restartDiscovery == 1:
                         # Reset discovery.
                         manager.reset_discovery()
                         break;
                     elif restartDiscovery == 0:
                         # Exiting.
-                        with open(OUTPUT_PATH, "w") as output_file:
-                            output_file.write('\nExiting...\n')
-                            output_file.write("$")
-                            output_file.write("")
+                        SOCKET.send_string('\nExiting...\n')
+                        SOCKET.send_string("$")
+                        SOCKET.close()
+                        CONTEXT.term()
                         sys.exit(0)
                         
     except KeyboardInterrupt:
         try:
             # Exiting.
-            with open(OUTPUT_PATH, "w") as output_file:
-                output_file.write('\nExiting...\n')
-                output_file.write("$")
-                output_file.write("")
+            SOCKET.send_string('\nExiting...\n')
+            SOCKET.send_string("$")
+            SOCKET.close()
+            CONTEXT.term()
             sys.exit(0)
         except SystemExit:
-            with open(OUTPUT_PATH, "w") as output_file:
-                output_file.write("$")
-                output_file.write("")
-                os._exit(0)
+            SOCKET.send_string("$")
+            SOCKET.close()
+            CONTEXT.term()
+            os._exit(0)
 
 
 if __name__ == "__main__":

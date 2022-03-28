@@ -1,15 +1,21 @@
 import sys
 import os
+import zmq
 
-PATH = "output.txt"
-oldContent = ""
-newContent = ""
+context = zmq.Context()
+socket = context.socket(zmq.REQ)
+socket.connect("tcp://localhost:5555")
 
-while(True):
-    with open(PATH, "r") as messages:
-        newContent = messages.read()
-        if oldContent != newContent:
-            if newContent == "$":
-                sys.exit(0)
-            print(newContent)
-            oldContent = newContent
+while True:
+    try:
+        message = socket.recv()
+        if "?" in message:
+            message.send_string(input())
+        elif "$" in message:
+            socket.close()
+            context.term()
+            sys.exit(0)
+    except KeyboardInterrupt:
+        socket.close()
+        context.term()
+        sys.exit(0)
