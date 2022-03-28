@@ -351,6 +351,7 @@ def main(argv):
             if not devices:
                 with open(OUTPUT_PATH, "w") as output_file:
                     output_file.write('No Bluetooth devices found. Exiting...\n')
+                    output_file.write("")
                     sys.exit(0)
             
             with open(OUTPUT_PATH, "w") as output_file:
@@ -372,6 +373,7 @@ def main(argv):
                 manager.remove_listener(manager_listener)
                 with open(OUTPUT_PATH, "w") as output_file:
                     print(output_file)
+                    output_file.write("")
                 sys.exit(0)
             device = devices[choice - 1]
             
@@ -565,6 +567,7 @@ def main(argv):
                         # Exiting.
                         with open(OUTPUT_PATH, "w") as output_file:
                             output_file.write('\nExiting...\n')
+                            output_file.write("")
                         sys.exit(0)
                         
     except KeyboardInterrupt:
@@ -572,9 +575,12 @@ def main(argv):
             # Exiting.
             with open(OUTPUT_PATH, "w") as output_file:
                 output_file.write('\nExiting...\n')
+                output_file.write("")
             sys.exit(0)
         except SystemExit:
-            os._exit(0)
+            with open(OUTPUT_PATH, "w") as output_file:
+                output_file.write("")
+                os._exit(0)
 
 
 if __name__ == "__main__":
