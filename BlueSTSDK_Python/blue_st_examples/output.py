@@ -3,12 +3,13 @@ import os
 import zmq
 
 context = zmq.Context()
-socket = context.socket(zmq.REQ)
-socket.connect("tcp://localhost:5555")
+socket = context.socket(zmq.REP)
+socket.bind("tcp://*:5555")
 
 while True:
     try:
         message = socket.recv()
+        print(message)
         if "?" in message:
             message.send_string(input())
         elif "$" in message:
