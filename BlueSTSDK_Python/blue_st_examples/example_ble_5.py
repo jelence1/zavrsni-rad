@@ -170,7 +170,8 @@ class MyManagerListener(ManagerListener):
         with open(OUTPUT_PATH, "w") as output_file:
             output_file.write('Discovery %s.' % ('started' if enabled else 'stopped'))
             if not enabled:
-                print(output_file)
+                #print()
+                pass
 
     #
     # This method is called whenever a new node is discovered.
@@ -280,8 +281,8 @@ class MyFeatureListenerSync(FeatureListener):
                 audio_feature.set_audio_sync_parameters(sample)
             elif isinstance(feature, FeatureAudioOpusConf):
                 global OUTPUT_PATH
-                with open(OUTPUT_PATH, "w") as output_file:
-                    output_file.write("command message received: " + str(sample))  
+                #with open(OUTPUT_PATH, "w") as output_file:
+                #    output_file.write("command message received: " + str(sample))  
                 
 class MyFeatureListenerBeam(FeatureListener):
 
@@ -351,6 +352,7 @@ def main(argv):
             if not devices:
                 with open(OUTPUT_PATH, "w") as output_file:
                     output_file.write('No Bluetooth devices found. Exiting...\n')
+                    output_file.write("$")
                     output_file.write("")
                     sys.exit(0)
             
@@ -372,7 +374,8 @@ def main(argv):
                 # Exiting.
                 manager.remove_listener(manager_listener)
                 with open(OUTPUT_PATH, "w") as output_file:
-                    print(output_file)
+                    #print(output_file)
+                    output_file.write("$")
                     output_file.write("")
                 sys.exit(0)
             device = devices[choice - 1]
@@ -567,6 +570,7 @@ def main(argv):
                         # Exiting.
                         with open(OUTPUT_PATH, "w") as output_file:
                             output_file.write('\nExiting...\n')
+                            output_file.write("$")
                             output_file.write("")
                         sys.exit(0)
                         
@@ -575,10 +579,12 @@ def main(argv):
             # Exiting.
             with open(OUTPUT_PATH, "w") as output_file:
                 output_file.write('\nExiting...\n')
+                output_file.write("$")
                 output_file.write("")
             sys.exit(0)
         except SystemExit:
             with open(OUTPUT_PATH, "w") as output_file:
+                output_file.write("$")
                 output_file.write("")
                 os._exit(0)
 
