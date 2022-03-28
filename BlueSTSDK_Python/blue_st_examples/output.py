@@ -2,21 +2,25 @@ import sys
 import os
 import zmq
 
-context = zmq.Context()
-socket = context.socket(zmq.REP)
-socket.bind("tcp://*:5555")
+CONTEXT = zmq.Context()
+SOCKET = CONTEXT.socket(zmq.REP)
+SOCKET.bind("tcp://*:5555")
 
 while True:
     try:
-        message = socket.recv()
+        message = SOCKET.recv().decode("utf-8")
         print(message)
         if "?" in message:
-            message.send_string(input())
+            SOCKET.send(input().encode("utf-8"))
         elif "$" in message:
-            socket.close()
-            context.term()
+            SOCKET.send(str().encode("utf-8"))
+            SOCKET.close()
+            CONTEXT.term()
             sys.exit(0)
+        else:
+            SOCKET.send(str().encode("utf-8"))
+
     except KeyboardInterrupt:
-        socket.close()
-        context.term()
+        SOCKET.close()
+        CONTEXT.term()
         sys.exit(0)
