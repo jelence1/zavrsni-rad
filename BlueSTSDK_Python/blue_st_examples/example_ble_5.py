@@ -245,7 +245,7 @@ class MyFeatureListener(FeatureListener):
                         audioFile.write(byteData)
                     ###Save Audio File######################################
                     ###Audio Stream#########################################
-                    #stream.write(byteData)
+                    stream.write(byteData)
                     ###Audio Stream#########################################
                 n_idx += 1
         elif isinstance(feature,FeatureAudioOpus):
@@ -257,7 +257,7 @@ class MyFeatureListener(FeatureListener):
                         audioFile.write(byteData)
                     ###Save Audio File######################################
                     ###Audio Stream#########################################
-                    #stream.write(byteData)
+                    stream.write(byteData)
                     ###Audio Stream#########################################
                     n_idx += 1
 
