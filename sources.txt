@@ -15,3 +15,7 @@ Guide to Pyzmq (za TCP)
 --> https://zguide.zeromq.org/
 
 + svi oni pdfovi iz Karlinog foldera
+
+https://www.flaticon.com/free-icons/audio Audio icons created by Freepik - Flaticon
+<a href="https://www.flaticon.com/free-icons/podcast" title="podcast icons">Podcast icons created by Freepik - Flaticon</a>
+pixabay.com
