@@ -25,3 +25,5 @@ def main():
 		SOCKET.close()
 		CONTEXT.term()
 		sys.exit(0)
+
+main()
