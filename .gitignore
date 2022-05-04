@@ -5,3 +5,9 @@ BlueSTSDK_Python/blue_st_examples/blue_st_examples/features/__pycache__
 BlueSTSDK_Python/blue_st_examples/blue_st_examples/features/audio/__pycache__
 BlueSTSDK_Python/blue_st_examples/blue_st_examples/features/audio/opus/__pycache__
 BlueSTSDK_Python/blue_st_examples/blue_st_examples/features/audio/adpcm/__pycache__
+BlueSTSDK_Python/blue_st_examples/blue_st_sdk/advertising_data/__pycache__/
+BlueSTSDK_Python/blue_st_examples/blue_st_sdk/features/__pycache__/
+BlueSTSDK_Python/blue_st_examples/blue_st_sdk/features/audio/__pycache__/
+BlueSTSDK_Python/blue_st_examples/blue_st_sdk/features/audio/adpcm/__pycache__/
+BlueSTSDK_Python/blue_st_examples/blue_st_sdk/features/audio/opus/__pycache__/
+
