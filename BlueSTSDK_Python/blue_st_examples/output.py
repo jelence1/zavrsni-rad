@@ -26,4 +26,4 @@ def main():
 		CONTEXT.term()
 		sys.exit(0)
 
-main()
+#main()
