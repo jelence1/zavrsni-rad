@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="images">
+    <file>soundwaves_blue.jpg</file>
+  </qresource>
+</RCC>
