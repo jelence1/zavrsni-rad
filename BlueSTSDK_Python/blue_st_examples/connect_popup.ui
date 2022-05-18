@@ -29,26 +29,23 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton#exitBtn_2 {
+    <string notr="true">QPushButton#exitBtn {
 background-color: rgba(195, 195, 195, 0.3);
 color: rgba(10, 10, 10);
-border-radius: 5px; 
+border-radius: 10px; 
 }
-QPushButton#exitBtn_2:hover {
+QPushButton#exitBtn:hover {
 background-color:  qlineargradient(spread:pad, x1:0, y1:0, x2:0.731905, y2:0.755, stop:0 rgba(255, 221, 221, 255), stop:0.955224 rgba(238, 103, 100, 255))
 }
-
-QDialogButtonBox {
-background-color: blue;
-}</string>
+</string>
    </property>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="mainLabel">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>-1</y>
+      <y>0</y>
       <width>480</width>
-      <height>381</height>
+      <height>380</height>
      </rect>
     </property>
     <property name="font">
@@ -71,7 +68,7 @@ border-radius: 50px</string>
      <number>10</number>
     </property>
    </widget>
-   <widget class="QLabel" name="header_2">
+   <widget class="QLabel" name="header">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -102,7 +99,7 @@ background-color: rgb(64, 69, 79);
      <number>10</number>
     </property>
    </widget>
-   <widget class="QLabel" name="headerFade_2">
+   <widget class="QLabel" name="headerFade">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -130,7 +127,7 @@ background-color: rgb(64, 69, 79);
      <number>10</number>
     </property>
    </widget>
-   <widget class="QPushButton" name="exitBtn_2">
+   <widget class="QPushButton" name="exitBtn">
     <property name="geometry">
      <rect>
       <x>410</x>

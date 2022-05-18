@@ -1,5 +1,6 @@
 <RCC>
-  <qresource prefix="images">
-    <file>soundwaves_blue.jpg</file>
+  <qresource prefix="res">
+    <file>header.png</file>
+    <file>microphone.png</file>
   </qresource>
 </RCC>

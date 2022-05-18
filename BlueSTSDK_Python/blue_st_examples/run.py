@@ -1,11 +1,11 @@
 import threading
 import example_ble_5
-import proba_tk
+import output
 #import proba as output
 import sys
 
 def main():
-	output_thread = threading.Thread(target=proba_tk.main)
+	output_thread = threading.Thread(target=output.main)
 	ble_thread = threading.Thread(target=example_ble_5.main, args=(1,))
 
 	output_thread.start()

@@ -346,7 +346,7 @@ def main(argv):
             if not devices:
                 SOCKET.send(('No Bluetooth devices found. Exiting...\n').encode("utf-8"))
                 SOCKET.recv()
-                SOCKET.send("$")
+                SOCKET.send("$".encode("utf-8"))
                 SOCKET.recv()
                 SOCKET.close()
                 CONTEXT.term()

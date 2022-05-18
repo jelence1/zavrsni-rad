@@ -1,69 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>400</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Form</string>
   </property>
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>480</width>
-     <height>380</height>
+     <x>20</x>
+     <y>20</y>
+     <width>750</width>
+     <height>550</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>Arial Rounded MT Bold</family>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton#exitBtn {
+    <string notr="true">QPushButton {
+	font: 14pt &quot;Arial Rounded MT Bold&quot;;
+border-radius: 20px;
+}
+
+QPushButton#recordBtn {
+background-color: qlineargradient(spread:reflect, x1:0, y1:0, x2:0.553, y2:0.533409, stop:0.00497512 rgba(78, 75, 108, 255), stop:0.935323 rgba(151, 180, 209, 255))
+}
+
+QPushButton#editBtn {
+color: white;
+background-color:qlineargradient(spread:reflect, x1:0, y1:0, x2:0.513, y2:0.499318, stop:0 rgba(160, 193, 221, 255), stop:0.955224 rgba(74, 99, 119, 255))
+}
+
+QPushButton#editBtn:hover, #recordBtn:hover, #exitBtn:hover {
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.731905, y2:0.755, stop:0 rgba(255, 221, 221, 255), stop:0.955224 rgba(238, 103, 100, 255))
+}
+
+QPushButton#exitBtn {
 background-color: rgba(195, 195, 195, 0.3);
 border-radius: 10px; 
-}
-QPushButton#exitBtn:hover {
-background-color:  qlineargradient(spread:pad, x1:0, y1:0, x2:0.731905, y2:0.755, stop:0 rgba(255, 221, 221, 255), stop:0.955224 rgba(238, 103, 100, 255))
 }</string>
    </property>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="mainLabel">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>-1</y>
-      <width>480</width>
-      <height>381</height>
+      <y>0</y>
+      <width>750</width>
+      <height>550</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(231, 236, 245);
-border-radius: 50px</string>
+     <string notr="true">border-radius: 50px;
+background-color: rgb(191, 204, 228);</string>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;This is an interface primarily for audio streaming &lt;/p&gt;&lt;p&gt;via Bluetooth from the &lt;a href=&quot;https://www.st.com/en/evaluation-tools/stm32wb5mm-dk.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;STM32WB5MM-DK &lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://www.st.com/en/evaluation-tools/stm32wb5mm-dk.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Discovery kit&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;For audio editing you need to install additional&lt;/p&gt;&lt;p&gt;software, such as &lt;a href=&quot;https://www.audacityteam.org/download/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Audacity&lt;/span&gt;&lt;/a&gt;, which is a free, &lt;/p&gt;&lt;p&gt;open-source software for digital audio &lt;/p&gt;&lt;p&gt;editing and recording.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="micLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>130</y>
+      <width>80</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="imgs/res.qrc">:/res/header.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
-    </property>
-    <property name="margin">
-     <number>10</number>
     </property>
    </widget>
    <widget class="QLabel" name="header">
@@ -71,7 +90,7 @@ border-radius: 50px</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>480</width>
+      <width>750</width>
       <height>70</height>
      </rect>
     </property>
@@ -97,12 +116,31 @@ background-color: rgb(64, 69, 79);
      <number>10</number>
     </property>
    </widget>
+   <widget class="QLabel" name="headerLabel">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>10</y>
+      <width>352</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>imgs/Webp.net-resizeimage.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
    <widget class="QLabel" name="headerFade">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>70</y>
-      <width>480</width>
+      <width>750</width>
       <height>30</height>
      </rect>
     </property>
@@ -128,7 +166,7 @@ background-color: rgb(64, 69, 79);
    <widget class="QPushButton" name="exitBtn">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>690</x>
       <y>30</y>
       <width>31</width>
       <height>31</height>
@@ -147,8 +185,30 @@ background-color: rgb(64, 69, 79);
      <string>X</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>250</y>
+      <width>331</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ovdje će biti upisan tekst koji se šalje. </string>
+    </property>
+   </widget>
+   <zorder>mainLabel</zorder>
+   <zorder>micLabel</zorder>
+   <zorder>header</zorder>
+   <zorder>headerFade</zorder>
+   <zorder>headerLabel</zorder>
+   <zorder>exitBtn</zorder>
+   <zorder>label</zorder>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="imgs/res.qrc"/>
+ </resources>
  <connections/>
 </ui>
