@@ -9,12 +9,15 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QPoint, Qt
 
 
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(800, 600)
+        Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        Form.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.widget = QtWidgets.QWidget(Form)
         self.widget.setGeometry(QtCore.QRect(20, 20, 750, 550))
         self.widget.setStyleSheet("QPushButton {\n"
@@ -210,6 +213,9 @@ class Ui_Form(object):
         self.saveCheck.raise_()
         self.gridLayoutWidget.raise_()
 
+        self.exitBtn.clicked.connect(self.exit)
+        self.widget.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0))
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -227,12 +233,30 @@ class Ui_Form(object):
         self.hourLabel.setText(_translate("Form", "hours"))
         self.minLabel.setText(_translate("Form", "minutes"))
 
+    def exit(self):
+        sys.exit(0)
 
-if __name__ == "__main__":
+
+
+class Form(QtWidgets.QWidget, Ui_Form):
+    def __init__(self, parent=None):
+        super(Form, self).__init__(parent)
+        self.setupUi(self)
+        self.setMouseTracking(True)
+
+    def mousePressEvent(self, event):
+        self.oldPosition = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() & Qt.LeftButton:
+                delta = QPoint(event.globalPos() - self.oldPosition)
+                self.move(self.x() + delta.x(), self.y() + delta.y())
+                self.oldPosition = event.globalPos()
+
+
+def main():
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    w = Form()
+    w.show()
     sys.exit(app.exec_())

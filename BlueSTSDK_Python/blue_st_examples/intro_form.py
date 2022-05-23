@@ -9,12 +9,17 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QPoint, Qt
+
+import params_form
 
 
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(800, 600)
+        Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        Form.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.widget = QtWidgets.QWidget(Form)
         self.widget.setGeometry(QtCore.QRect(20, 20, 750, 550))
         self.widget.setStyleSheet("QPushButton {\n"
@@ -125,6 +130,12 @@ class Ui_Form(object):
         self.headerLabel.raise_()
         self.exitBtn.raise_()
 
+        self.exitBtn.clicked.connect(self.exit)
+        self.widget.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0))
+
+        self.recordBtn.clicked.connect(self.recording)
+        self.editBtn.clicked.connect(self.edit)
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -135,12 +146,35 @@ class Ui_Form(object):
         self.editBtn.setText(_translate("Form", "EDIT AUDIO"))
         self.exitBtn.setText(_translate("Form", "X"))
 
+    def exit(self):
+            sys.exit(0)
+
+    def recording(self):
+            sys.exit(50)
+
+    def edit(self):
+            sys.exit(100)
+
+
+class Form(QtWidgets.QWidget, Ui_Form):
+    def __init__(self, parent=None):
+        super(Form, self).__init__(parent)
+        self.setupUi(self)
+        self.setMouseTracking(True)
+
+    def mousePressEvent(self, event):
+        self.oldPosition = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() & Qt.LeftButton:
+                delta = QPoint(event.globalPos() - self.oldPosition)
+                self.move(self.x() + delta.x(), self.y() + delta.y())
+                self.oldPosition = event.globalPos()
+
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    w = Form()
+    w.show()
     sys.exit(app.exec_())
