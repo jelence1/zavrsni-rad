@@ -76,7 +76,7 @@ background-color: rgb(191, 204, 228);</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>imgs/microphone.png</pixmap>
+     <pixmap>../imgs/microphone.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -129,7 +129,7 @@ background-color: rgb(64, 69, 79);
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>imgs/Webp.net-resizeimage.png</pixmap>
+     <pixmap>../imgs/header.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>

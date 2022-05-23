@@ -66,7 +66,7 @@ background-color: rgb(191, 204, 228);</string>
    <widget class="QLabel" name="micLabel">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>50</x>
       <y>130</y>
       <width>80</width>
       <height>80</height>
@@ -76,7 +76,7 @@ background-color: rgb(191, 204, 228);</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="imgs/res.qrc">:/res/header.png</pixmap>
+     <pixmap>../imgs/microphone.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -129,7 +129,7 @@ background-color: rgb(64, 69, 79);
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>imgs/Webp.net-resizeimage.png</pixmap>
+     <pixmap>../imgs/header.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -207,8 +207,6 @@ background-color: rgb(64, 69, 79);
    <zorder>label</zorder>
   </widget>
  </widget>
- <resources>
-  <include location="imgs/res.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
