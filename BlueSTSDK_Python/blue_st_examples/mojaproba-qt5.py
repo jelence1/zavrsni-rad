@@ -41,3 +41,5 @@ def main():
         received_string = input()
         ui.retranslateUi(Dialog)
     sys.exit(app.exec_())
+    
+main()
