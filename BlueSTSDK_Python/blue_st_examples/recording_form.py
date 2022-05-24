@@ -170,6 +170,6 @@ if __name__ == "__main__":
     w = Form()
     w.show()
 
-    w.m_id = w.timer.start(DURATION)
+    w.m_id = w.timer.start(DURATION*1000)
 
     sys.exit(app.exec_())
