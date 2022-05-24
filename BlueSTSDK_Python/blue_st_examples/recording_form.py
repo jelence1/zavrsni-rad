@@ -153,7 +153,7 @@ if __name__ == "__main__":
     t2 = time.time()
     while (t2 - t1) < 5:
             TIME_LEFT = 5 - (t2 - t1)
-            w.retranslateUi()
+            w.retranslateUi(w)
             time.sleep(1)
             t2 = time.time()
 
