@@ -24,12 +24,12 @@ def main():
 def new_main():
 	p = subprocess.run(["python3", "intro_form.py"])
 
-	if p.returncode == globals.RECORDING_CODE:
-		print("record, ",globals.RECORDING_CODE)
-	elif p.returncode == globals.EDIT_CODE:
-		print("edit, ",globals.RECORDING_CODE)
-	else:
-		print("sys exited.")
+	if p.returncode == globals.EDIT_CODE:
+		print("edit audio, run audacity. ",globals.RECORDING_CODE)
+	elif p.returncode != globals.RECORDING_CODE:
+		print("Exit code: ", p.returncode)
+
+	print("me want recorddd")
 
 if __name__ == "__main__":
 	try:
