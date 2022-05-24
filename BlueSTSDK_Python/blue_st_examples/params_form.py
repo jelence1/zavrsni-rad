@@ -12,6 +12,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint, Qt
 
 import sys
+import json
+
 import globals
 
 
@@ -241,9 +243,14 @@ class Ui_Form(object):
         sys.exit(0)
 
     def recording(self):
-        ispis = "Stream audio: {}\nSave recording: {}\nDuration: {}h{}m{}s".format(
-            int(self.streamCheck.isChecked()), int(self.saveCheck.isChecked()), self.hourBox.value(), self.minBox.value(), self.secondBox.value())
-        print("recording parameters: " + ispis)
+        to_secs = self.hourBox.value()*60*60 + self.minBox.value()*60 + self.secondBox.value()
+        r = {"STREAM":int(self.streamCheck.isChecked()),
+            "SAVE":int(self.saveCheck.isChecked()),
+            "DURATION":to_secs}
+
+        with open('json_data.json', 'w') as outfile:
+            json.dump(r, outfile)
+
         sys.exit(globals.RECORDING_CODE)
 
 
