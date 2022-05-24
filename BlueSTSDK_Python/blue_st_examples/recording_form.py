@@ -9,14 +9,14 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QPoint, Qt, QTimer
+from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer
 
 import time
 import zmq
 
 import globals
 
-TIME_LEFT = 5
+DURATION = 5
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -118,11 +118,11 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        global TIME_LEFT
+        global DURATION
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
-        self.label.setText(_translate("Form", "Time left: {}".format(TIME_LEFT)))
+        self.label.setText(_translate("Form", "Time left: {}".format(DURATION)))
 
     def exit(self):
         sys.exit(0)
@@ -135,8 +135,11 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.setMouseTracking(True)
 
         self.timer = QTimer()
-        self.timer.timeout.connect(self.update_gui)
-        print(self.timer.interval())
+        self.timer.timeout.connect(self.finished)
+        self.m_id = 0
+
+        # self.basic = QBasicTimer()
+        # self.basic.start(1000)
 
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
@@ -148,9 +151,17 @@ class Form(QtWidgets.QWidget, Ui_Form):
                 self.oldPosition = event.globalPos()
 
     def update_gui(self):
-        print(self.timer.interval())
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", "Time left: {}".format(self.timer.remainingTime())))
+
+    def finished(self):
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
+
+    def timerEvent(self, event):
+        if self.m_id == event.timerId():
+            self.update_gui()
+        super().timerEvent(event)
 
 
 if __name__ == "__main__":
@@ -159,6 +170,6 @@ if __name__ == "__main__":
     w = Form()
     w.show()
 
-    w.timer.start(5000)
+    w.m_id = w.timer.start(DURATION)
 
     sys.exit(app.exec_())
