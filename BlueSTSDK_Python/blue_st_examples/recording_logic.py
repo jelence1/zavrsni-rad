@@ -9,9 +9,14 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QPoint, Qt
+from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer
 
+import time
+import zmq
 
+import globals
+
+DURATION = 5
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -74,7 +79,6 @@ class Ui_Form(object):
         self.headerLabel.setGeometry(QtCore.QRect(200, 10, 352, 71))
         self.headerLabel.setText("")
         self.headerLabel.setPixmap(QtGui.QPixmap("imgs/header.png"))
-        pixmap = QtGui.QPixmap("imgs/header.png")
         self.headerLabel.setScaledContents(True)
         self.headerLabel.setObjectName("headerLabel")
         self.headerFade = QtWidgets.QLabel(self.widget)
@@ -110,19 +114,18 @@ class Ui_Form(object):
 
         self.exitBtn.clicked.connect(self.exit)
 
-        self.widget.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0))
-
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-    def exit(self):
-            sys.exit(0)
-
     def retranslateUi(self, Form):
+        global DURATION
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
-        self.label.setText(_translate("Form", "Ovdje će biti upisan tekst koji se šalje. "))
+        self.label.setText(_translate("Form", "Time left: {}".format(DURATION)))
+
+    def exit(self):
+        sys.exit(0)
 
 
 class Form(QtWidgets.QWidget, Ui_Form):
@@ -130,6 +133,12 @@ class Form(QtWidgets.QWidget, Ui_Form):
         super(Form, self).__init__(parent)
         self.setupUi(self)
         self.setMouseTracking(True)
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.finished)
+
+        self.basic = QBasicTimer()
+        self.basic.start(1000, self)
 
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
@@ -140,10 +149,26 @@ class Form(QtWidgets.QWidget, Ui_Form):
                 self.move(self.x() + delta.x(), self.y() + delta.y())
                 self.oldPosition = event.globalPos()
 
+    def update_gui(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", "Time left: {}".format(self.timer.remainingTime()//1000)))
+
+    def finished(self):
+        self.basic.stop()
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
+
+    def timerEvent(self, event):
+        self.update_gui()
+        super().timerEvent(event)
+
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
     w.show()
+
+    w.timer.start(DURATION*1000)
+
     sys.exit(app.exec_())
