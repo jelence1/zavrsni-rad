@@ -28,7 +28,7 @@ class Ui_Dialog(object):
         self.widget.setFont(font)
         self.widget.setStyleSheet("QPushButton#exitBtn {\n"
 "background-color: rgba(195, 195, 195, 0.3);\n"
-"color: rgba(10, 10, 10);\n"
+"color: rgb(10, 10, 10);\n"
 "border-radius: 10px; \n"
 "}\n"
 "QPushButton#exitBtn:hover {\n"
