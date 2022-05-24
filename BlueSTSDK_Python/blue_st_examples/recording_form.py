@@ -11,6 +11,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint, Qt
 
+import time
+import zmq
+
+import globals
+
+TIME_LEFT = 5
+
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -111,10 +118,11 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
+        global TIME_LEFT
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
-        self.label.setText(_translate("Form", "Ovdje će biti upisan tekst koji se šalje. "))
+        self.label.setText(_translate("Form", "Time left: {}".format(TIME_LEFT)))
 
     def exit(self):
         sys.exit(0)
@@ -141,4 +149,12 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
     w.show()
+    t1 = time.time()
+    t2 = time.time()
+    while (t2 - t1) < 5:
+            TIME_LEFT = 5 - (t2 - t1)
+            w.retranslateUi()
+            time.sleep(1)
+            t2 = time.time()
+
     sys.exit(app.exec_())

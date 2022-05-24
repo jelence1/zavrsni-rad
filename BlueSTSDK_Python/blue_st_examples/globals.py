@@ -11,3 +11,4 @@ SOCKET_BLE = CONTEXT.socket(zmq.REQ)
 CONTEXT2 = zmq.Context()
 SOCKET_OUT = CONTEXT2.socket(zmq.REP)
 #SOCKET_OUT.bind("tcp://*:5555")
+
