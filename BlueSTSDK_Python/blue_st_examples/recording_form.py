@@ -147,7 +147,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
                 self.oldPosition = event.globalPos()
 
     def update_gui(self):
-            self.label.setText(self._translate("time is up!"))
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("time is up!"))
 
 
 if __name__ == "__main__":
