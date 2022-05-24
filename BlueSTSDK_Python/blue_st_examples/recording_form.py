@@ -148,7 +148,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
     def update_gui(self):
         _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("time is up!"))
+        self.label.setText(_translate("Form", "time is up!"))
 
 
 if __name__ == "__main__":
