@@ -248,8 +248,8 @@ class Ui_Form(object):
             "SAVE":int(self.saveCheck.isChecked()),
             "DURATION":to_secs}
 
-        with open('json_data.json', 'w') as outfile:
-            json.dump(r, outfile)
+        # SOCKET.bind
+        # json.dump(r, globals.)
 
         sys.exit(globals.RECORDING_CODE)
 
