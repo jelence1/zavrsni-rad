@@ -138,7 +138,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.timer.timeout.connect(self.finished)
 
         self.basic = QBasicTimer()
-        self.m_id = self.basic.start(1000)
+        self.m_id = self.basic.start(1000, self)
 
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
