@@ -143,6 +143,9 @@ class Form(QtWidgets.QWidget, Ui_Form):
                 self.move(self.x() + delta.x(), self.y() + delta.y())
                 self.oldPosition = event.globalPos()
 
+    def update_gui(self):
+            self.retranslateUi(self)
+
 
 if __name__ == "__main__":
     import sys
@@ -151,7 +154,7 @@ if __name__ == "__main__":
     w.show()
 
     timer = QTimer(w)
-    timer.timeout.connect(w.retranslateUi)
+    timer.timeout.connect(w.update_gui)
     timer.start(5000)
 
     sys.exit(app.exec_())
