@@ -152,8 +152,9 @@ if __name__ == "__main__":
     t1 = time.time()
     t2 = time.time()
     while (t2 - t1) < 5:
-            TIME_LEFT = 5 - (t2 - t1)
+            TIME_LEFT = int(5 - (t2 - t1))
             w.retranslateUi(w)
+            w.show()
             time.sleep(1)
             t2 = time.time()
 
