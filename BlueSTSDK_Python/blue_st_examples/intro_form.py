@@ -11,8 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint, Qt
 
-import params_form
-
+import globals
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -150,10 +149,10 @@ class Ui_Form(object):
             sys.exit(0)
 
     def recording(self):
-            sys.exit(50)
+            sys.exit(globals.RECORDING_CODE)
 
     def edit(self):
-            sys.exit(100)
+            sys.exit(globals.EDIT_CODE)
 
 
 class Form(QtWidgets.QWidget, Ui_Form):

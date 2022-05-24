@@ -1,8 +1,17 @@
+# LIBRARY IMPORTS
+from glob import glob
+from http.client import CONTINUE
 import threading
+import sys
+import subprocess
+
+# USER IMPORTS
 import example_ble_5
 import output
+import globals
 #import proba as output
-import sys
+
+
 
 def main():
 	output_thread = threading.Thread(target=output.main)
@@ -12,10 +21,19 @@ def main():
 	ble_thread.start()
 	ble_thread.join()
 
+def new_main():
+	p = subprocess.run(["python3", "introform.py"])
+
+	if p.returncode == globals.RECORDING_CODE:
+		print("record, ",globals.RECORDING_CODE)
+	elif p.returncode == globals.EDIT_CODE:
+		print("edit, ",globals.RECORDING_CODE)
+	else:
+		print("sys exited.")
 
 if __name__ == "__main__":
 	try:
-		main()
+		new_main()
 	except KeyboardInterrupt:
 		print("Shutting down...")
 		sys.exit(0)
