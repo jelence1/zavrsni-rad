@@ -105,6 +105,8 @@ class Ui_Form(object):
         self.exitBtn.raise_()
         self.label.raise_()
 
+        self.exitBtn.clicked.connect(self.exit)
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -114,6 +116,8 @@ class Ui_Form(object):
         self.exitBtn.setText(_translate("Form", "X"))
         self.label.setText(_translate("Form", "Ovdje će biti upisan tekst koji se šalje. "))
 
+    def exit(self):
+        sys.exit(0)
 
 
 class Form(QtWidgets.QWidget, Ui_Form):
