@@ -188,14 +188,17 @@ background-color: rgb(64, 69, 79);
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>70</x>
       <y>250</y>
-      <width>331</width>
-      <height>61</height>
+      <width>621</width>
+      <height>251</height>
      </rect>
     </property>
     <property name="text">
-     <string>Ovdje će biti upisan tekst koji se šalje. </string>
+     <string>Trying to connect to the STM32...</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignHCenter|Qt::AlignTop</set>
     </property>
    </widget>
    <zorder>mainLabel</zorder>

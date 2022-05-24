@@ -50,7 +50,7 @@ background-color:  qlineargradient(spread:pad, x1:0, y1:0, x2:0.731905, y2:0.755
     </property>
     <property name="font">
      <font>
-      <family>Arial</family>
+      <family>Calibri</family>
       <pointsize>12</pointsize>
      </font>
     </property>
@@ -191,8 +191,10 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.731905, y2:0.755,
      </property>
      <property name="font">
       <font>
-       <family>Arial</family>
-       <pointsize>11</pointsize>
+       <family>Calibri</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="text">
@@ -210,8 +212,10 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.731905, y2:0.755,
      </property>
      <property name="font">
       <font>
-       <family>Arial</family>
-       <pointsize>11</pointsize>
+       <family>Calibri</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="text">
