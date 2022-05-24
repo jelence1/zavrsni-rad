@@ -242,7 +242,7 @@ class Ui_Form(object):
 
     def recording(self):
         ispis = "Stream audio: {}\nSave recording: {}\nDuration: {}h{}m{}s".format(
-            self.streamCheck.isChecked(), self.saveCheck.isChecked(), self.hourBox.value(), self.minBox.value(), self.secondBox.value())
+            int(self.streamCheck.isChecked()), int(self.saveCheck.isChecked()), self.hourBox.value(), self.minBox.value(), self.secondBox.value())
         print("recording parameters: " + ispis)
         sys.exit(globals.RECORDING_CODE)
 
