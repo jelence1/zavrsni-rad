@@ -119,8 +119,6 @@ class Ui_Dialog(object):
         self.pushNo.clicked.connect(self.exit)
         self.pushYes.clicked.connect(self.recording)
 
-        self.setMouseTracking(True)
-
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -138,6 +136,13 @@ class Ui_Dialog(object):
     def recording(self):
             sys.exit(globals.RECORDING_CODE)
 
+
+class Dialog(QtWidgets.QWidget, Ui_Dialog):
+    def __init__(self, parent=None):
+        super(Dialog, self).__init__(parent)
+        self.setupUi(self)
+        self.setMouseTracking(True)
+
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
 
@@ -147,11 +152,10 @@ class Ui_Dialog(object):
                 self.move(self.x() + delta.x(), self.y() + delta.y())
                 self.oldPosition = event.globalPos()
 
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
+    w = Dialog()
+    w.show()
     sys.exit(app.exec_())
