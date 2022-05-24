@@ -119,6 +119,8 @@ class Ui_Dialog(object):
         self.pushNo.clicked.connect(self.exit)
         self.pushYes.clicked.connect(self.recording)
 
+        self.setMouseTracking(True)
+
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
