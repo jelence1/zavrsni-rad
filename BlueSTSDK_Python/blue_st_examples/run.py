@@ -33,7 +33,7 @@ def new_main():
 			sys.exit(0)
 
 	q = subprocess.run(["python3", "params_form.py"])
-
+	print("i am here")
 	if q.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
 	
