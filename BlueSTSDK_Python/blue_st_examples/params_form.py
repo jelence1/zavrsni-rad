@@ -261,7 +261,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
                 self.oldPosition = event.globalPos()
 
 
-def main():
+
+if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
