@@ -9,12 +9,17 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt, QPoint
+
+import globals
 
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(500, 400)
+        Dialog.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        Dialog.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.widget = QtWidgets.QWidget(Dialog)
         self.widget.setGeometry(QtCore.QRect(10, 10, 480, 380))
         font = QtGui.QFont()
@@ -110,6 +115,10 @@ class Ui_Dialog(object):
         self.pushYes.setFont(font)
         self.pushYes.setObjectName("pushYes")
 
+        self.exitBtn.clicked.connect(self.exit)
+        self.pushNo.clicked.connect(self.exit)
+        self.pushYes.clicked.connect(self.recording)
+
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -121,6 +130,20 @@ class Ui_Dialog(object):
         self.pushNo.setText(_translate("Dialog", "No"))
         self.pushYes.setText(_translate("Dialog", "Yes"))
 
+    def exit(self):
+            sys.exit(0)
+
+    def recording(self):
+            sys.exit(globals.RECORDING_CODE)
+
+    def mousePressEvent(self, event):
+        self.oldPosition = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() & Qt.LeftButton:
+                delta = QPoint(event.globalPos() - self.oldPosition)
+                self.move(self.x() + delta.x(), self.y() + delta.y())
+                self.oldPosition = event.globalPos()
 
 if __name__ == "__main__":
     import sys

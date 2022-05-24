@@ -9,12 +9,15 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt, QPoint
 
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(500, 400)
+        Dialog.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        Dialog.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.widget = QtWidgets.QWidget(Dialog)
         self.widget.setGeometry(QtCore.QRect(10, 10, 480, 380))
         font = QtGui.QFont()
@@ -73,6 +76,8 @@ class Ui_Dialog(object):
         self.exitBtn.setFont(font)
         self.exitBtn.setObjectName("exitBtn")
 
+        self.exitBtn.clicked.connect(self.exit)
+
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -81,6 +86,19 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p><br/></p><p><br/>This is an interface primarily for audio streaming </p><p>via Bluetooth from the <a href=\"https://www.st.com/en/evaluation-tools/stm32wb5mm-dk.html\"><span style=\" text-decoration: underline; color:#0000ff;\">STM32WB5MM-DK </span></a></p><p><a href=\"https://www.st.com/en/evaluation-tools/stm32wb5mm-dk.html\"><span style=\" text-decoration: underline; color:#0000ff;\">Discovery kit</span></a>.</p><p>For audio editing you need to install additional</p><p>software, such as <a href=\"https://www.audacityteam.org/download/\"><span style=\" text-decoration: underline; color:#0000ff;\">Audacity</span></a>, which is a free, </p><p>open-source software for digital audio </p><p>editing and recording.</p></body></html>"))
         self.exitBtn.setText(_translate("Dialog", "X"))
+
+    def exit(self):
+            sys.exit(0)
+
+    def mousePressEvent(self, event):
+        self.oldPosition = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() & Qt.LeftButton:
+                delta = QPoint(event.globalPos() - self.oldPosition)
+                self.move(self.x() + delta.x(), self.y() + delta.y())
+                self.oldPosition = event.globalPos()
+
 
 
 if __name__ == "__main__":
