@@ -134,6 +134,9 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.setupUi(self)
         self.setMouseTracking(True)
 
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.exit)
+
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
 
@@ -153,8 +156,6 @@ if __name__ == "__main__":
     w = Form()
     w.show()
 
-    timer = QTimer(w)
-    timer.timeout.connect(w.update_gui)
-    timer.start(5000)
+    w.timer.start(5000)
 
     sys.exit(app.exec_())
