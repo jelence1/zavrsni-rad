@@ -22,7 +22,7 @@ def main():
 	ble_thread.join()
 
 def new_main():
-	p = subprocess.run(["python3", "introform.py"])
+	p = subprocess.run(["python3", "intro_form.py"])
 
 	if p.returncode == globals.RECORDING_CODE:
 		print("record, ",globals.RECORDING_CODE)
