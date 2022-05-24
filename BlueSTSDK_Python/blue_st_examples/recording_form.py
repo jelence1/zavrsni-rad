@@ -136,6 +136,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_gui)
+        print(self.timer.interval())
 
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
@@ -147,8 +148,9 @@ class Form(QtWidgets.QWidget, Ui_Form):
                 self.oldPosition = event.globalPos()
 
     def update_gui(self):
+        print(self.timer.interval())
         _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("Form", "time is up!"))
+        self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
 
 
 if __name__ == "__main__":
