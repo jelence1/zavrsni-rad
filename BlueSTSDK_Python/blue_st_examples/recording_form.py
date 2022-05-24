@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QPoint, Qt
+from PyQt5.QtCore import QPoint, Qt, QTimer
 
 import time
 import zmq
@@ -149,13 +149,9 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
     w.show()
-    t1 = time.time()
-    t2 = time.time()
-    while (t2 - t1) < 5:
-            TIME_LEFT = int(5 - (t2 - t1))
-            w.retranslateUi(w)
-            w.show()
-            time.sleep(1)
-            t2 = time.time()
+
+    timer = QTimer(w)
+    timer.timeout.connect(w.retranslateUi)
+    timer.start(5000)
 
     sys.exit(app.exec_())
