@@ -159,6 +159,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
 
     def timerEvent(self, event):
+        print("ovdjejejej")
         if self.m_id == event.timerId():
             self.update_gui()
         super().timerEvent(event)
