@@ -135,7 +135,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.setMouseTracking(True)
 
         self.timer = QTimer()
-        self.timer.timeout.connect(self.exit)
+        self.timer.timeout.connect(self.update_gui)
 
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
@@ -147,7 +147,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
                 self.oldPosition = event.globalPos()
 
     def update_gui(self):
-            self.retranslateUi(self)
+            self.label.setText(self._translate("time is up!"))
 
 
 if __name__ == "__main__":
