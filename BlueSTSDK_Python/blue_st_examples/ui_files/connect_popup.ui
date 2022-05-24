@@ -175,10 +175,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.731905, y2:0.755,
 }</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <widget class="QPushButton" name="pushNo">
      <property name="geometry">
