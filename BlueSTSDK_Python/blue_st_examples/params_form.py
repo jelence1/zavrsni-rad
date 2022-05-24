@@ -11,6 +11,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint, Qt
 
+import sys
+import globals
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -214,6 +217,7 @@ class Ui_Form(object):
         self.gridLayoutWidget.raise_()
 
         self.exitBtn.clicked.connect(self.exit)
+        self.recordBtn.clicked.connect(self.recording)
         self.widget.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0))
 
         self.retranslateUi(Form)
@@ -235,6 +239,9 @@ class Ui_Form(object):
 
     def exit(self):
         sys.exit(0)
+
+    def recording(self):
+        sys.exit(globals.RECORDING_CODE)
 
 
 

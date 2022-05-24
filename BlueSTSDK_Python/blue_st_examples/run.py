@@ -29,9 +29,9 @@ def new_main():
 	elif p.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
 
-	p = subprocess.run(["python3", "params_form.py"])
+	q = subprocess.run(["python3", "params_form.py"])
 
-	if p.returncode != globals.RECORDING_CODE:
+	if q.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
 	
 	print("i rly want to recordddd :))) ")
