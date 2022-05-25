@@ -331,6 +331,7 @@ def terminate(context, socket):
 # its exported features, and let the user get data from those supporting
 # notifications.
 def main(argv):
+    print("ovdje sam")
     
     global n_idx
     ###Audio Stream#####################################################
