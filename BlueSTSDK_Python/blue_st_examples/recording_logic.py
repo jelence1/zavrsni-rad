@@ -162,7 +162,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
     def get_data(self):
         globals.SOCKET_OUT.bind("tcp://*:5555")
-        data = globals.SOCKET_OUT.recv().decode("utf-8")
+        data = globals.SOCKET_OUT.recv_json()
+        print(data)
 
     def make_connection(self):
         message = globals.SOCKET_OUT.recv().decode("utf-8")

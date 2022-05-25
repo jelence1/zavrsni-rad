@@ -251,7 +251,7 @@ class Ui_Form(object):
             "DURATION":to_secs}
 
         globals.SOCKET_BLE.connect("tcp://localhost:5555")
-        json.dump(r, globals.SOCKET_BLE)
+        globals.SOCKET_BLE.send_json(r)
 
         sys.exit(globals.RECORDING_CODE)
 
