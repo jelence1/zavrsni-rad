@@ -42,6 +42,8 @@ def main():
 	return_vals = list(async_result.get().values())
 	data = ",".join([str(ele) for ele in return_vals])
 
+	async_result = pool.apply_async(example_ble_5.main)
+
 	q = subprocess.run(["python3", "recording_logic.py", data])
 
 	
