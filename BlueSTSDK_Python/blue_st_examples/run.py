@@ -34,7 +34,7 @@ def main():
 		print("Exit code: ", p.returncode)
 		sys.exit(p.returncode)
 
-	q = subprocess.run(["python3", "recording_logic.py"])
+	#q = subprocess.run(["python3", "recording_logic.py"])
 
 	
 	
