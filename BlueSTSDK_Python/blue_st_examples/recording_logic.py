@@ -13,7 +13,6 @@ from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer
 
 import zmq
 import time
-import sys
 
 import globals
 
@@ -191,7 +190,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
             self.make_connection(self)
 
 
-def main():
+if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     w = Form()

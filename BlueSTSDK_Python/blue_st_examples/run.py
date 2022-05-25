@@ -26,8 +26,7 @@ def main():
 			sys.exit(p.returncode)
 
 	p = subprocess.run(["python3", "params_form.py"])
-	b = threading.Thread(target=recording_logic.main)
-	b.start()
+	q = subprocess.run(["python3", "recording_logic.py"])
 
 	if p.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)

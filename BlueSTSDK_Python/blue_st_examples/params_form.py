@@ -280,3 +280,5 @@ def main():
     w = Form()
     w.show()
     sys.exit(app.exec_())
+
+main()
