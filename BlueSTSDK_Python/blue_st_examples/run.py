@@ -14,6 +14,7 @@ import globals
 def main():
 	# globals.SOCKET_BLE.connect("tcp://localhost:5555")
 	# globals.SOCKET_OUT.bind("tcp://*:5555")
+	globals.SOCKET_OUT.bind("tcp://*:5555")
 
 	p = subprocess.run(["python3", "intro_form.py"])
 
@@ -26,6 +27,8 @@ def main():
 			sys.exit(p.returncode)
 
 	p = subprocess.run(["python3", "params_form.py"])
+
+	msg = globals.SOCKET_OUT.recv_json()
 
 	if p.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
