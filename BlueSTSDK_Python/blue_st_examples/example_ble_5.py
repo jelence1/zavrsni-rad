@@ -372,7 +372,7 @@ def main(argv):
 
             # Listing discovered devices.
             if not devices:
-                terminate(SOCKET, CONTEXT)
+                terminate(context=CONTEXT, socket=SOCKET)
             
             # Selecting a device.
             device = devices[0]
@@ -381,7 +381,7 @@ def main(argv):
             node_listener = MyNodeListener()
             device.add_listener(node_listener)
             if not device.connect():
-                terminate(SOCKET, CONTEXT)
+                terminate(socket=SOCKET, context=CONTEXT)
                 
             SOCKET.send(("SUCCESS").encode("utf-8"))
             received = SOCKET.recv().decode("utf-8")
