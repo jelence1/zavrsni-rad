@@ -250,9 +250,6 @@ class Ui_Form(object):
             "SAVE":int(self.saveCheck.isChecked()),
             "DURATION":to_secs}
 
-        import connect_popup
-        connect_popup.main(r)
-        
         sys.exit(globals.RECORDING_CODE)
 
 
