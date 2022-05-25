@@ -161,16 +161,20 @@ class Form(QtWidgets.QWidget, Ui_Form):
         super().timerEvent(event)
 
     def get_data(self, r):
-        data = r.split(",")
-        print("my data ", r)
+        self.data = r
 
     def make_connection(self):
         message = globals.SOCKET_OUT.recv().decode("utf-8")
-        if "?" in message:
-            globals.SOCKET_OUT.send(input().encode("utf-8"))
+        if "SUCCESS" in message:
+            globals.SOCKET_OUT.send(self.data.encode("utf-8"))
             self.make_connection(self)
 
-        elif "$" in message:
+        elif "STREAMING" in message:
+            globals.SOCKET_OUT.send(str().encode("utf-8"))
+            _translate = QtCore.QCoreApplication.translate
+            self.label.setText(_translate("Form", "<html><head/><body><p>Streaming has started!</p></body></html>"))
+
+        else:
             globals.SOCKET_OUT.send(str().encode("utf-8"))
             globals.SOCKET_OUT.close()
             globals.CONTEXT_OUT.term()
@@ -179,15 +183,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
             self.label.setText(_translate("Form", "<html><head/><body><p>There's something wrong with the connection.</p><p>Check the microcontroller's activity.</p><p>The application will now shut down.</p></body></html>"))
             time.sleep(5000)
             sys.exit(0)
-        elif "Streaming started!" in message:
-            globals.SOCKET_OUT.send(str().encode("utf-8"))
-            return 
-            _translate = QtCore.QCoreApplication.translate
-            self.label.setText(_translate("Form", "<html><head/><body><p>Streaming has started!</p></body></html>"))
-        else:
-            globals.SOCKET_OUT.send(str().encode("utf-8"))
-            self.make_connection(self)
 
+        
 
 if __name__ == "__main__":
     import sys

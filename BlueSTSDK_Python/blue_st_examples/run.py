@@ -41,16 +41,22 @@ def main():
 
 	return_vals = list(async_result.get().values())
 	data = ",".join([str(ele) for ele in return_vals])
-	print(data)
 
-	#q = subprocess.run(["python3", "recording_logic.py", data])
+	q = subprocess.run(["python3", "recording_logic.py", data])
 
 	
-	
+def main2():
+	import output
+	output_thread = threading.Thread(target=output.main)
+	ble_thread = threading.Thread(target=example_ble_5.main, args=(1,))
+
+	output_thread.start()
+	ble_thread.start()
+	ble_thread.join()
 
 if __name__ == "__main__":
 	try:
-		main()
+		main2()
 	except KeyboardInterrupt:
 		print("Shutting down...")
 		sys.exit(0)

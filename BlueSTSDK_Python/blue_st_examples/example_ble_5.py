@@ -139,9 +139,16 @@ beamforming_feature = None
 beamforming_flag = 0;
 
 # Connection to server.
-CONTEXT = zmq.Context()
-SOCKET = CONTEXT.socket(zmq.REQ)
-SOCKET.connect("tcp://localhost:5555")
+# CONTEXT = zmq.Context()
+# SOCKET = CONTEXT.socket(zmq.REQ)
+# SOCKET.connect("tcp://localhost:5555")
+
+import globals
+CONTEXT = globals.CONTEXT_BLE
+SOCKET = globals.SOCKET_BLE
+
+# Audio stream flag
+audio_stream_flag = 0
 
 # FUNCTIONS
 
@@ -166,6 +173,7 @@ class MyManagerListener(ManagerListener):
     # @param enabled True if a new discovery starts, False otherwise.
     #
     def on_discovery_change(self, manager, enabled):
+        return
         global SOCKET
         SOCKET.send(('Discovery %s.' % ('started' if enabled else 'stopped')).encode("utf-8"))
         SOCKET.recv()
@@ -180,6 +188,7 @@ class MyManagerListener(ManagerListener):
     # @param node    New node discovered.
     #
     def on_node_discovered(self, manager, node):
+        return
         global SOCKET
         SOCKET.send(('New device discovered: %s.' % (node.get_name())).encode("utf-8"))
         SOCKET.recv()
@@ -197,8 +206,10 @@ class MyNodeListener(NodeListener):
     # @param node Node that has connected to a host.
     #
     def on_connect(self, node):
+        return
         global SOCKET
-        SOCKET.send(('Device %s connected.' % (node.get_name())).encode("utf-8"))
+        #SOCKET.send(('Device %s connected.' % (node.get_name())).encode("utf-8"))
+        SOCKET.send("CONNECTED".encode("utf-8"))
         SOCKET.recv()
 
     #
@@ -209,8 +220,10 @@ class MyNodeListener(NodeListener):
     #                   (called by the user).
     #
     def on_disconnect(self, node, unexpected=False):
+        return
         global SOCKET
-        SOCKET.send(('Device {} disconnected{}.'.format(node.get_name(), ' unexpectedly' if unexpected else '')).encode("utf-8"))
+        #SOCKET.send(('Device {} disconnected{}.'.format(node.get_name(), ' unexpectedly' if unexpected else '')).encode("utf-8"))
+        SOCKET.send("DISCONNECTED".encode("utf-8"))
         SOCKET.recv()
 
 
@@ -235,17 +248,21 @@ class MyFeatureListener(FeatureListener):
         global audioFile
         global save_audio_flag
         ###Save Audio File##############################################
+        ###Audio Stream###
+        global audio_stream_flag
+        ###Audio Stream###
         if isinstance(feature,FeatureAudioADPCM):
             shortData = sample._data
             if len(shortData) != 0:
                 for d in shortData:
                     byteData = LittleEndian.int16_to_bytes(d)
                     ###Save Audio File######################################
-                    if save_audio_flag == 'y' or save_audio_flag == 'Y':
+                    if save_audio_flag == 1:
                         audioFile.write(byteData)
                     ###Save Audio File######################################
                     ###Audio Stream#########################################
-                    stream.write(byteData)
+                    if audio_stream_flag == 1:
+                        stream.write(byteData)
                     ###Audio Stream#########################################
                 n_idx += 1
         elif isinstance(feature,FeatureAudioOpus):
@@ -253,11 +270,12 @@ class MyFeatureListener(FeatureListener):
                 byteData = sample._data
                 if byteData is not None and len(byteData) != 0:
                     ###Save Audio File######################################
-                    if save_audio_flag == 'y' or save_audio_flag == 'Y':
+                    if save_audio_flag == 1:
                         audioFile.write(byteData)
                     ###Save Audio File######################################
                     ###Audio Stream#########################################
-                    stream.write(byteData)
+                    if audio_stream_flag == 1:
+                        stream.write(byteData)
                     ###Audio Stream#########################################
                     n_idx += 1
 
@@ -279,7 +297,8 @@ class MyFeatureListenerSync(FeatureListener):
             if isinstance(feature, FeatureAudioADPCMSync):
                 audio_feature.set_audio_sync_parameters(sample)
             elif isinstance(feature, FeatureAudioOpusConf):
-                global SOCKET
+                return
+                #global SOCKET
                 #with open(OUTPUT_PATH, "w") as output_file:
                 #    output_file.write("command message received: " + str(sample))  
                 
@@ -292,12 +311,20 @@ class MyFeatureListenerBeam(FeatureListener):
     # @param sample  Data extracted from the feature.
     #
     def on_update(self, feature, sample):
+        return
         global beamforming_feature
         if beamforming_feature is not None:
             global SOCKET
             SOCKET.send(beamforming_feature.encode("utf-8"))
             SOCKET.recv()
                 
+def terminate(context, socket):
+    socket.send("$".encode("utf-8"))
+    socket.recv().decode("utf-8")
+    socket.close()
+    context.term()
+    sys.exit(0)
+
 # MAIN APPLICATION
 
 # This application example connects to a Bluetooth Low Energy device, retrieves
@@ -324,19 +351,20 @@ def main(argv):
     global SOCKET
     ###TCP Connection###########################################
     
+    ###Audio Stream###
+    global audio_stream_flag
+    ###Audio Stream###
+
     # Printing intro.
-    print_intro(SOCKET)
+    #print_intro(SOCKET)
     
     try:
         # Creating Bluetooth Manager.
-        manager = Manager.instance()
-        manager_listener = MyManagerListener()
-        manager.add_listener(manager_listener)
+            manager = Manager.instance()
+            manager_listener = MyManagerListener()
+            manager.add_listener(manager_listener)
 
-        while True:
-            # Synchronous discovery of Bluetooth devices.
-            SOCKET.send(('Scanning Bluetooth devices...\n').encode("utf-8"))
-            SOCKET.recv()
+        #while True:
             manager.discover(SCANNING_TIME_s)
 
             # Getting discovered devices.
@@ -344,61 +372,23 @@ def main(argv):
 
             # Listing discovered devices.
             if not devices:
-                SOCKET.send(('No Bluetooth devices found. Exiting...\n').encode("utf-8"))
-                SOCKET.recv()
-                SOCKET.send("$".encode("utf-8"))
-                SOCKET.recv()
-                SOCKET.close()
-                CONTEXT.term()
-                sys.exit(0)
+                terminate(SOCKET, CONTEXT)
             
-            SOCKET.send_string('Available Bluetooth devices:')
-            i = 1
-            '''if len(devices) > 0:
-                SOCKET.recv()
-                SOCKET.send(('%d) %s: [%s]' % (i, devices[0].get_name(), devices[0].get_tag())).encode("utf-8"))
-                SOCKET.recv()'''
-            
-            for device in devices:
-                SOCKET.recv()
-                SOCKET.send(('%d) %s: [%s]' % (i, device.get_name(), device.get_tag())).encode("utf-8"))
-                SOCKET.recv()
-                i += 1
-
             # Selecting a device.
-            while True:
-                SOCKET.send(("\nWhich device do you want to connect to? (Enter a number, \'0\' to quit) ").encode("utf-8"))
-                choice = int(SOCKET.recv().decode("utf-8"))
-                if choice >= 0 and choice <= len(devices):
-                    break
-            if choice == 0:
-                # Exiting.
-                manager.remove_listener(manager_listener)
-                SOCKET.send(("Exiting...").encode("utf-8"))
-                SOCKET.recv()
-                SOCKET.send(("$").encode("utf-8"))
-                SOCKET.recv()
-                SOCKET.close()
-                CONTEXT.term()
-                sys.exit(0)
-            device = devices[choice - 1]
+            device = devices[0]
             
             # Connecting to the device.
             node_listener = MyNodeListener()
             device.add_listener(node_listener)
-            SOCKET.send(('Connecting to %s...' % (device.get_name())).encode("utf-8"))
-            SOCKET.recv()
             if not device.connect():
-                SOCKET.send(('Connection failed.\n').encode("utf-8"))
-                SOCKET.recv()
-                continue
+                terminate(SOCKET, CONTEXT)
                 
-            SOCKET.send(('Connection done.').encode("utf-8"))
-            SOCKET.recv() 
+            SOCKET.send(("SUCCESS").encode("utf-8"))
+            received = SOCKET.recv().decode("utf-8")
+            params = [int(ele) for ele in received.split(",")] #STREAM, SAVE, DURATION
 
             has_audio_adpcm_features = [False,False]
             has_audio_opus_features = [False,False]
-            has_beamforming_feature = False
 
             i = 1
             features = device.get_features()
@@ -417,18 +407,13 @@ def main(argv):
                     has_audio_opus_features[1] = True
                 elif isinstance(feature,FeatureBeamforming):
                     beamforming_feature = feature
-                    has_beamforming_feature = True
                 i += 1
             
             if all(has_audio_adpcm_features) or all(has_audio_opus_features):
-                while True:
-                    SOCKET.send(('\nDo you want to save the audio stream?'
-                                            '\'y\' - Yes, \'n\' - No (\'0\' to quit): ').encode("utf-8"))
-                    save_audio_flag = SOCKET.recv().decode("utf-8")
+                    save_audio_flag = params[1]
                     
-                    if save_audio_flag == 'y' or save_audio_flag == 'Y' or \
-                        save_audio_flag == 'n' or save_audio_flag == 'N':
-                        if save_audio_flag == 'y' or save_audio_flag == 'Y':
+                    if save_audio_flag is not None:
+                        if save_audio_flag == 1:
                             ts = time.time()
                             st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
                             if not os.path.exists(AUDIO_DUMPS_PATH):
@@ -439,14 +424,8 @@ def main(argv):
                                 fileName = AUDIO_DUMPS_PATH + st + OPUS_TAG + AUDIO_DUMP_SUFFIX
                             audioFile = open(fileName,"wb+")
                         
-                        if(has_beamforming_feature):
-                            SOCKET.send(('\nDo you want to enable beamforming?'
-                                             '\'y\' - Yes, \'n\' - No (\'0\' to quit): ').encode("utf-8"))
-                            beamforming_flag = SOCKET.recv().decode("utf-8")
                         
-                        SOCKET.send(('\nHow many seconds do you want to stream?'
-                                                      ' Value must be > 0 (\'0\' to quit): ').encode("utf-8"))
-                        number_of_seconds = int(SOCKET.recv().decode("utf-8"))
+                        number_of_seconds = params[2]
                         
                         if all(has_audio_adpcm_features):
                             number_of_notifications = number_of_seconds * NPS_ADPCM
@@ -454,7 +433,7 @@ def main(argv):
                             number_of_notifications = number_of_seconds * NPS_OPUS
 
                         if number_of_seconds > 0:
-                            SOCKET.send(("Streaming Started!").encode("utf-8"))
+                            SOCKET.send(("STREAMING").encode("utf-8"))
                             SOCKET.recv()
                             
                             if all(has_audio_adpcm_features):
@@ -495,114 +474,35 @@ def main(argv):
                                     audio_feature.add_listener(audio_feature_listener)
                                     device.enable_notifications(audio_feature)
                             
-                            if beamforming_flag == 'y' or beamforming_flag == 'Y' or \
-                                beamforming_flag == 'n' or beamforming_flag == 'N':
-                                if beamforming_flag == 'y' or beamforming_flag == 'Y':
-                                    beamforming_feature_listener = MyFeatureListenerBeam()
-                                    beamforming_feature.add_listener(beamforming_feature_listener)
-                                    device.enable_notifications(beamforming_feature)
-                                    device.send_command(b"\x00\x00\x08\x00\xAA\x01")
-                                    SOCKET.send_string("Beamforming Enabled")
-                            
                             n_idx = 0
                             while n_idx < number_of_notifications:
                                 device.wait_for_notifications(0.05)
                                     
-                            return
-                            SOCKET.send(("End of Streaming!").encode("utf-8"))
-                            SOCKET.recv()
+
+                        
+                            #SOCKET.send(("End of Streaming!").encode("utf-8"))
+                            #SOCKET.recv()
                             # Disabling notifications.
                             device.disable_notifications(audio_feature)
                             audio_feature.remove_listener(audio_feature_listener)
                             device.disable_notifications(audio_sync_feature)
                             audio_sync_feature.remove_listener(audio_sync_feature_listener)
-                            if beamforming_flag == 'y' or beamforming_flag == 'Y':
-                                device.send_command(b"\x00\x00\x08\x00\xAA\x00")
-                                SOCKET.send(("Beamforming Disabled").encode("utf-8"))
-                                SOCKET.recv()
-                                device.disable_notifications(beamforming_feature)
-                                beamforming_feature.remove_listener(beamforming_feature_listener)
+                            
                             ###Save Audio File##################################
-                            if save_audio_flag == 'y' or save_audio_flag == 'Y':
+                            if save_audio_flag == 1:
                                 audioFile.close()
                             ###Save Audio File##################################
                             ###Audio Stream#####################################
                             stream.close()
                             ###Audio Stream#####################################
-                        elif number_of_seconds == 0:
-                            # Disabling notifications.
-                            if audio_feature.is_notifying():
-                                device.disable_notifications(audio_feature)
-                                audio_feature.remove_listener(audio_feature_listener)
-                            if audio_sync_feature.is_notifying():
-                                device.disable_notifications(audio_sync_feature)
-                                audio_sync_feature.remove_listener(audio_sync_feature_listener)
-                            if beamforming_flag == 'y' or beamforming_flag == 'Y':
-                                if beamforming_feature.is_notifying():
-                                    device.disable_notifications(beamforming_feature)
-                                    beamforming_feature.remove_listener(beamforming_feature_listener)
-                            ###Save Audio File##################################
-                            if save_audio_flag == 'y' or save_audio_flag == 'Y':
-                                audioFile.close()
-                            ###Save Audio File##################################
-                            # Disconnecting from the device.
-                            SOCKET.send(('\nDisconnecting from %s...' % (device.get_name())).encode("utf-8"))
-                            SOCKET.recv()
-                            device.disconnect()
-                            SOCKET.send(('Disconnection done.').encode("utf-8"))
-                            SOCKET.recv()
-                            device.remove_listener(node_listener)
-                            # Reset discovery.
-                            manager.reset_discovery()
-                            # Going back to the list of devices.
-                            break
-                    elif save_audio_flag == '0':
-                        # Disconnecting from the device.
-                        SOCKET.send(('\nDisconnecting from %s...' % (device.get_name())).encode("utf-8"))
-                        SOCKET.recv()
-                        device.disconnect()
-                        SOCKET.send(('Disconnection done.').encode("utf-8"))
-                        SOCKET.recv()
-                        device.remove_listener(node_listener)
-                        # Reset discovery.
-                        manager.reset_discovery()
-                        # Going back to the list of devices.
-                        break
-            else:
-                SOCKET.send(("No Audio Features are Exposed from your BLE Node!".encode("utf-8")))
-                SOCKET.recv()
-                while True:
-                    SOCKET.send(('\nWant to restart scanning for BLE devices? Press \'1\'(\'0\' to quit) '.encode("utf-8")))
-                    restartDiscovery = int(SOCKET.recv().decode("utf-8"))
-                    if restartDiscovery == 1:
-                        # Reset discovery.
-                        manager.reset_discovery()
-                        break;
-                    elif restartDiscovery == 0:
-                        # Exiting.
-                        SOCKET.send(('\nExiting...\n').encode("utf-8"))
-                        SOCKET.recv()
-                        SOCKET.send(("$").encode("utf-8"))
-                        SOCKET.recv()
-                        SOCKET.close()
-                        CONTEXT.term()
-                        sys.exit(0)
+                        
                         
     except KeyboardInterrupt:
         try:
             # Exiting.
-            SOCKET.send(('\nExiting...\n').encode("utf-8"))
-            SOCKET.recv()
-            SOCKET.send(("$").encode("utf-8"))
-            SOCKET.recv()
-            SOCKET.close()
-            CONTEXT.term()
-            sys.exit(0)
+            terminate(context=CONTEXT, socket=SOCKET)
         except SystemExit:
-            SOCKET.send(("$").encode("utf-8"))
-            SOCKET.recv()
-            SOCKET.close()
-            CONTEXT.term()
+            terminate(context=CONTEXT, socket=SOCKET)
             os._exit(0)
 
 
