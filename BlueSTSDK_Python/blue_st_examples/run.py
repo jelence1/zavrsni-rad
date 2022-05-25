@@ -9,8 +9,8 @@ import globals
 
 
 def main():
-	globals.SOCKET_BLE.connect("tcp://localhost:5555")
-	globals.SOCKET_OUT.bind("tcp://*:5555")
+	# globals.SOCKET_BLE.connect("tcp://localhost:5555")
+	# globals.SOCKET_OUT.bind("tcp://*:5555")
 
 	p = subprocess.run(["python3", "intro_form.py"])
 

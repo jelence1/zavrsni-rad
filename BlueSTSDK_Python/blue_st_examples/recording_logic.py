@@ -161,6 +161,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         super().timerEvent(event)
 
     def get_data(self):
+        globals.SOCKET_OUT.bind("tcp://*:5555")
         data = globals.SOCKET_OUT.recv().decode("utf-8")
 
     def make_connection(self):
