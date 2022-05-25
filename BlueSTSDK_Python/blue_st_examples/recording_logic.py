@@ -164,7 +164,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
         super().timerEvent(event)
 
     def get_data(self, r):
-        self.data = r #stream, save, duration
+        self.data = r
+        r = r.split(",") #stream, save, duration
         if int(r[0]) == 0:
             self.stream = "No"
         else:
