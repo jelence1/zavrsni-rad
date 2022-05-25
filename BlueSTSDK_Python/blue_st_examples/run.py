@@ -28,6 +28,7 @@ def main():
 
 	p = subprocess.run(["python3", "params_form.py"])
 	a = threading.Thread(target=pipe.main)
+	a.start()
 
 	if p.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
