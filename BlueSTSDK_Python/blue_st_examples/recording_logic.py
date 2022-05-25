@@ -207,7 +207,7 @@ if __name__ == "__main__":
     w.get_data(sys.argv[1])
     
     w.show()
-    #w.make_connection()
+    w.make_connection()
 
     w.timer.start(w.duration*1000)
     w.basic.start(1000, w)
