@@ -29,13 +29,16 @@ def main():
 	
 	a = threading.Thread(target=pipe.main)
 	a.start()
+
 	p = subprocess.run(["python3", "params_form.py"])
 
 	if p.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
 		sys.exit(p.returncode)
 
-	q = subprocess.run(["python3", "recording_logic.py"])
+	print(a.is_alive())
+
+	#q = subprocess.run(["python3", "recording_logic.py"])
 
 	
 	
