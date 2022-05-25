@@ -9,12 +9,12 @@ import example_ble_5
 import params_form
 import recording_logic
 import globals
+import pipe
 
 
 def main():
 	# globals.SOCKET_BLE.connect("tcp://localhost:5555")
 	# globals.SOCKET_OUT.bind("tcp://*:5555")
-	globals.SOCKET_OUT.bind("tcp://*:5555")
 
 	p = subprocess.run(["python3", "intro_form.py"])
 
@@ -27,8 +27,7 @@ def main():
 			sys.exit(p.returncode)
 
 	p = subprocess.run(["python3", "params_form.py"])
-
-	msg = globals.SOCKET_OUT.recv_json()
+	a = threading.Thread(target=pipe.main)
 
 	if p.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
