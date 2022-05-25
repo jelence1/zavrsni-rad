@@ -508,6 +508,7 @@ def main(argv):
                             while n_idx < number_of_notifications:
                                 device.wait_for_notifications(0.05)
                                     
+                            return
                             SOCKET.send(("End of Streaming!").encode("utf-8"))
                             SOCKET.recv()
                             # Disabling notifications.

@@ -250,6 +250,8 @@ class Ui_Form(object):
             "SAVE":int(self.saveCheck.isChecked()),
             "DURATION":to_secs}
 
+        json.dump(r, globals.SOCKET_BLE)
+
         sys.exit(globals.RECORDING_CODE)
 
 

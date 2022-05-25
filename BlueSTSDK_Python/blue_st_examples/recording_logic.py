@@ -11,8 +11,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer
 
-import time
 import zmq
+import time
 
 import globals
 
@@ -94,15 +94,14 @@ class Ui_Form(object):
         self.exitBtn = QtWidgets.QPushButton(self.widget)
         self.exitBtn.setGeometry(QtCore.QRect(690, 30, 31, 31))
         font = QtGui.QFont()
-        font.setFamily("Arial Rounded MT Bold")
+        font.setFamily("Calibri")
         font.setPointSize(14)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(50)
         self.exitBtn.setFont(font)
         self.exitBtn.setObjectName("exitBtn")
         self.label = QtWidgets.QLabel(self.widget)
-        self.label.setGeometry(QtCore.QRect(80, 250, 331, 61))
+        self.label.setGeometry(QtCore.QRect(70, 250, 621, 251))
+        self.label.setFont(font)
+        self.label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.label.setObjectName("label")
         self.mainLabel.raise_()
         self.micLabel.raise_()
@@ -122,7 +121,7 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
-        self.label.setText(_translate("Form", "Time left: {}".format(DURATION)))
+        self.label.setText(_translate("Form", "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"))
 
     def exit(self):
         sys.exit(0)
@@ -138,16 +137,15 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.timer.timeout.connect(self.finished)
 
         self.basic = QBasicTimer()
-        self.basic.start(1000, self)
 
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
 
     def mouseMoveEvent(self, event):
         if event.buttons() & Qt.LeftButton:
-                delta = QPoint(event.globalPos() - self.oldPosition)
-                self.move(self.x() + delta.x(), self.y() + delta.y())
-                self.oldPosition = event.globalPos()
+            delta = QPoint(event.globalPos() - self.oldPosition)
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.oldPosition = event.globalPos()
 
     def update_gui(self):
         _translate = QtCore.QCoreApplication.translate
@@ -162,13 +160,45 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.update_gui()
         super().timerEvent(event)
 
+    def get_data(self):
+        data = globals.SOCKET_OUT.recv().decode("utf-8")
+
+    def make_connection(self):
+        message = globals.SOCKET_OUT.recv().decode("utf-8")
+        if "?" in message:
+            globals.SOCKET_OUT.send(input().encode("utf-8"))
+            self.make_connection(self)
+
+        elif "$" in message:
+            globals.SOCKET_OUT.send(str().encode("utf-8"))
+            globals.SOCKET_OUT.close()
+            globals.CONTEXT_OUT.term()
+            
+            _translate = QtCore.QCoreApplication.translate
+            self.label.setText(_translate("Form", "<html><head/><body><p>There's something wrong with the connection.</p><p>Check the microcontroller's activity.</p><p>The application will now shut down.</p></body></html>"))
+            time.sleep(5000)
+            sys.exit(0)
+        elif "Streaming started!" in message:
+            globals.SOCKET_OUT.send(str().encode("utf-8"))
+            return 
+            _translate = QtCore.QCoreApplication.translate
+            self.label.setText(_translate("Form", "<html><head/><body><p>Streaming has started!</p></body></html>"))
+        else:
+            globals.SOCKET_OUT.send(str().encode("utf-8"))
+            self.make_connection(self)
+
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
+
+    w.get_data()
+    
     w.show()
+    #w.make_connection()
 
     w.timer.start(DURATION*1000)
+    w.basic.start(1000, w)
 
     sys.exit(app.exec_())

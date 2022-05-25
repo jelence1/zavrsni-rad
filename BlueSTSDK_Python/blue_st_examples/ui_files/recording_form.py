@@ -93,7 +93,12 @@ class Ui_Form(object):
         self.exitBtn.setFont(font)
         self.exitBtn.setObjectName("exitBtn")
         self.label = QtWidgets.QLabel(self.widget)
-        self.label.setGeometry(QtCore.QRect(80, 250, 331, 61))
+        self.label.setGeometry(QtCore.QRect(70, 250, 621, 251))
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(14)
+        self.label.setFont(font)
+        self.label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.label.setObjectName("label")
         self.mainLabel.raise_()
         self.micLabel.raise_()
@@ -110,7 +115,7 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
-        self.label.setText(_translate("Form", "Ovdje će biti upisan tekst koji se šalje. "))
+        self.label.setText(_translate("Form", "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"))
 
 
 if __name__ == "__main__":
