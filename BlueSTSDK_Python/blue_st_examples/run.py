@@ -56,7 +56,7 @@ def main2():
 
 if __name__ == "__main__":
 	try:
-		main2()
+		main()
 	except KeyboardInterrupt:
 		print("Shutting down...")
 		sys.exit(0)
