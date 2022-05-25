@@ -163,7 +163,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
     def get_data(self):
         globals.SOCKET_BLE.connect("tcp://localhost:5555")
         data = globals.SOCKET_BLE.recv_json()
-        print(data)
+        print("my data ", data)
 
     def make_connection(self):
         message = globals.SOCKET_OUT.recv().decode("utf-8")
