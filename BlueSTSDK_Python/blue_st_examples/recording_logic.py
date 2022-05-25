@@ -193,7 +193,8 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
 
-    w.get_data(sys.argv[2])
+    print(sys.argv)
+    #w.get_data(sys.argv[2])
     
     w.show()
     #w.make_connection()
