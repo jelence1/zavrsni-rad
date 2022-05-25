@@ -160,7 +160,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.update_gui()
         super().timerEvent(event)
 
-    def get_data(r):
+    def get_data(self, r):
         data = r.split(",")
         print("my data ", r)
 
