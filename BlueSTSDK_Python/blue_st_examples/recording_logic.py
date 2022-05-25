@@ -149,7 +149,10 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
     def update_gui(self):
         _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("Form", "Time left: {}".format(self.timer.remainingTime()//1000)))
+        self.label.setText(_translate("Form", '''<html><head/><body><p>Streaming has started!</p>
+        <p>Streaming enabled: {}</p>
+        <p>Audio will be saved: {}</p>
+        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)))
 
     def finished(self):
         self.basic.stop()
@@ -161,7 +164,16 @@ class Form(QtWidgets.QWidget, Ui_Form):
         super().timerEvent(event)
 
     def get_data(self, r):
-        self.data = r
+        self.data = r #stream, save, duration
+        if int(r[0]) == 0:
+            self.stream = "No"
+        else:
+            self.stream = "Yes"
+        if int(r[1]) == 0:
+            self.save = "No"
+        else:
+            self.save = "Yes"
+        self.duration = int(r[2])
 
     def make_connection(self):
         message = globals.SOCKET_OUT.recv().decode("utf-8")
@@ -171,7 +183,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
         elif "STREAMING" in message:
             globals.SOCKET_OUT.send(str().encode("utf-8"))
-            _translate = QtCore.QCoreApplication.translate
+            self.update_gui()
             self.label.setText(_translate("Form", "<html><head/><body><p>Streaming has started!</p></body></html>"))
 
         else:
@@ -196,7 +208,7 @@ if __name__ == "__main__":
     w.show()
     #w.make_connection()
 
-    w.timer.start(DURATION*1000)
+    w.timer.start(w.duration*1000)
     w.basic.start(1000, w)
 
     sys.exit(app.exec_())
