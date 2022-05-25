@@ -3,6 +3,9 @@ import sys
 import subprocess
 import threading
 
+from multiprocessing.pool import ThreadPool
+
+
 
 # USER IMPORTS
 import example_ble_5
@@ -27,8 +30,8 @@ def main():
 			sys.exit(p.returncode)
 
 	
-	a = threading.Thread(target=pipe.main)
-	a.start()
+	pool = ThreadPool(processes=1)
+	async_result = pool.apply_async(pipe.main)
 
 	p = subprocess.run(["python3", "params_form.py"])
 
@@ -36,8 +39,8 @@ def main():
 		print("Exit code: ", p.returncode)
 		sys.exit(p.returncode)
 
-	print(a.is_alive())
-
+	return_val = async_result.get()
+	print(return_val)
 	#q = subprocess.run(["python3", "recording_logic.py"])
 
 	
