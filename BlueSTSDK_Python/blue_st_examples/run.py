@@ -1,10 +1,15 @@
 # LIBRARY IMPORTS
+from distutils.util import subst_vars
 import sys
 import subprocess
+import threading
+
+from sympy import python
 
 # USER IMPORTS
 import example_ble_5
-import output
+import params_form
+import recording_logic
 import globals
 
 
@@ -22,8 +27,9 @@ def main():
 			print("Exit code: ", p.returncode)
 			sys.exit(p.returncode)
 
-	p = subprocess.run(["python3", "params_form.py"])
-	q = subprocess.run(["python3", "recording_logic.py"])
+	p = subprocess.run(["python3", "params.form.py"])
+	b = threading.Thread(target=recording_logic.main)
+	b.start()
 
 	if p.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
