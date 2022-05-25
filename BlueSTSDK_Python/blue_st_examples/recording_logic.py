@@ -161,6 +161,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         super().timerEvent(event)
 
     def get_data(r):
+        data = r.split(",")
         print("my data ", r)
 
     def make_connection(self):
@@ -193,8 +194,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
 
-    print(sys.argv)
-    #w.get_data(sys.argv[2])
+    w.get_data(sys.argv[1])
     
     w.show()
     #w.make_connection()

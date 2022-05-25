@@ -40,8 +40,9 @@ def main():
 		sys.exit(p.returncode)
 
 	return_val = async_result.get()
+	data = str(return_val.values())
 
-	q = subprocess.run(["python3", "recording_logic.py", str(return_val)])
+	q = subprocess.run(["python3", "recording_logic.py", data])
 
 	
 	
