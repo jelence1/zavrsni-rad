@@ -365,15 +365,14 @@ def main(argv):
             manager.add_listener(manager_listener)
 
         #while True:
-            print("ovdje")
             manager.discover(SCANNING_TIME_s)
-            print("proskenirao sam")
 
             # Getting discovered devices.
             devices = manager.get_nodes()
 
             # Listing discovered devices.
             if not devices:
+                print("u ovoj sam funkciji")
                 terminate(context=CONTEXT, socket=SOCKET)
             
             # Selecting a device.
