@@ -274,11 +274,9 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
 
 
-def main():
+if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
     w.show()
     sys.exit(app.exec_())
-
-main()
