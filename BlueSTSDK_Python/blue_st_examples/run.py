@@ -1,10 +1,8 @@
 # LIBRARY IMPORTS
-from distutils.util import subst_vars
 import sys
 import subprocess
 import threading
 
-from sympy import python
 
 # USER IMPORTS
 import example_ble_5
