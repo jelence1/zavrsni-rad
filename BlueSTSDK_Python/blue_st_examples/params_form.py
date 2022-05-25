@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint, Qt
+from PyQt5.QtWidgets import QMessageBox
 
 import sys
 import json
@@ -243,14 +244,15 @@ class Ui_Form(object):
         sys.exit(0)
 
     def recording(self):
+        
         to_secs = self.hourBox.value()*60*60 + self.minBox.value()*60 + self.secondBox.value()
         r = {"STREAM":int(self.streamCheck.isChecked()),
             "SAVE":int(self.saveCheck.isChecked()),
             "DURATION":to_secs}
 
-        # SOCKET.bind
-        # json.dump(r, globals.)
-
+        import connect_popup
+        connect_popup.main(r)
+        
         sys.exit(globals.RECORDING_CODE)
 
 

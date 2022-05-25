@@ -19,13 +19,16 @@ def main():
 			print("Exit code: ", p.returncode)
 			sys.exit(p.returncode)
 
-	q = subprocess.run(["python3", "params_form.py"])
+	p = subprocess.run(["python3", "params_form.py"])
+
+	# if p.returncode != globals.RECORDING_CODE:
+	# 	print("Exit code: ", p.returncode)
+	# 	sys.exit(p.returncode)
+	
+	q = subprocess.run(["python3", "connect_popup.py"])
 
 	if q.returncode != globals.RECORDING_CODE:
-		print("Exit code: ", p.returncode)
-		sys.exit(p.returncode)
-	
-	print("i rly want to recordddd :))) ")
+		pass
 
 if __name__ == "__main__":
 	try:

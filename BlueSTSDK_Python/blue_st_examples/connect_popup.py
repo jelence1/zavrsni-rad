@@ -9,7 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtCore import Qt, QPoint, QSize
+
+import sys
 
 import globals
 
@@ -18,6 +20,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(500, 400)
+        print("ovdje sam")
         Dialog.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         Dialog.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.widget = QtWidgets.QWidget(Dialog)
@@ -121,7 +124,7 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, Dialog): 
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.mainLabel.setText(_translate("Dialog", "<html><head/><body><p><br/>You are about to start the connection to the STM32</p><p>via Bluetooth and start recording. Check if the</p><p>parameters you selected are correct, as they can\'t</p><p>be changed later.</p><p>Are you sure you want to start the connection?</p></body></html>"))
@@ -136,7 +139,7 @@ class Ui_Dialog(object):
             sys.exit(globals.RECORDING_CODE)
 
 
-class Dialog(QtWidgets.QWidget, Ui_Dialog):
+class Dialog(QtWidgets.QMessageBox, Ui_Dialog):
     def __init__(self, parent=None):
         super(Dialog, self).__init__(parent)
         self.setupUi(self)
@@ -151,10 +154,8 @@ class Dialog(QtWidgets.QWidget, Ui_Dialog):
                 self.move(self.x() + delta.x(), self.y() + delta.y())
                 self.oldPosition = event.globalPos()
 
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
+def main(r):
     w = Dialog()
     w.show()
-    sys.exit(app.exec_())
+    w.setFixedSize(30, 30)
+    w.exec_()
