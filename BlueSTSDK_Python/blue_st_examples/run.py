@@ -41,7 +41,7 @@ def main():
 
 	return_val = async_result.get()
 
-	q = subprocess.run(["python3", "recording_logic.py", return_val])
+	q = subprocess.run(["python3", "recording_logic.py", str(return_val)])
 
 	
 	
