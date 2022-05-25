@@ -25,7 +25,7 @@ def main():
 			print("Exit code: ", p.returncode)
 			sys.exit(p.returncode)
 
-	p = subprocess.run(["python3", "params.form.py"])
+	p = subprocess.run(["python3", "params_form.py"])
 	b = threading.Thread(target=recording_logic.main)
 	b.start()
 
