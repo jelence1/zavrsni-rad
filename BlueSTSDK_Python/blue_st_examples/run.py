@@ -39,8 +39,8 @@ def main():
 		print("Exit code: ", p.returncode)
 		sys.exit(p.returncode)
 
-	return_val = async_result.get()
-	data = ",".join(list(return_val.values()))
+	return_vals = list(async_result.get().values())
+	data = ",".join([str(ele) for ele in return_vals])
 	print(data)
 
 	#q = subprocess.run(["python3", "recording_logic.py", data])
