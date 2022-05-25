@@ -191,6 +191,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
             globals.SOCKET_OUT.send(str().encode("utf-8"))
             globals.SOCKET_OUT.close()
             globals.CONTEXT_OUT.term()
+            print("ovo se dogodilo")
             
             _translate = QtCore.QCoreApplication.translate
             self.label.setText(_translate("Form", "<html><head/><body><p>There's something wrong with the connection.</p><p>Check the microcontroller's activity.</p><p>The application will now shut down.</p></body></html>"))
