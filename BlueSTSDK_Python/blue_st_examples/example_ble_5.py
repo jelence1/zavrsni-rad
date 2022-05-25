@@ -331,7 +331,6 @@ def terminate(context, socket):
 # its exported features, and let the user get data from those supporting
 # notifications.
 def main(argv):
-    print("ovdje sam")
     
     global n_idx
     ###Audio Stream#####################################################
@@ -366,7 +365,9 @@ def main(argv):
             manager.add_listener(manager_listener)
 
         #while True:
+            print("ovdje")
             manager.discover(SCANNING_TIME_s)
+            print("proskenirao sam")
 
             # Getting discovered devices.
             devices = manager.get_nodes()
