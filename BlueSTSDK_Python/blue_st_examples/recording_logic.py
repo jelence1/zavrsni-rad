@@ -160,10 +160,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.update_gui()
         super().timerEvent(event)
 
-    def get_data(self):
-        globals.SOCKET_BLE.connect("tcp://localhost:5555")
-        data = globals.SOCKET_BLE.recv_json()
-        print("my data ", data)
+    def get_data(r):
+        print("my data ", r)
 
     def make_connection(self):
         message = globals.SOCKET_OUT.recv().decode("utf-8")
@@ -195,7 +193,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
 
-    w.get_data()
+    w.get_data(sys.argv[2])
     
     w.show()
     #w.make_connection()
