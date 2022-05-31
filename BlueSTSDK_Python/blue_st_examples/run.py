@@ -39,13 +39,12 @@ def main():
 		print("Exit code: ", p.returncode)
 		sys.exit(p.returncode)
 
-	# return_vals = list(async_result.get().values())
-	# data = ",".join([str(ele) for ele in return_vals])
+	return_vals = list(async_result.get().values())
+	data = ",".join([str(ele) for ele in return_vals])
 
-	async_result = pool.apply_async(recording_logic.main, args=(1,)) #, data
+	async_result = pool.apply_async(example_ble_5.main, args=(1,))
 
-	#q = subprocess.run(["python3", "recording_logic.py"])
-	q = subprocess.run(["python3", "example_ble_5.py", "1"])
+	q = subprocess.run(["python3", "recording_logic.py", data])
 
 	
 def main2():
