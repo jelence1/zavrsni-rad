@@ -316,7 +316,6 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
         self.label.setText(_translate("Form", label_text))
-        print(self.labeltext)
         self.recordBtn.setText(_translate("Form", "START"))
 
     def exit(self):
