@@ -146,6 +146,7 @@ beamforming_flag = 0;
 import globals
 CONTEXT = globals.CONTEXT_BLE
 SOCKET = globals.SOCKET_BLE
+SOCKET.connect("tcp://localhost:5555")
 
 # Audio stream flag
 audio_stream_flag = 0
