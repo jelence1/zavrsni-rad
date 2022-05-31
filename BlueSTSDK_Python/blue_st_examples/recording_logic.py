@@ -322,6 +322,22 @@ class Ui_Form(object):
         time.sleep(5000)
         sys.exit(0)
 
+    def update_gui(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", '''<html><head/><body><p>Streaming has started!</p>
+        <p>Streaming enabled: {}</p>
+        <p>Audio will be saved: {}</p>
+        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)))
+
+    def finished(self):
+        self.basic.stop()
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
+
+    def timerEvent(self, event):
+        self.update_gui()
+        super().timerEvent(event)
+
     def get_data(self, r):
         self.data = r
         r = r.split(",") #stream, save, duration
