@@ -302,8 +302,8 @@ class Ui_Form(object):
         self.timer.timeout.connect(self.finished)
         self.basic = QBasicTimer()
 
-        self.labeltext = "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"
-
+        #self.labeltext = "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"
+        self.labeltext = ""
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
