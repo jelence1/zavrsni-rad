@@ -178,7 +178,9 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.duration = int(r[2])
 
     def get_new_data(self, socket):
+        print("pocetak get new data")
         r = socket.recv_json()
+        print("primljen new data")
         socket.send(str().encode("utf-8"))
         self.data = r
         r = r.split(",") #stream, save, duration
