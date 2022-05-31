@@ -526,8 +526,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.worker.moveToThread(self.thread)
         # Connect signals and slots
         self.thread.started.connect(self.worker.run)
-        #self.worker.finished.connect(self.thread.quit)
-        self.worker.finished.connect(self.worker.quit)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
         self.worker.textlabel.connect(self.progress)
         # Step 6: Start the thread
