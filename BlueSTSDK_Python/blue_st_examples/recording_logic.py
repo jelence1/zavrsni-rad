@@ -501,10 +501,6 @@ class Form(QtWidgets.QWidget, Ui_Form):
         super(Form, self).__init__(parent)
         self.setupUi(self)
         self.setMouseTracking(True)
-
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.finished)
-        self.basic = QBasicTimer()
         
         self.recordBtn.clicked.connect(self.start)
 
@@ -536,7 +532,10 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.recordBtn.setEnabled(False)
         return
         
-
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.finished)
+        self.basic = QBasicTimer()
+        
         self.timer.start(self.duration*1000)
         self.basic.start(1000, self)
 
