@@ -179,10 +179,23 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
     def get_new_data(self, socket):
         r = socket.recv_json()
+        socket.send(str().encode("utf-8"))
+        self.data = r
+        r = r.split(",") #stream, save, duration
+        if int(r[0]) == 0:
+            self.stream = "No"
+        else:
+            self.stream = "Yes"
+        if int(r[1]) == 0:
+            self.save = "No"
+        else:
+            self.save = "Yes"
+        self.duration = int(r[2])
 
     def make_connection(self):
         #globals.SOCKET_OUT.bind("tcp://*:5555")
         print("cekam ovde")
+        print(self.data)
         message = globals.SOCKET_OUT.recv().decode("utf-8")
         print("ovo se napokon izvelo")
         if "SUCCESS" in message:
