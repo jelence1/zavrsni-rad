@@ -310,7 +310,7 @@ class Ui_Form(object):
 "border-radius: 10px; \n"
 "}\n"
 "\n"
-"QPushButton#editBtn:disabled {\n"
+"QPushButton#recordBtn:disabled {\n"
 "color: rgb(158, 158, 158);\n"
 "background-color:rgb(227, 227, 227)\n"
 "}")
