@@ -316,6 +316,7 @@ class Ui_Form(object):
 
     def start(self):
         self.recordBtn.setEnabled(False)
+        print("u startu sam")
         self.make_connection()
 
     def terminate(self):
