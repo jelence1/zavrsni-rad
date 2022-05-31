@@ -295,7 +295,7 @@ class Ui_Form(object):
         self.recordBtn.raise_()
 
         self.exitBtn.clicked.connect(self.exit)
-        self.recordBtn.clicked.connect(self.start(Form))
+        self.recordBtn.clicked.connect(self.start)
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.finished)
@@ -316,21 +316,21 @@ class Ui_Form(object):
     def exit(self):
         sys.exit(0)
 
-    def start(self, Form):
+    def start(self):
         self.recordBtn.setEnabled(False)
-        self.make_connection(Form)
+        self.make_connection()
 
     def terminate(self):
         time.sleep(5000)
         sys.exit(0)
 
-    def update_gui(self, Form):
+    def update_gui(self):
         _translate = QtCore.QCoreApplication.translate
         self.labeltext = '''<html><head/><body><p>Streaming has started!</p>
         <p>Streaming enabled: {}</p>
         <p>Audio will be saved: {}</p>
         <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)
-        self.retranslateUi(Form)
+        #self.retranslateUi(Form)
 
     def finished(self, Form):
         self.basic.stop()
@@ -355,7 +355,7 @@ class Ui_Form(object):
             self.save = "Yes"
         self.duration = int(r[2])
 
-    def make_connection(self, Form):
+    def make_connection(self):
         _translate = QtCore.QCoreApplication.translate
 
         global n_idx
