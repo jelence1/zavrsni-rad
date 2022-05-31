@@ -196,6 +196,10 @@ class MyFeatureListenerBeam(FeatureListener):
     def on_update(self, feature, sample):
         return
 
+
+# label text
+label_text = 0
+
 class Ui_Form(object):
     def setupUi(self, Form):
         self.form = Form
@@ -303,15 +307,15 @@ class Ui_Form(object):
         self.basic = QBasicTimer()
 
         #self.labeltext = "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"
-        self.labeltext = ""
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
+        global label_text
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
-        self.label.setText(_translate("Form", self.labeltext))
+        self.label.setText(_translate("Form", label_text))
         print(self.labeltext)
         self.recordBtn.setText(_translate("Form", "START"))
 
@@ -383,7 +387,7 @@ class Ui_Form(object):
         manager_listener = MyManagerListener()
         manager.add_listener(manager_listener)
 
-        self.labeltext = "Scanning for Bluetooth devices..."
+        label_text = "Scanning for Bluetooth devices..."
         self.retranslateUi(self.form)
 
         manager.discover(globals.SCANNING_TIME_s)
