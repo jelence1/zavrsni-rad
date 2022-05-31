@@ -554,7 +554,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.progress.connect(self.progress)
+        self.worker.textlabel.connect(self.progress)
         # Step 6: Start the thread
         self.thread.start()
 
