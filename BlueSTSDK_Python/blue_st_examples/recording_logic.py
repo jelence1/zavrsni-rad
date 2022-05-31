@@ -295,7 +295,6 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        global DURATION
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
@@ -399,7 +398,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         device = devices[0]
         
         # Connecting to the device.
-        text = "Device found: ", device.get_name() + "\n" + "Trying to connect..."
+        text = "Device found: " +  device.get_name() + "\n" + "Trying to connect..."
         self.label.setText(_translate("Form", text))
         node_listener = MyNodeListener()
         device.add_listener(node_listener)
@@ -533,7 +532,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
                         
                     # END OF STREAMING 
-                    
+
                     # Disabling notifications.
                     device.disable_notifications(audio_feature)
                     audio_feature.remove_listener(audio_feature_listener)
