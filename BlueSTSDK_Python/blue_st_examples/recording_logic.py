@@ -308,11 +308,11 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        print("retranslajtam")
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
         self.label.setText(_translate("Form", self.labeltext))
+        print(self.labeltext)
         self.recordBtn.setText(_translate("Form", "START"))
 
     def exit(self):
