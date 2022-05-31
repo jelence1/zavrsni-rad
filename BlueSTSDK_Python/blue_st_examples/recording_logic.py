@@ -295,7 +295,7 @@ class Ui_Form(object):
         self.recordBtn.raise_()
 
         self.exitBtn.clicked.connect(self.exit)
-        self.recordBtn.clicked.connect(self.start)
+        self.recordBtn.clicked.connect(self.start(Form))
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.finished)
@@ -316,27 +316,27 @@ class Ui_Form(object):
     def exit(self):
         sys.exit(0)
 
-    def start(self):
+    def start(self, Form):
         self.recordBtn.setEnabled(False)
-        self.make_connection()
+        self.make_connection(Form)
 
     def terminate(self):
         time.sleep(5000)
         sys.exit(0)
 
-    def update_gui(self):
+    def update_gui(self, Form):
         _translate = QtCore.QCoreApplication.translate
         self.labeltext = '''<html><head/><body><p>Streaming has started!</p>
         <p>Streaming enabled: {}</p>
         <p>Audio will be saved: {}</p>
         <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)
-        self.retranslateUi()
+        self.retranslateUi(Form)
 
-    def finished(self):
+    def finished(self, Form):
         self.basic.stop()
         _translate = QtCore.QCoreApplication.translate
         self.labeltext =  "Recording is finished! You can now exit the application."
-        self.retranslateUi()
+        self.retranslateUi(Form)
 
     def timerEvent(self, event):
         self.update_gui()
@@ -355,7 +355,7 @@ class Ui_Form(object):
             self.save = "Yes"
         self.duration = int(r[2])
 
-    def make_connection(self):
+    def make_connection(self, Form):
         _translate = QtCore.QCoreApplication.translate
 
         global n_idx
@@ -382,7 +382,7 @@ class Ui_Form(object):
         manager.add_listener(manager_listener)
 
         self.labeltext = "Scanning for Bluetooth devices..."
-        self.retranslateUi()
+        self.retranslateUi(Form)
 
         manager.discover(globals.SCANNING_TIME_s)
 
