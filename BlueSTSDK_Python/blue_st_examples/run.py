@@ -1,7 +1,6 @@
 # LIBRARY IMPORTS
 import sys
 import subprocess
-import threading
 
 
 # USER IMPORTS
@@ -15,10 +14,7 @@ def main():
 	p = subprocess.run(["python3", "intro_form.py"])
 
 	if p.returncode == globals.EDIT_CODE:
-		p = subprocess.run(["sudo", "audacity"])
-		print(p.returncode)
-		if p.returncode != 0:
-			pass
+		p = subprocess.run(["python3", "info_popup.py"])
 		sys.exit(0)
 	else: 
 		if p.returncode != globals.RECORDING_CODE:
