@@ -316,7 +316,6 @@ class Ui_Form(object):
 
     def start(self):
         self.recordBtn.setEnabled(False)
-        print("u startu sam")
         self.make_connection()
 
     def terminate(self):
@@ -378,8 +377,12 @@ class Ui_Form(object):
         manager_listener = MyManagerListener()
         manager.add_listener(manager_listener)
 
+        print("ocdjw sam")
+
         self.label.setText(_translate("Form", "Scanning for Bluetooth devices..."))
         manager.discover(globals.SCANNING_TIME_s)
+
+        print("sad sam ovdje")
 
         # Getting discovered devices.
         devices = manager.get_nodes()
