@@ -556,7 +556,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.basic.stop()
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("Form", '''<html><head/><body><p>Recording is finished!</p>
-        <p>You can now exit the application or restart recording.</p></body></html>''')
+        <p>You can now exit the application or restart recording.</p></body></html>'''))
 
     def timerEvent(self, event):
         self.update_gui()
