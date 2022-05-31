@@ -301,6 +301,8 @@ class Ui_Form(object):
         self.timer.timeout.connect(self.finished)
         self.basic = QBasicTimer()
 
+        self.labeltext = "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -308,7 +310,7 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
-        self.label.setText(_translate("Form", "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"))
+        self.label.setText(_translate("Form", self.labeltext))
         self.recordBtn.setText(_translate("Form", "START"))
 
     def exit(self):
@@ -324,15 +326,17 @@ class Ui_Form(object):
 
     def update_gui(self):
         _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("Form", '''<html><head/><body><p>Streaming has started!</p>
+        self.labeltext = '''<html><head/><body><p>Streaming has started!</p>
         <p>Streaming enabled: {}</p>
         <p>Audio will be saved: {}</p>
-        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)))
+        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)
+        self.retranslateUi()
 
     def finished(self):
         self.basic.stop()
         _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
+        self.labeltext =  "Recording is finished! You can now exit the application."
+        self.retranslateUi()
 
     def timerEvent(self, event):
         self.update_gui()
@@ -377,12 +381,10 @@ class Ui_Form(object):
         manager_listener = MyManagerListener()
         manager.add_listener(manager_listener)
 
-        print("ocdjw sam")
+        self.labeltext = "Scanning for Bluetooth devices..."
+        self.retranslateUi()
 
-        self.label.setText(_translate("Form", "Scanning for Bluetooth devices..."))
         manager.discover(globals.SCANNING_TIME_s)
-
-        print("sad sam ovdje")
 
         # Getting discovered devices.
         devices = manager.get_nodes()
