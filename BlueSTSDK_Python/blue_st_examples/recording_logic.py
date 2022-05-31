@@ -9,16 +9,11 @@
 
 # IMPORT
 
-from __future__ import print_function
 import sys
 import os
 import time
 import datetime
 import warnings
-import click
-import zmq
-from abc import abstractmethod
-from threading import Thread
 
 import opuslib
 
@@ -41,7 +36,6 @@ import alsaaudio
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer, QThread, QThreadPool
 
-import time
 import globals
 
 # Global Audio Raw file.
@@ -381,6 +375,9 @@ class Ui_Form(object):
         ###Audio Stream###
         global audio_stream_flag
         ###Audio Stream###
+
+        # text label
+        global label_text
 
         # Creating Bluetooth Manager.
         manager = Manager.instance()
