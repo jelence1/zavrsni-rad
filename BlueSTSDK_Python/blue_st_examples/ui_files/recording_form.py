@@ -113,7 +113,7 @@ class Ui_Form(object):
         self.headerLabel.raise_()
         self.exitBtn.raise_()
         self.label.raise_()
-        self.recordBtn.raise_()
+        
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -123,7 +123,7 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
         self.label.setText(_translate("Form", "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"))
-        self.recordBtn.setText(_translate("Form", "START"))
+        
 
 
 if __name__ == "__main__":

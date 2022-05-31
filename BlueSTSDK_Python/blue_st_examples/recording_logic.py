@@ -39,7 +39,7 @@ import alsaaudio
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer
+from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer, QThread, QThreadPool
 
 import time
 import globals
@@ -382,7 +382,7 @@ class Ui_Form(object):
         manager.add_listener(manager_listener)
 
         self.labeltext = "Scanning for Bluetooth devices..."
-        self.retranslateUi(Form)
+        #self.retranslateUi(Form)
 
         manager.discover(globals.SCANNING_TIME_s)
 
@@ -399,7 +399,8 @@ class Ui_Form(object):
         
         # Connecting to the device.
         text = "Device found: " +  device.get_name() + "\n" + "Trying to connect..."
-        self.label.setText(_translate("Form", text))
+        print(text)
+        #self.label.setText(_translate("Form", text))
         node_listener = MyNodeListener()
         device.add_listener(node_listener)
         if not device.connect():
@@ -408,10 +409,11 @@ class Ui_Form(object):
 
         self.label.setText(_translate("Form", "<html><head/><body><p>Connection successful!</p><p>Streaming will start in a few seconds.</p></body></html>"))
         time.sleep(300)
+        print("connected")
 
         has_audio_adpcm_features = [False,False]
         has_audio_opus_features = [False,False]
-
+        sys.exit(0)
         i = 1
         features = device.get_features()
         for feature in features:
