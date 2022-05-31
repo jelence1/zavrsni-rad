@@ -177,7 +177,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.duration = int(r[2])
 
     def make_connection(self):
-        globals.SOCKET_OUT.bind("tcp://*:5555")
+        #globals.SOCKET_OUT.bind("tcp://*:5555")
         print("cekam ovde")
         message = globals.SOCKET_OUT.recv().decode("utf-8")
         print("ovo se napokon izvelo")
