@@ -246,9 +246,9 @@ class Ui_Form(object):
     def recording(self):
         
         to_secs = self.hourBox.value()*60*60 + self.minBox.value()*60 + self.secondBox.value()
-        r = "STREAM" + ":" + self.streamCheck.isChecked() + "," + \
-            "SAVE" + ":" + self.saveCheck.isChecked() + "," + \
-            "DURATION" + ":" + to_secs
+        r = "STREAM" + ":" + str(int(self.streamCheck.isChecked())) + "," + \
+            "SAVE" + ":" + str(int(self.saveCheck.isChecked())) + "," + \
+            "DURATION" + ":" + str(to_secs)
 
         sys.stdout.write(r)
 
