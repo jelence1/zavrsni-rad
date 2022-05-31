@@ -10,10 +10,10 @@ BlueSTSDK_Python/blue_st_examples/blue_st_sdk/features/__pycache__/
 BlueSTSDK_Python/blue_st_examples/blue_st_sdk/features/audio/__pycache__/
 BlueSTSDK_Python/blue_st_examples/blue_st_sdk/features/audio/adpcm/__pycache__/
 BlueSTSDK_Python/blue_st_examples/blue_st_sdk/features/audio/opus/__pycache__/
-text/*.toc
-text/*.aux
-text/*.bbl
-text/*.blg
-text/*.log
-text/*.gz
-text/*.toc
+docs/*.toc
+docs/*.aux
+docs/*.bbl
+docs/*.blg
+docs/*.log
+docs/*.gz
+docs/*.toc
