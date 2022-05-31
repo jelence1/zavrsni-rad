@@ -202,7 +202,6 @@ label_text = ""
 
 class Ui_Form(object):
     def setupUi(self, Form):
-        self.form = Form
         Form.setObjectName("Form")
         Form.resize(800, 600)
         Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
@@ -307,6 +306,7 @@ class Ui_Form(object):
         self.basic = QBasicTimer()
 
         #self.labeltext = "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"
+        self.form = Form
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
