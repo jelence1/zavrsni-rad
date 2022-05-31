@@ -393,9 +393,10 @@ class Ui_Form(object):
 
         # Listing discovered devices.
         if not devices:
+            print("nisam ga nasel")
             self.label.setText(_translate("Form", "<html><head/><body><p>No Bluetooth devices found.</p><p>Check the STM32's connection.</p><p>The application will now shut down.</p></body></html>"))
             self.terminate()
-            
+        
         # Selecting a device.
         device = devices[0]
         
