@@ -42,7 +42,7 @@ def main():
 	data = p.stdout
 	print(data)
 
-	#q = subprocess.run(["python3", "recording_logic.py", data])
+	q = subprocess.run(["python3", "recording_logic.py", data])
 
 	
 def main2():
