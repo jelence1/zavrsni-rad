@@ -382,12 +382,14 @@ class Ui_Form(object):
         manager.add_listener(manager_listener)
 
         self.labeltext = "Scanning for Bluetooth devices..."
+        print("scaning..")
         #self.retranslateUi(Form)
 
         manager.discover(globals.SCANNING_TIME_s)
 
         # Getting discovered devices.
         devices = manager.get_nodes()
+        print("discovered.")
 
         # Listing discovered devices.
         if not devices:
