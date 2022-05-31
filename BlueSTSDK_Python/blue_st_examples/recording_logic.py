@@ -308,6 +308,11 @@ class Ui_Form(object):
 "QPushButton#exitBtn {\n"
 "background-color: rgba(195, 195, 195, 0.3);\n"
 "border-radius: 10px; \n"
+"}\n"
+"\n"
+"QPushButton#editBtn:disabled {\n"
+"color: rgb(158, 158, 158);\n"
+"background-color:rgb(227, 227, 227)\n"
 "}")
         self.widget.setObjectName("widget")
         self.mainLabel = QtWidgets.QLabel(self.widget)
