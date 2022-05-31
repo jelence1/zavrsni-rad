@@ -198,9 +198,86 @@ class Worker(QObject):
     # Class for running BLE 
     finished = pyqtSignal()
     textlabel = pyqtSignal(str)
+    stream = pyqtSignal()
 
     def run(self):
-        pass
+        global n_idx
+        ###Audio Stream#####################################################
+        global stream
+        ###Audio Stream#####################################################
+        ###Save Audio File##################################################
+        global audioFile
+        global save_audio_flag
+        global beamforming_flag
+        ###Save Audio File##################################################
+        
+        global audio_feature
+        global audio_sync_feature
+        global beamforming_feature
+        
+        ###Audio Stream###
+        global audio_stream_flag
+        ###Audio Stream###
+
+        # text label
+        global label_text
+
+        # Creating Bluetooth Manager.
+        manager = Manager.instance()
+        manager_listener = MyManagerListener()
+        manager.add_listener(manager_listener)
+
+        self.textlabel.emit("Scanning for Bluetooth devices...")
+
+        manager.discover(globals.SCANNING_TIME_s)
+
+        # Getting discovered devices.
+        devices = manager.get_nodes()
+
+        # Listing discovered devices.
+        if not devices:
+            self.textlabel.emit("nisam ga nasel :(")
+            time.sleep(5)
+            sys.exit(0)
+        
+        # Selecting a device.
+        device = devices[0]
+        
+        # Connecting to the device.
+        self.textlabel.emit("Device found: " +  device.get_name() + "\n" + "Trying to connect...")
+
+        node_listener = MyNodeListener()
+        device.add_listener(node_listener)
+        if not device.connect():
+            self.textlabel.emit("<html><head/><body><p>Connection failed.</p><p>Check the STM32's connection.</p><p>The application will now shut down.</p></body></html>")
+            time.sleep(5)
+            sys.exit(0)
+
+        self.textlabel.emit("<html><head/><body><p>Connection successful!</p><p>Streaming will start in a few seconds.</p></body></html>")
+        time.sleep(3)
+
+        has_audio_adpcm_features = [False,False]
+        has_audio_opus_features = [False,False]
+
+        i = 1
+        features = device.get_features()
+        for feature in features:
+            if isinstance(feature, FeatureAudioADPCM):
+                audio_feature = feature
+                has_audio_adpcm_features[0] = True
+            elif isinstance(feature, FeatureAudioADPCMSync):
+                audio_sync_feature = feature
+                has_audio_adpcm_features[1] = True
+            elif isinstance(feature, FeatureAudioOpus):
+                audio_feature = feature
+                has_audio_opus_features[0] = True
+            elif isinstance(feature, FeatureAudioOpusConf):
+                audio_sync_feature = feature
+                has_audio_opus_features[1] = True
+            elif isinstance(feature,FeatureBeamforming):
+                beamforming_feature = feature
+            i += 1
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -301,152 +378,29 @@ class Ui_Form(object):
         self.recordBtn.raise_()
 
         self.exitBtn.clicked.connect(self.exit)
-        self.recordBtn.clicked.connect(self.start)
-
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.finished)
-        self.basic = QBasicTimer()
 
         #self.labeltext = "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        global label_text
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
-        self.label.setText(_translate("Form", label_text))
+        self.label.setText(_translate("Form", ""))
         self.recordBtn.setText(_translate("Form", "START"))
 
     def exit(self):
         sys.exit(0)
 
-    def start(self):
-        return
-        self.recordBtn.setEnabled(False)
-        self.make_connection()
-
-    def terminate(self):
-        time.sleep(5)
-        sys.exit(0)
-
-    def update_gui(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.labeltext = '''<html><head/><body><p>Streaming has started!</p>
-        <p>Streaming enabled: {}</p>
-        <p>Audio will be saved: {}</p>
-        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)
-        #self.retranslateUi(Form)
-
-    def finished(self, Form):
-        self.basic.stop()
-        _translate = QtCore.QCoreApplication.translate
-        self.labeltext =  "Recording is finished! You can now exit the application."
-        self.retranslateUi(Form)
-
-    def timerEvent(self, event):
-        self.update_gui()
-        super().timerEvent(event)
-
-    def get_data(self, r):
-        self.data = r
-        r = r.split(",") #stream, save, duration
-        if r[0] == "0":
-            self.stream = "No"
-        else:
-            self.stream = "Yes"
-        if r[1] == "0":
-            self.save = "No"
-        else:
-            self.save = "Yes"
-        self.duration = int(r[2])
+    
 
     def make_connection(self):
         _translate = QtCore.QCoreApplication.translate
 
-        global n_idx
-        ###Audio Stream#####################################################
-        global stream
-        ###Audio Stream#####################################################
-        ###Save Audio File##################################################
-        global audioFile
-        global save_audio_flag
-        global beamforming_flag
-        ###Save Audio File##################################################
         
-        global audio_feature
-        global audio_sync_feature
-        global beamforming_feature
-        
-        ###Audio Stream###
-        global audio_stream_flag
-        ###Audio Stream###
 
-        # text label
-        global label_text
-
-        # Creating Bluetooth Manager.
-        manager = Manager.instance()
-        manager_listener = MyManagerListener()
-        manager.add_listener(manager_listener)
-
-        label_text = "Scanning for Bluetooth devices..."
-        self.retranslateUi(self.form)
-
-        manager.discover(globals.SCANNING_TIME_s)
-
-        # Getting discovered devices.
-        devices = manager.get_nodes()
-        print("discovered.")
-
-        # Listing discovered devices.
-        if not devices:
-            print("nisam ga nasel")
-            self.label.setText(_translate("Form", "<html><head/><body><p>No Bluetooth devices found.</p><p>Check the STM32's connection.</p><p>The application will now shut down.</p></body></html>"))
-            self.terminate()
-        
-        # Selecting a device.
-        device = devices[0]
-        
-        # Connecting to the device.
-        text = "Device found: " +  device.get_name() + "\n" + "Trying to connect..."
-        print(text)
-        #self.label.setText(_translate("Form", text))
-        node_listener = MyNodeListener()
-        device.add_listener(node_listener)
-        if not device.connect():
-            self.label.setText(_translate("Form", "<html><head/><body><p>Connection failed.</p><p>Check the STM32's connection.</p><p>The application will now shut down.</p></body></html>"))
-            self.terminate()
-
-        self.label.setText(_translate("Form", "<html><head/><body><p>Connection successful!</p><p>Streaming will start in a few seconds.</p></body></html>"))
-        time.sleep(3)
-        print("connected")
-
-        has_audio_adpcm_features = [False,False]
-        has_audio_opus_features = [False,False]
-
-        i = 1
-        features = device.get_features()
-        for feature in features:
-            if isinstance(feature, FeatureAudioADPCM):
-                audio_feature = feature
-                has_audio_adpcm_features[0] = True
-            elif isinstance(feature, FeatureAudioADPCMSync):
-                audio_sync_feature = feature
-                has_audio_adpcm_features[1] = True
-            elif isinstance(feature, FeatureAudioOpus):
-                audio_feature = feature
-                has_audio_opus_features[0] = True
-            elif isinstance(feature, FeatureAudioOpusConf):
-                audio_sync_feature = feature
-                has_audio_opus_features[1] = True
-            elif isinstance(feature,FeatureBeamforming):
-                beamforming_feature = feature
-            i += 1
-
-
-        self.streaming(has_audio_adpcm_features, has_audio_opus_features, device)
+        #self.streaming(has_audio_adpcm_features, has_audio_opus_features, device)
         
     def streaming(self, audio_feat_flag, opus_feat_flag, device):
         global n_idx
@@ -470,9 +424,6 @@ class Ui_Form(object):
 
         has_audio_adpcm_features = audio_feat_flag   
         has_audio_opus_features = opus_feat_flag
-
-        self.timer.start(self.duration*1000)
-        self.basic.start(1000, self)
 
         if all(has_audio_adpcm_features) or all(has_audio_opus_features):
             save_audio_flag = self.save
@@ -576,10 +527,14 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.setupUi(self)
         self.setMouseTracking(True)
 
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.finished)
+        self.basic = QBasicTimer()
+        
+        self.recordBtn.clicked.connect(self.start)
+
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
-        _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("Form", "Kliking"))
 
     def mouseMoveEvent(self, event):
         if event.buttons() & Qt.LeftButton:
@@ -587,9 +542,66 @@ class Form(QtWidgets.QWidget, Ui_Form):
             self.move(self.x() + delta.x(), self.y() + delta.y())
             self.oldPosition = event.globalPos()
 
+    def start(self):
+        # Create a QThread object
+        self.thread = QThread()
+        # Create a worker object
+        self.worker = Worker()
+        # Move worker to the thread
+        self.worker.moveToThread(self.thread)
+        # Connect signals and slots
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.worker.progress.connect(self.progress)
+        # Step 6: Start the thread
+        self.thread.start()
 
+        self.recordBtn.setEnabled(False)
+        return
+        
 
-    
+        self.timer.start(self.duration*1000)
+        self.basic.start(1000, self)
+
+    def terminate(self):
+        
+        time.sleep(5)
+        sys.exit(0)
+
+    def update_gui(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", '''<html><head/><body><p>Streaming has started!</p>
+        <p>Streaming enabled: {}</p>
+        <p>Audio will be saved: {}</p>
+        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)))
+
+    def finished(self):
+        self.basic.stop()
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
+
+    def timerEvent(self, event):
+        self.update_gui()
+        super().timerEvent(event)
+
+    def get_data(self, r):
+        self.data = r
+        r = r.split(",") #stream, save, duration
+        if r[0] == "0":
+            self.stream = "No"
+        else:
+            self.stream = "Yes"
+        if r[1] == "0":
+            self.save = "No"
+        else:
+            self.save = "Yes"
+        self.duration = int(r[2])
+
+    def progress(self, text):
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", text))
 
     
 
