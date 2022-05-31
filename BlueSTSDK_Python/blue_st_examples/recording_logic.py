@@ -306,7 +306,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         global label_text
-        print("label text:",label_text)
+        print("label text:",Form)
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
