@@ -297,6 +297,10 @@ class Ui_Form(object):
         self.exitBtn.clicked.connect(self.exit)
         self.recordBtn.clicked.connect(self.start)
 
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.finished)
+        self.basic = QBasicTimer()
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -536,11 +540,6 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.setupUi(self)
         self.setMouseTracking(True)
 
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.finished)
-
-        self.basic = QBasicTimer()
-
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
 
@@ -550,21 +549,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
             self.move(self.x() + delta.x(), self.y() + delta.y())
             self.oldPosition = event.globalPos()
 
-    def update_gui(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("Form", '''<html><head/><body><p>Streaming has started!</p>
-        <p>Streaming enabled: {}</p>
-        <p>Audio will be saved: {}</p>
-        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)))
-
-    def finished(self):
-        self.basic.stop()
-        _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
-
-    def timerEvent(self, event):
-        self.update_gui()
-        super().timerEvent(event)
+    
 
     
 
