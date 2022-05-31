@@ -37,35 +37,6 @@
 # Audio stream na PC trenutno onemogucen. Za omogucavanje otkomentirati linije sa stream.write().
 
 
-# IMPORT
-
-from __future__ import print_function
-import sys
-import os
-import time
-import datetime
-import warnings
-import click
-import zmq
-from abc import abstractmethod
-from threading import Thread
-
-import opuslib
-
-from blue_st_sdk.manager import Manager
-from blue_st_sdk.manager import ManagerListener
-from blue_st_sdk.node import NodeListener
-from blue_st_sdk.feature import FeatureListener
-from blue_st_sdk.features.audio.adpcm.feature_audio_adpcm import FeatureAudioADPCM
-from blue_st_sdk.features.audio.adpcm.feature_audio_adpcm_sync import FeatureAudioADPCMSync
-from blue_st_sdk.features.audio.opus.feature_audio_opus import FeatureAudioOpus
-from blue_st_sdk.features.audio.opus.feature_audio_opus_conf import FeatureAudioOpusConf
-from blue_st_sdk.features.feature_beamforming import FeatureBeamforming
-from blue_st_sdk.utils.number_conversion import LittleEndian
-
-###Audio Stream#########################################################
-import alsaaudio
-###Audio Stream#########################################################
 
 
 # PRECONDITIONS
@@ -99,204 +70,12 @@ import alsaaudio
 
 # CONSTANTS
 
-INTRO = """##################
-# BlueST Example #
-##################"""
-
-# Paths and File names
-AUDIO_DUMPS_PATH = "audioDumps/"
-AUDIO_DUMP_SUFFIX = "_audioDump.raw"
-ADPCM_TAG = "_ADPCM"
-OPUS_TAG = "_Opus"
-
-# Notifications per second
-NPS_ADPCM = 200
-NPS_OPUS = 50
-
-# Number of channels.
-CHANNELS = 1
-
-# Sampling frequency.
-SAMPLING_FREQ_ADPCM = 8000
-SAMPLING_FREQ_OPUS = 16000
-
-# Global Audio Raw file.
-audioFile=None
-save_audio_flag = 0
-
-# Bluetooth Scanning time in seconds (optional).
-SCANNING_TIME_s = 5
-
-# Global stream control index.
-n_idx = 0
-
-# Global audio features.
-audio_feature = None
-audio_sync_feature = None 
-beamforming_feature = None
-
-# Global Beamforming control.
-beamforming_flag = 0;
-
-# Connection to server.
-# CONTEXT = zmq.Context()
-# SOCKET = CONTEXT.socket(zmq.REQ)
-# SOCKET.connect("tcp://localhost:5555")
-
-import globals
-CONTEXT = globals.CONTEXT_BLE
-SOCKET = globals.SOCKET_BLE
-SOCKET.connect("tcp://localhost:5555")
-
-# Audio stream flag
-audio_stream_flag = 0
-
-# FUNCTIONS
 
 
-# INTERFACES
-
-#
-# Implementation of the interface used by the Manager class to notify that a new
-# node has been discovered or that the scanning starts/stops.
-#
-class MyManagerListener(ManagerListener):
-
-    #
-    # This method is called whenever a discovery process starts or stops.
-    #
-    # @param manager Manager instance that starts/stops the process.
-    # @param enabled True if a new discovery starts, False otherwise.
-    #
-    def on_discovery_change(self, manager, enabled):
-        return
-
-    #
-    # This method is called whenever a new node is discovered.
-    #
-    # @param manager Manager instance that discovers the node.
-    # @param node    New node discovered.
-    #
-    def on_node_discovered(self, manager, node):
-        return
-
-#
-# Implementation of the interface used by the Node class to notify that a node
-# has updated its status.
-#
-class MyNodeListener(NodeListener):
-
-    #
-    # To be called whenever a node connects to a host.
-    #
-    # @param node Node that has connected to a host.
-    #
-    def on_connect(self, node):
-        return
-
-    #
-    # To be called whenever a node disconnects from a host.
-    #
-    # @param node       Node that has disconnected from a host.
-    # @param unexpected True if the disconnection is unexpected, False otherwise
-    #                   (called by the user).
-    #
-    def on_disconnect(self, node, unexpected=False):
-        return
 
 
-#
-# Implementation of the interface used by the Feature class to notify that a
-# feature has updated its data.
-#
-class MyFeatureListener(FeatureListener):
 
-    #
-    # To be called whenever the feature updates its data.
-    #
-    # @param feature Feature that has updated.
-    # @param sample  Data extracted from the feature.
-    #
-    def on_update(self, feature, sample):        
-        global n_idx
-        ###Audio Stream#################################################
-        global stream
-        ###Audio Stream#################################################
-        ###Save Audio File##############################################
-        global audioFile
-        global save_audio_flag
-        ###Save Audio File##############################################
-        ###Audio Stream###
-        global audio_stream_flag
-        ###Audio Stream###
-        if isinstance(feature,FeatureAudioADPCM):
-            shortData = sample._data
-            if len(shortData) != 0:
-                for d in shortData:
-                    byteData = LittleEndian.int16_to_bytes(d)
-                    ###Save Audio File######################################
-                    if save_audio_flag == 1:
-                        audioFile.write(byteData)
-                    ###Save Audio File######################################
-                    ###Audio Stream#########################################
-                    if audio_stream_flag == 1:
-                        stream.write(byteData)
-                    ###Audio Stream#########################################
-                n_idx += 1
-        elif isinstance(feature,FeatureAudioOpus):
-            if sample is not None:
-                byteData = sample._data
-                if byteData is not None and len(byteData) != 0:
-                    ###Save Audio File######################################
-                    if save_audio_flag == 1:
-                        audioFile.write(byteData)
-                    ###Save Audio File######################################
-                    ###Audio Stream#########################################
-                    if audio_stream_flag == 1:
-                        stream.write(byteData)
-                    ###Audio Stream#########################################
-                    n_idx += 1
 
-#
-# Implementation of the interface used by the Feature class to notify that a
-# feature has updated its data.
-#
-class MyFeatureListenerSync(FeatureListener):
-
-    #
-    # To be called whenever the feature updates its data.
-    #
-    # @param feature Feature that has updated.
-    # @param sample  Data extracted from the feature.
-    #
-    def on_update(self, feature, sample):
-        global audio_feature
-        if audio_feature is not None:
-            if isinstance(feature, FeatureAudioADPCMSync):
-                audio_feature.set_audio_sync_parameters(sample)
-            elif isinstance(feature, FeatureAudioOpusConf):
-                return
-                
-class MyFeatureListenerBeam(FeatureListener):
-
-    #
-    # To be called whenever the feature updates its data.
-    #
-    # @param feature Feature that has updated.
-    # @param sample  Data extracted from the feature.
-    #
-    def on_update(self, feature, sample):
-        return
-
-                
-def terminate(context, socket):
-    globals.SOCKET_BLE.send("$".encode("utf-8"))
-    print("ble salje nekay")
-    globals.SOCKET_BLE.recv().decode("utf-8")
-    print("ble prima nekay")
-    socket.close()
-    context.term()
-    sys.exit(0)
 
 # MAIN APPLICATION
 
@@ -305,58 +84,12 @@ def terminate(context, socket):
 # notifications.
 
 def make_connection():
-    global n_idx
-    ###Audio Stream#####################################################
-    global stream
-    ###Audio Stream#####################################################
-    ###Save Audio File##################################################
-    global audioFile
-    global save_audio_flag
-    global beamforming_flag
-    ###Save Audio File##################################################
     
-    global audio_feature
-    global audio_sync_feature
-    global beamforming_feature
-
-    ###TCP Connection###########################################
-    global CONTEXT
-    global SOCKET
-    ###TCP Connection###########################################
-    
-    ###Audio Stream###
-    global audio_stream_flag
-    ###Audio Stream###
 
 
     
-    # Creating Bluetooth Manager.
-    manager = Manager.instance()
-    manager_listener = MyManagerListener()
-    manager.add_listener(manager_listener)
-
-    manager.discover(SCANNING_TIME_s)
-
-    # Getting discovered devices.
-    devices = manager.get_nodes()
-
-    # Listing discovered devices.
-    if not devices:
-        print("u ovoj sam funkciji")
-        terminate(context=CONTEXT, socket=SOCKET)
+    
             
-    # Selecting a device.
-    device = devices[0]
-            
-    # Connecting to the device.
-    node_listener = MyNodeListener()
-    device.add_listener(node_listener)
-    if not device.connect():
-        terminate(socket=SOCKET, context=CONTEXT)
-                
-    SOCKET.send(("SUCCESS").encode("utf-8"))
-    received = SOCKET.recv().decode("utf-8")
-    params = [int(ele) for ele in received.split(",")] #STREAM, SAVE, DURATION
 
     has_audio_adpcm_features = [False,False]
     has_audio_opus_features = [False,False]
@@ -380,7 +113,7 @@ def make_connection():
             beamforming_feature = feature
         i += 1
 
-        return has_audio_adpcm_features, has_audio_opus_features, 
+        return has_audio_adpcm_features, has_audio_opus_features
 
 
 def main(audio_feat_flag, opus_feat_flag, params):

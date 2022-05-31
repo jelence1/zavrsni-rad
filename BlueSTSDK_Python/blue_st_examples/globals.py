@@ -1,14 +1,23 @@
-import zmq
-
+# Exit codes
 RECORDING_CODE = 50
 EDIT_CODE = 100
 
-CONTEXT_BLE = zmq.Context()
+# Paths and File names
+AUDIO_DUMPS_PATH = "audioDumps/"
+AUDIO_DUMP_SUFFIX = "_audioDump.raw"
+ADPCM_TAG = "_ADPCM"
+OPUS_TAG = "_Opus"
 
-SOCKET_BLE = CONTEXT_BLE.socket(zmq.REQ)
-#SOCKET_BLE.connect("tcp://localhost:5555")
+# Notifications per second
+NPS_ADPCM = 200
+NPS_OPUS = 50
 
-CONTEXT_OUT = zmq.Context()
-SOCKET_OUT = CONTEXT_OUT.socket(zmq.REP)
-#SOCKET_OUT.bind("tcp://*:5555")
+# Number of channels.
+CHANNELS = 1
 
+# Sampling frequency.
+SAMPLING_FREQ_ADPCM = 8000
+SAMPLING_FREQ_OPUS = 16000
+
+# Bluetooth Scanning time in seconds (optional).
+SCANNING_TIME_s = 5

@@ -13,7 +13,6 @@ from PyQt5.QtCore import QPoint, Qt
 from PyQt5.QtWidgets import QMessageBox
 
 import sys
-import json
 
 import globals
 
