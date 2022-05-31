@@ -179,6 +179,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
     def make_connection(self):
         #globals.SOCKET_OUT.bind("tcp://*:5555")
         print("cekam ovde")
+        globals.SOCKET_OUT.send(str().encode("utf-8"))
+        print("uspio je poslat nekay")
         message = globals.SOCKET_OUT.recv().decode("utf-8")
         print("ovo se napokon izvelo")
         if "SUCCESS" in message:
