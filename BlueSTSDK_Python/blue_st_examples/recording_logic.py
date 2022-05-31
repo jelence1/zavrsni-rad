@@ -198,6 +198,7 @@ class MyFeatureListenerBeam(FeatureListener):
 
 class Ui_Form(object):
     def setupUi(self, Form):
+        self.form = Form
         Form.setObjectName("Form")
         Form.resize(800, 600)
         Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
@@ -382,8 +383,7 @@ class Ui_Form(object):
         manager.add_listener(manager_listener)
 
         self.labeltext = "Scanning for Bluetooth devices..."
-        print("scaning..")
-        #self.retranslateUi(Form)
+        self.retranslateUi(self.form)
 
         manager.discover(globals.SCANNING_TIME_s)
 
@@ -416,7 +416,7 @@ class Ui_Form(object):
 
         has_audio_adpcm_features = [False,False]
         has_audio_opus_features = [False,False]
-        sys.exit(0)
+
         i = 1
         features = device.get_features()
         for feature in features:
