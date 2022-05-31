@@ -320,9 +320,9 @@ class MyFeatureListenerBeam(FeatureListener):
             SOCKET.recv()
                 
 def terminate(context, socket):
-    socket.send("$".encode("utf-8"))
+    globals.SOCKET_BLE.send("$".encode("utf-8"))
     print("ble salje nekay")
-    socket.recv().decode("utf-8")
+    globals.SOCKET_BLE.recv().decode("utf-8")
     print("ble prima nekay")
     socket.close()
     context.term()
