@@ -44,7 +44,7 @@ def main():
 
 	async_result = pool.apply_async(example_ble_5.main, args=(1,))
 
-	q = subprocess.run(["python3", "recording_logic.py", data])
+	#q = subprocess.run(["python3", "recording_logic.py", data])
 
 	
 def main2():
