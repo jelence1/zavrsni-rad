@@ -34,7 +34,7 @@ import alsaaudio
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer, QThread, QThreadPool
+from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer, QThread, QObject, pyqtSignal
 
 import globals
 
@@ -194,6 +194,14 @@ class MyFeatureListenerBeam(FeatureListener):
 # label text
 label_text = ""
 
+class Worker(QObject):
+    # Class for running BLE 
+    finished = pyqtSignal()
+    textlabel = pyqtSignal(str)
+
+    def run(self):
+        pass
+
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -300,24 +308,22 @@ class Ui_Form(object):
         self.basic = QBasicTimer()
 
         #self.labeltext = "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"
-        self.form = Form
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         global label_text
-        print("label text:",Form)
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
         self.label.setText(_translate("Form", label_text))
-        print("ovdje sam aaaaaa")
         self.recordBtn.setText(_translate("Form", "START"))
 
     def exit(self):
         sys.exit(0)
 
     def start(self):
+        return
         self.recordBtn.setEnabled(False)
         self.make_connection()
 
@@ -572,12 +578,16 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
     def mousePressEvent(self, event):
         self.oldPosition = event.globalPos()
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", "Kliking"))
 
     def mouseMoveEvent(self, event):
         if event.buttons() & Qt.LeftButton:
             delta = QPoint(event.globalPos() - self.oldPosition)
             self.move(self.x() + delta.x(), self.y() + delta.y())
             self.oldPosition = event.globalPos()
+
+
 
     
 
