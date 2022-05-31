@@ -246,11 +246,11 @@ class Ui_Form(object):
     def recording(self):
         
         to_secs = self.hourBox.value()*60*60 + self.minBox.value()*60 + self.secondBox.value()
-        r = {"STREAM":int(self.streamCheck.isChecked()),
-            "SAVE":int(self.saveCheck.isChecked()),
-            "DURATION":to_secs}
+        r = "STREAM" + ":" + int(self.streamCheck.isChecked()) + "," + \
+            "SAVE" + ":" + int(self.saveCheck.isChecked()) + "," + \
+            "DURATION" + ":" + to_secs
 
-        sys.stdout.write(str(r))
+        sys.stdout.write(r)
 
         sys.exit(globals.RECORDING_CODE)
 

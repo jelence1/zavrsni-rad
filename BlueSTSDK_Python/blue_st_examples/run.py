@@ -39,7 +39,8 @@ def main():
 		print("Exit code: ", p.returncode)
 		sys.exit(p.returncode)
 
-	print(p.stdout)
+	var = p.stdout
+	
 
 	sys.exit(0)
 
