@@ -321,7 +321,7 @@ class Ui_Form(object):
         self.make_connection()
 
     def terminate(self):
-        time.sleep(5000)
+        time.sleep(5)
         sys.exit(0)
 
     def update_gui(self):
@@ -411,7 +411,7 @@ class Ui_Form(object):
             self.terminate()
 
         self.label.setText(_translate("Form", "<html><head/><body><p>Connection successful!</p><p>Streaming will start in a few seconds.</p></body></html>"))
-        time.sleep(300)
+        time.sleep(3)
         print("connected")
 
         has_audio_adpcm_features = [False,False]
