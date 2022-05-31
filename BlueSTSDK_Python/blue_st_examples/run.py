@@ -5,8 +5,6 @@ import threading
 
 from multiprocessing.pool import ThreadPool
 
-from numpy import record
-
 
 
 # USER IMPORTS
