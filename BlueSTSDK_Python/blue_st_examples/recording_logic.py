@@ -13,6 +13,7 @@ from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer
 
 import zmq
 import time
+import sys
 
 import globals
 
@@ -176,6 +177,9 @@ class Form(QtWidgets.QWidget, Ui_Form):
             self.save = "Yes"
         self.duration = int(r[2])
 
+    def get_new_data(self, socket):
+        r = socket.recv_json()
+
     def make_connection(self):
         #globals.SOCKET_OUT.bind("tcp://*:5555")
         print("cekam ovde")
@@ -203,12 +207,15 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
         
 
-if __name__ == "__main__":
+def main():
     import sys
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
 
-    w.get_data(sys.argv[1])
+    globals.SOCKET_OUT.bind("tcp://*:5555")
+
+    #w.get_data(sys.argv[1])
+    w.get_new_data(globals.SOCKET_OUT)
     
     w.show()
     w.make_connection()
