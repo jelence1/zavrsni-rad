@@ -198,7 +198,7 @@ class MyFeatureListenerBeam(FeatureListener):
 
 
 # label text
-label_text = 0
+label_text = ""
 
 class Ui_Form(object):
     def setupUi(self, Form):
