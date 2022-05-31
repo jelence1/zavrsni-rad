@@ -250,9 +250,7 @@ class Ui_Form(object):
             "SAVE":int(self.saveCheck.isChecked()),
             "DURATION":to_secs}
 
-        globals.SOCKET_BLE.connect("tcp://localhost:5555")
-        globals.SOCKET_BLE.send_json(r)
-        globals.SOCKET_BLE.recv().decode("utf-8")
+        sys.stdout.write(str(r))
 
         sys.exit(globals.RECORDING_CODE)
 

@@ -153,11 +153,6 @@ audio_stream_flag = 0
 
 # FUNCTIONS
 
-# Printing intro
-def print_intro(socket):
-    socket.send(('\n' + INTRO + '\n').encode("utf-8"))
-    socket.recv()
-
 
 # INTERFACES
 
@@ -175,12 +170,6 @@ class MyManagerListener(ManagerListener):
     #
     def on_discovery_change(self, manager, enabled):
         return
-        global SOCKET
-        SOCKET.send(('Discovery %s.' % ('started' if enabled else 'stopped')).encode("utf-8"))
-        SOCKET.recv()
-        if not enabled:
-                #print()
-                pass
 
     #
     # This method is called whenever a new node is discovered.
@@ -190,10 +179,6 @@ class MyManagerListener(ManagerListener):
     #
     def on_node_discovered(self, manager, node):
         return
-        global SOCKET
-        SOCKET.send(('New device discovered: %s.' % (node.get_name())).encode("utf-8"))
-        SOCKET.recv()
-
 
 #
 # Implementation of the interface used by the Node class to notify that a node
@@ -208,10 +193,6 @@ class MyNodeListener(NodeListener):
     #
     def on_connect(self, node):
         return
-        global SOCKET
-        #SOCKET.send(('Device %s connected.' % (node.get_name())).encode("utf-8"))
-        SOCKET.send("CONNECTED".encode("utf-8"))
-        SOCKET.recv()
 
     #
     # To be called whenever a node disconnects from a host.
@@ -222,10 +203,6 @@ class MyNodeListener(NodeListener):
     #
     def on_disconnect(self, node, unexpected=False):
         return
-        global SOCKET
-        #SOCKET.send(('Device {} disconnected{}.'.format(node.get_name(), ' unexpectedly' if unexpected else '')).encode("utf-8"))
-        SOCKET.send("DISCONNECTED".encode("utf-8"))
-        SOCKET.recv()
 
 
 #
@@ -299,9 +276,6 @@ class MyFeatureListenerSync(FeatureListener):
                 audio_feature.set_audio_sync_parameters(sample)
             elif isinstance(feature, FeatureAudioOpusConf):
                 return
-                #global SOCKET
-                #with open(OUTPUT_PATH, "w") as output_file:
-                #    output_file.write("command message received: " + str(sample))  
                 
 class MyFeatureListenerBeam(FeatureListener):
 
@@ -313,11 +287,7 @@ class MyFeatureListenerBeam(FeatureListener):
     #
     def on_update(self, feature, sample):
         return
-        global beamforming_feature
-        if beamforming_feature is not None:
-            global SOCKET
-            SOCKET.send(beamforming_feature.encode("utf-8"))
-            SOCKET.recv()
+
                 
 def terminate(context, socket):
     globals.SOCKET_BLE.send("$".encode("utf-8"))
@@ -333,8 +303,8 @@ def terminate(context, socket):
 # This application example connects to a Bluetooth Low Energy device, retrieves
 # its exported features, and let the user get data from those supporting
 # notifications.
-def main(argv):
-    
+
+def make_connection():
     global n_idx
     ###Audio Stream#####################################################
     global stream
@@ -358,147 +328,179 @@ def main(argv):
     global audio_stream_flag
     ###Audio Stream###
 
-    # Printing intro.
-    #print_intro(SOCKET)
+
+    
+    # Creating Bluetooth Manager.
+    manager = Manager.instance()
+    manager_listener = MyManagerListener()
+    manager.add_listener(manager_listener)
+
+    manager.discover(SCANNING_TIME_s)
+
+    # Getting discovered devices.
+    devices = manager.get_nodes()
+
+    # Listing discovered devices.
+    if not devices:
+        print("u ovoj sam funkciji")
+        terminate(context=CONTEXT, socket=SOCKET)
+            
+    # Selecting a device.
+    device = devices[0]
+            
+    # Connecting to the device.
+    node_listener = MyNodeListener()
+    device.add_listener(node_listener)
+    if not device.connect():
+        terminate(socket=SOCKET, context=CONTEXT)
+                
+    SOCKET.send(("SUCCESS").encode("utf-8"))
+    received = SOCKET.recv().decode("utf-8")
+    params = [int(ele) for ele in received.split(",")] #STREAM, SAVE, DURATION
+
+    has_audio_adpcm_features = [False,False]
+    has_audio_opus_features = [False,False]
+
+    i = 1
+    features = device.get_features()
+    for feature in features:
+        if isinstance(feature, FeatureAudioADPCM):
+            audio_feature = feature
+            has_audio_adpcm_features[0] = True
+        elif isinstance(feature, FeatureAudioADPCMSync):
+            audio_sync_feature = feature
+            has_audio_adpcm_features[1] = True
+        elif isinstance(feature, FeatureAudioOpus):
+            audio_feature = feature
+            has_audio_opus_features[0] = True
+        elif isinstance(feature, FeatureAudioOpusConf):
+            audio_sync_feature = feature
+            has_audio_opus_features[1] = True
+        elif isinstance(feature,FeatureBeamforming):
+            beamforming_feature = feature
+        i += 1
+
+        return has_audio_adpcm_features, has_audio_opus_features, 
+
+
+def main(audio_feat_flag, opus_feat_flag, params):
+    
+    global n_idx
+    ###Audio Stream#####################################################
+    global stream
+    ###Audio Stream#####################################################
+    ###Save Audio File##################################################
+    global audioFile
+    global save_audio_flag
+    global beamforming_flag
+    ###Save Audio File##################################################
+    
+    global audio_feature
+    global audio_sync_feature
+    global beamforming_feature
+
+    ###TCP Connection###########################################
+    global CONTEXT
+    global SOCKET
+    ###TCP Connection###########################################
+    
+    ###Audio Stream###
+    global audio_stream_flag
+    ###Audio Stream###
     
     try:
-        # Creating Bluetooth Manager.
-            manager = Manager.instance()
-            manager_listener = MyManagerListener()
-            manager.add_listener(manager_listener)
 
-        #while True:
-            manager.discover(SCANNING_TIME_s)
+        has_audio_adpcm_features = audio_feat_flag
+        has_audio_opus_features = opus_feat_flag
 
-            # Getting discovered devices.
-            devices = manager.get_nodes()
-
-            # Listing discovered devices.
-            if not devices:
-                print("u ovoj sam funkciji")
-                terminate(context=CONTEXT, socket=SOCKET)
             
-            # Selecting a device.
-            device = devices[0]
-            
-            # Connecting to the device.
-            node_listener = MyNodeListener()
-            device.add_listener(node_listener)
-            if not device.connect():
-                terminate(socket=SOCKET, context=CONTEXT)
-                
-            SOCKET.send(("SUCCESS").encode("utf-8"))
-            received = SOCKET.recv().decode("utf-8")
-            params = [int(ele) for ele in received.split(",")] #STREAM, SAVE, DURATION
-
-            has_audio_adpcm_features = [False,False]
-            has_audio_opus_features = [False,False]
-
-            i = 1
-            features = device.get_features()
-            for feature in features:
-                if isinstance(feature, FeatureAudioADPCM):
-                    audio_feature = feature
-                    has_audio_adpcm_features[0] = True
-                elif isinstance(feature, FeatureAudioADPCMSync):
-                    audio_sync_feature = feature
-                    has_audio_adpcm_features[1] = True
-                elif isinstance(feature, FeatureAudioOpus):
-                    audio_feature = feature
-                    has_audio_opus_features[0] = True
-                elif isinstance(feature, FeatureAudioOpusConf):
-                    audio_sync_feature = feature
-                    has_audio_opus_features[1] = True
-                elif isinstance(feature,FeatureBeamforming):
-                    beamforming_feature = feature
-                i += 1
-            
-            if all(has_audio_adpcm_features) or all(has_audio_opus_features):
-                    save_audio_flag = params[1]
+        if all(has_audio_adpcm_features) or all(has_audio_opus_features):
+            save_audio_flag = params[1]
                     
-                    if save_audio_flag is not None:
-                        if save_audio_flag == 1:
-                            ts = time.time()
-                            st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
-                            if not os.path.exists(AUDIO_DUMPS_PATH):
-                                os.makedirs(AUDIO_DUMPS_PATH)
-                            if all(has_audio_adpcm_features):
-                                fileName = AUDIO_DUMPS_PATH + st + ADPCM_TAG + AUDIO_DUMP_SUFFIX
-                            elif all(has_audio_opus_features):
-                                fileName = AUDIO_DUMPS_PATH + st + OPUS_TAG + AUDIO_DUMP_SUFFIX
-                            audioFile = open(fileName,"wb+")
+            if save_audio_flag is not None:
+                if save_audio_flag == 1:
+                    ts = time.time()
+                    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
+                    if not os.path.exists(AUDIO_DUMPS_PATH):
+                        os.makedirs(AUDIO_DUMPS_PATH)
+                    if all(has_audio_adpcm_features):
+                        fileName = AUDIO_DUMPS_PATH + st + ADPCM_TAG + AUDIO_DUMP_SUFFIX
+                    elif all(has_audio_opus_features):
+                        fileName = AUDIO_DUMPS_PATH + st + OPUS_TAG + AUDIO_DUMP_SUFFIX
+                    audioFile = open(fileName,"wb+")
                         
                         
-                        number_of_seconds = params[2]
+                number_of_seconds = params[2]
                         
-                        if all(has_audio_adpcm_features):
-                            number_of_notifications = number_of_seconds * NPS_ADPCM
-                        elif all(has_audio_opus_features):
-                            number_of_notifications = number_of_seconds * NPS_OPUS
+                if all(has_audio_adpcm_features):
+                    number_of_notifications = number_of_seconds * NPS_ADPCM
+                elif all(has_audio_opus_features):
+                    number_of_notifications = number_of_seconds * NPS_OPUS
 
-                        if number_of_seconds > 0:
-                            SOCKET.send(("STREAMING").encode("utf-8"))
-                            SOCKET.recv()
+                if number_of_seconds > 0:
+                    print("Streaming!")
+                    # SOCKET.send(("STREAMING").encode("utf-8"))
+                    # SOCKET.recv()
                             
-                            if all(has_audio_adpcm_features):
-                                ###Audio Stream#####################################
-                                stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NONBLOCK,'default')
-                                stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-                                stream.setchannels(CHANNELS)
-                                stream.setrate(SAMPLING_FREQ_ADPCM)
-                                ###Audio Stream#####################################
+                    if all(has_audio_adpcm_features):
+                        ###Audio Stream#####################################
+                        stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NONBLOCK,'default')
+                        stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+                        stream.setchannels(CHANNELS)
+                        stream.setrate(SAMPLING_FREQ_ADPCM)
+                        ###Audio Stream#####################################
                                 
-                                #Enabling Notifications
-                                audio_feature_listener = MyFeatureListener()
-                                audio_feature.add_listener(audio_feature_listener)
-                                device.enable_notifications(audio_feature)
-                                audio_sync_feature_listener = MyFeatureListenerSync()
-                                audio_sync_feature.add_listener(audio_sync_feature_listener)
-                                device.enable_notifications(audio_sync_feature)
-                            elif all(has_audio_opus_features):
-                                ###Audio Stream#########################################
-                                #SuppressING warnings.
-                                with warnings.catch_warnings():
-                                    warnings.simplefilter("ignore")
-                                    stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')
-                                    stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-                                    stream.setchannels(CHANNELS)
-                                    stream.setrate(SAMPLING_FREQ_OPUS)
-                                    stream.setperiodsize(160)
-                                ###Audio Stream#########################################
+                        #Enabling Notifications
+                        audio_feature_listener = MyFeatureListener()
+                        audio_feature.add_listener(audio_feature_listener)
+                        device.enable_notifications(audio_feature)
+                        audio_sync_feature_listener = MyFeatureListenerSync()
+                        audio_sync_feature.add_listener(audio_sync_feature_listener)
+                        device.enable_notifications(audio_sync_feature)
+                    elif all(has_audio_opus_features):
+                        ###Audio Stream#########################################
+                        #SuppressING warnings.
+                        with warnings.catch_warnings():
+                            warnings.simplefilter("ignore")
+                            stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')
+                            stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+                            stream.setchannels(CHANNELS)
+                            stream.setrate(SAMPLING_FREQ_OPUS)
+                            stream.setperiodsize(160)
+                        ###Audio Stream#########################################
                                             
-                                #Enabling Notifications
-                                audio_sync_feature_listener = MyFeatureListenerSync()
-                                audio_sync_feature.add_listener(audio_sync_feature_listener)
-                                # Suppressing warnings.
-                                with warnings.catch_warnings():
-                                    warnings.simplefilter("ignore")
-                                    device.enable_notifications(audio_sync_feature)
-                                    audio_feature_listener = MyFeatureListener()
-                                    audio_feature.add_listener(audio_feature_listener)
-                                    device.enable_notifications(audio_feature)
+                        #Enabling Notifications
+                        audio_sync_feature_listener = MyFeatureListenerSync()
+                        audio_sync_feature.add_listener(audio_sync_feature_listener)
+                        # Suppressing warnings.
+                        with warnings.catch_warnings():
+                            warnings.simplefilter("ignore")
+                            device.enable_notifications(audio_sync_feature)
+                            audio_feature_listener = MyFeatureListener()
+                            audio_feature.add_listener(audio_feature_listener)
+                            device.enable_notifications(audio_feature)
                             
-                            n_idx = 0
-                            while n_idx < number_of_notifications:
-                                device.wait_for_notifications(0.05)
+                    n_idx = 0
+                    while n_idx < number_of_notifications:
+                        device.wait_for_notifications(0.05)
                                     
 
                         
-                            #SOCKET.send(("End of Streaming!").encode("utf-8"))
-                            #SOCKET.recv()
-                            # Disabling notifications.
-                            device.disable_notifications(audio_feature)
-                            audio_feature.remove_listener(audio_feature_listener)
-                            device.disable_notifications(audio_sync_feature)
-                            audio_sync_feature.remove_listener(audio_sync_feature_listener)
+                    #SOCKET.send(("End of Streaming!").encode("utf-8"))
+                    #SOCKET.recv()
+                    # Disabling notifications.
+                    device.disable_notifications(audio_feature)
+                    audio_feature.remove_listener(audio_feature_listener)
+                    device.disable_notifications(audio_sync_feature)
+                    audio_sync_feature.remove_listener(audio_sync_feature_listener)
                             
-                            ###Save Audio File##################################
-                            if save_audio_flag == 1:
-                                audioFile.close()
-                            ###Save Audio File##################################
-                            ###Audio Stream#####################################
-                            stream.close()
-                            ###Audio Stream#####################################
+                    ###Save Audio File##################################
+                    if save_audio_flag == 1:
+                        audioFile.close()
+                    ###Save Audio File##################################
+                    ###Audio Stream#####################################
+                    stream.close()
+                    ###Audio Stream#####################################
                         
                         
     except KeyboardInterrupt:

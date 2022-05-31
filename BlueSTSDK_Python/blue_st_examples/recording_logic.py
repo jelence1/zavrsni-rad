@@ -11,12 +11,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer
 
-import zmq
 import time
 
 import globals
-
-DURATION = 5
+import example_ble_5
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -179,8 +177,6 @@ class Form(QtWidgets.QWidget, Ui_Form):
     def make_connection(self):
         #globals.SOCKET_OUT.bind("tcp://*:5555")
         print("cekam ovde")
-        globals.SOCKET_OUT.send(str().encode("utf-8"))
-        print("uspio je poslat nekay")
         message = globals.SOCKET_OUT.recv().decode("utf-8")
         print("ovo se napokon izvelo")
         if "SUCCESS" in message:
@@ -213,7 +209,6 @@ if __name__ == "__main__":
     w.get_data(sys.argv[1])
     
     w.show()
-    w.make_connection()
 
     w.timer.start(w.duration*1000)
     w.basic.start(1000, w)

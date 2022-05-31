@@ -30,19 +30,24 @@ def main():
 			sys.exit(p.returncode)
 
 	
-	pool = ThreadPool(processes=1)
-	async_result = pool.apply_async(pipe.main)
+	# pool = ThreadPool(processes=1)
+	# async_result = pool.apply_async(pipe.main)
 
-	p = subprocess.run(["python3", "params_form.py"])
+	p = subprocess.run(["python3", "params_form.py"], encoding="utf-8")
 
 	if p.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
 		sys.exit(p.returncode)
 
-	return_vals = list(async_result.get().values())
-	data = ",".join([str(ele) for ele in return_vals])
+	print(p.stdout)
 
-	async_result = pool.apply_async(example_ble_5.main, args=(1,))
+	sys.exit(0)
+
+	# return_vals = list(async_result.get().values())
+	# data = ",".join([str(ele) for ele in return_vals])
+
+	# async_result = pool.apply_async(example_ble_5.main, args=(1,))
+	data = 0
 
 	q = subprocess.run(["python3", "recording_logic.py", data])
 
