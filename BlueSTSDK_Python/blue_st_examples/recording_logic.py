@@ -524,6 +524,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
+        self.worker.finished.connect(lambda: self.recordBtn.setEnabled(True))
         self.thread.finished.connect(self.thread.deleteLater)
         self.worker.textlabel.connect(self.progress)
         # Step 6: Start the thread
@@ -535,7 +536,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.timer = QTimer()
         self.timer.timeout.connect(self.finished)
         self.basic = QBasicTimer()
-        
+
         self.timer.start(self.duration*1000)
         self.basic.start(1000, self)
 
