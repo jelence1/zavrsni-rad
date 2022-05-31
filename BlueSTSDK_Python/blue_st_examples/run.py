@@ -40,6 +40,7 @@ def main():
 		sys.exit(p.returncode)
 
 	data = p.stdout
+	print(data)
 
 	#q = subprocess.run(["python3", "recording_logic.py", data])
 
