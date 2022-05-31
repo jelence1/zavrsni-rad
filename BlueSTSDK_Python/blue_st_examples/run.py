@@ -33,7 +33,7 @@ def main():
 	# pool = ThreadPool(processes=1)
 	# async_result = pool.apply_async(pipe.main)
 
-	p = subprocess.run(["python3", "params_form.py"], stdout=subprocess.PIPE)
+	p = subprocess.run(["python3", "params_form.py"], stdout=subprocess.PIPE, encoding="utf-8")
 
 	if p.returncode != globals.RECORDING_CODE:
 		print("Exit code: ", p.returncode)
