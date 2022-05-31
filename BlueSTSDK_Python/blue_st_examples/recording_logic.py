@@ -276,6 +276,10 @@ class Ui_Form(object):
         font.setPointSize(14)
         self.exitBtn.setFont(font)
         self.exitBtn.setObjectName("exitBtn")
+        self.recordBtn = QtWidgets.QPushButton(self.widget)
+        self.recordBtn.setGeometry(QtCore.QRect(240, 130, 291, 85))
+        self.recordBtn.setStyleSheet("")
+        self.recordBtn.setObjectName("recordBtn")
         self.label = QtWidgets.QLabel(self.widget)
         self.label.setGeometry(QtCore.QRect(70, 250, 621, 251))
         self.label.setFont(font)
@@ -288,8 +292,10 @@ class Ui_Form(object):
         self.headerLabel.raise_()
         self.exitBtn.raise_()
         self.label.raise_()
+        self.recordBtn.raise_()
 
         self.exitBtn.clicked.connect(self.exit)
+        self.recordBtn.clicked.connect(self.start)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -299,46 +305,14 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.exitBtn.setText(_translate("Form", "X"))
         self.label.setText(_translate("Form", "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"))
+        self.recordBtn.setText(_translate("Form", "START"))
 
     def exit(self):
         sys.exit(0)
 
-
-class Form(QtWidgets.QWidget, Ui_Form):
-    def __init__(self, parent=None):
-        super(Form, self).__init__(parent)
-        self.setupUi(self)
-        self.setMouseTracking(True)
-
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.finished)
-
-        self.basic = QBasicTimer()
-
-    def mousePressEvent(self, event):
-        self.oldPosition = event.globalPos()
-
-    def mouseMoveEvent(self, event):
-        if event.buttons() & Qt.LeftButton:
-            delta = QPoint(event.globalPos() - self.oldPosition)
-            self.move(self.x() + delta.x(), self.y() + delta.y())
-            self.oldPosition = event.globalPos()
-
-    def update_gui(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("Form", '''<html><head/><body><p>Streaming has started!</p>
-        <p>Streaming enabled: {}</p>
-        <p>Audio will be saved: {}</p>
-        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)))
-
-    def finished(self):
-        self.basic.stop()
-        _translate = QtCore.QCoreApplication.translate
-        self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
-
-    def timerEvent(self, event):
-        self.update_gui()
-        super().timerEvent(event)
+    def start(self):
+        self.recordBtn.setEnabled(False)
+        self.make_connection()
 
     def terminate(self):
         time.sleep(5000)
@@ -431,7 +405,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
                 beamforming_feature = feature
             i += 1
 
-        return has_audio_adpcm_features, has_audio_opus_features, device
+
+        self.streaming(has_audio_adpcm_features, has_audio_opus_features, device)
         
     def streaming(self, audio_feat_flag, opus_feat_flag, device):
         global n_idx
@@ -551,6 +526,52 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
         
 
+    
+    
+
+
+class Form(QtWidgets.QWidget, Ui_Form):
+    def __init__(self, parent=None):
+        super(Form, self).__init__(parent)
+        self.setupUi(self)
+        self.setMouseTracking(True)
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.finished)
+
+        self.basic = QBasicTimer()
+
+    def mousePressEvent(self, event):
+        self.oldPosition = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() & Qt.LeftButton:
+            delta = QPoint(event.globalPos() - self.oldPosition)
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.oldPosition = event.globalPos()
+
+    def update_gui(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", '''<html><head/><body><p>Streaming has started!</p>
+        <p>Streaming enabled: {}</p>
+        <p>Audio will be saved: {}</p>
+        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)))
+
+    def finished(self):
+        self.basic.stop()
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Form", "Recording is finished! You can now exit the application."))
+
+    def timerEvent(self, event):
+        self.update_gui()
+        super().timerEvent(event)
+
+    
+
+    
+
+    
+
         
 
 if __name__ == "__main__":
@@ -561,9 +582,9 @@ if __name__ == "__main__":
     w.get_data(sys.argv[1])
     
     w.show()
-
-    audio_feat_flag, opus_feat_flag, device = w.make_connection()
-
-    w.streaming(audio_feat_flag, opus_feat_flag, device)
-
+    
     sys.exit(app.exec_())
+
+    
+
+
