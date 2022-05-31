@@ -13,7 +13,6 @@ from PyQt5.QtCore import QPoint, Qt, QTimer, QBasicTimer
 
 import zmq
 import time
-import sys
 
 import globals
 
@@ -177,27 +176,9 @@ class Form(QtWidgets.QWidget, Ui_Form):
             self.save = "Yes"
         self.duration = int(r[2])
 
-    def get_new_data(self, socket):
-        print("pocetak get new data")
-        r = socket.recv_json()
-        print("primljen new data")
-        socket.send(str().encode("utf-8"))
-        self.data = r
-        r = r.split(",") #stream, save, duration
-        if int(r[0]) == 0:
-            self.stream = "No"
-        else:
-            self.stream = "Yes"
-        if int(r[1]) == 0:
-            self.save = "No"
-        else:
-            self.save = "Yes"
-        self.duration = int(r[2])
-
     def make_connection(self):
         #globals.SOCKET_OUT.bind("tcp://*:5555")
         print("cekam ovde")
-        print(self.data)
         message = globals.SOCKET_OUT.recv().decode("utf-8")
         print("ovo se napokon izvelo")
         if "SUCCESS" in message:
@@ -222,15 +203,12 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
         
 
-def main():
+if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     w = Form()
 
-    globals.SOCKET_OUT.bind("tcp://*:5555")
-
-    #w.get_data(sys.argv[1])
-    w.get_new_data(globals.SOCKET_OUT)
+    w.get_data(sys.argv[1])
     
     w.show()
     w.make_connection()
