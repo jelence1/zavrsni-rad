@@ -56,6 +56,9 @@ beamforming_flag = 0
 # Audio stream flag
 audio_stream_flag = 0
 
+# duration
+duration = 0
+
 # INTERFACES
 
 #
@@ -219,6 +222,8 @@ class Worker(QObject):
         global audio_stream_flag
         ###Audio Stream###
 
+        #duration #
+        global duration 
         # text label
         global label_text
 
@@ -236,9 +241,9 @@ class Worker(QObject):
 
         # Listing discovered devices.
         if not devices:
-            self.textlabel.emit("nisam ga nasel :(")
-            time.sleep(5)
-            sys.exit(0)
+            self.textlabel.emit("<html><head/><body><p>No Bluetooth devices found.</p><p>Check the STM32's connection.</p></body></html>")
+            self.finished.emit()
+            return
         
         # Selecting a device.
         device = devices[0]
@@ -249,9 +254,9 @@ class Worker(QObject):
         node_listener = MyNodeListener()
         device.add_listener(node_listener)
         if not device.connect():
-            self.textlabel.emit("<html><head/><body><p>Connection failed.</p><p>Check the STM32's connection.</p><p>The application will now shut down.</p></body></html>")
-            time.sleep(5)
-            sys.exit(0)
+            self.textlabel.emit("<html><head/><body><p>Connection failed.</p><p>Check the STM32's connection.</p></body></html>")
+            self.finished.emit()
+            return
 
         self.textlabel.emit("<html><head/><body><p>Connection successful!</p><p>Streaming will start in a few seconds.</p></body></html>")
         time.sleep(3)
@@ -277,6 +282,95 @@ class Worker(QObject):
             elif isinstance(feature,FeatureBeamforming):
                 beamforming_feature = feature
             i += 1
+
+        
+        if all(has_audio_adpcm_features) or all(has_audio_opus_features):
+            #save_audio_flag = self.save #!!!!!!!!!
+                    
+            if save_audio_flag is not None:
+                if save_audio_flag == 1:
+                    ts = time.time()
+                    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
+                    if not os.path.exists(globals.AUDIO_DUMPS_PATH):
+                        os.makedirs(globals.AUDIO_DUMPS_PATH)
+                    if all(has_audio_adpcm_features):
+                        fileName = globals.AUDIO_DUMPS_PATH + st + globals.ADPCM_TAG + globals.AUDIO_DUMP_SUFFIX
+                    elif all(has_audio_opus_features):
+                        fileName = globals.AUDIO_DUMPS_PATH + st + globals.PUS_TAG + globals.AUDIO_DUMP_SUFFIX
+                    audioFile = open(fileName,"wb+")
+                        
+                        
+                #number_of_seconds = self.duration #!!!!!!!
+                number_of_seconds = duration
+                        
+                if all(has_audio_adpcm_features):
+                    number_of_notifications = number_of_seconds * globals.NPS_ADPCM
+                elif all(has_audio_opus_features):
+                    number_of_notifications = number_of_seconds * globals.NPS_OPUS
+
+                if number_of_seconds > 0:
+                    # START OF STREAMING
+                    self.stream.emit()
+                            
+                    if all(has_audio_adpcm_features):
+                        ###Audio Stream#####################################
+                        stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NONBLOCK,'default')
+                        stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+                        stream.setchannels(globals.CHANNELS)
+                        stream.setrate(globals.SAMPLING_FREQ_ADPCM)
+                        ###Audio Stream#####################################
+                                
+                        #Enabling Notifications
+                        audio_feature_listener = MyFeatureListener()
+                        audio_feature.add_listener(audio_feature_listener)
+                        device.enable_notifications(audio_feature)
+                        audio_sync_feature_listener = MyFeatureListenerSync()
+                        audio_sync_feature.add_listener(audio_sync_feature_listener)
+                        device.enable_notifications(audio_sync_feature)
+                    elif all(has_audio_opus_features):
+                        ###Audio Stream#########################################
+                        #SuppressING warnings.
+                        with warnings.catch_warnings():
+                            warnings.simplefilter("ignore")
+                            stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')
+                            stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+                            stream.setchannels(globals.CHANNELS)
+                            stream.setrate(globals.SAMPLING_FREQ_OPUS)
+                            stream.setperiodsize(160)
+                        ###Audio Stream#########################################
+                                            
+                        #Enabling Notifications
+                        audio_sync_feature_listener = MyFeatureListenerSync()
+                        audio_sync_feature.add_listener(audio_sync_feature_listener)
+                        # Suppressing warnings.
+                        with warnings.catch_warnings():
+                            warnings.simplefilter("ignore")
+                            device.enable_notifications(audio_sync_feature)
+                            audio_feature_listener = MyFeatureListener()
+                            audio_feature.add_listener(audio_feature_listener)
+                            device.enable_notifications(audio_feature)
+                            
+                    n_idx = 0
+                    while n_idx < number_of_notifications:
+                        device.wait_for_notifications(0.05)
+                                    
+
+                        
+                    # END OF STREAMING 
+
+                    # Disabling notifications.
+                    device.disable_notifications(audio_feature)
+                    audio_feature.remove_listener(audio_feature_listener)
+                    device.disable_notifications(audio_sync_feature)
+                    audio_sync_feature.remove_listener(audio_sync_feature_listener)
+                            
+                    ###Save Audio File##################################
+                    if save_audio_flag == 1:
+                        audioFile.close()
+                    ###Save Audio File##################################
+                    ###Audio Stream#####################################
+                    stream.close()
+                    ###Audio Stream#####################################
 
 
 class Ui_Form(object):
@@ -398,132 +492,8 @@ class Ui_Form(object):
     def exit(self):
         sys.exit(0)
 
-    
-
-    def make_connection(self):
-        _translate = QtCore.QCoreApplication.translate
-
-        
-
-        #self.streaming(has_audio_adpcm_features, has_audio_opus_features, device)
-        
-    def streaming(self, audio_feat_flag, opus_feat_flag, device):
-        global n_idx
-        ###Audio Stream#####################################################
-        global stream
-        ###Audio Stream#####################################################
-        ###Save Audio File##################################################
-        global audioFile
-        global save_audio_flag
-        global beamforming_flag
-        ###Save Audio File##################################################
-        
-        global audio_feature
-        global audio_sync_feature
-        global beamforming_feature
-        
-        ###Audio Stream###
-        global audio_stream_flag
-        ###Audio Stream###        
 
 
-        has_audio_adpcm_features = audio_feat_flag   
-        has_audio_opus_features = opus_feat_flag
-
-        if all(has_audio_adpcm_features) or all(has_audio_opus_features):
-            save_audio_flag = self.save
-                    
-            if save_audio_flag is not None:
-                if save_audio_flag == 1:
-                    ts = time.time()
-                    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
-                    if not os.path.exists(globals.AUDIO_DUMPS_PATH):
-                        os.makedirs(globals.AUDIO_DUMPS_PATH)
-                    if all(has_audio_adpcm_features):
-                        fileName = globals.AUDIO_DUMPS_PATH + st + globals.ADPCM_TAG + globals.AUDIO_DUMP_SUFFIX
-                    elif all(has_audio_opus_features):
-                        fileName = globals.AUDIO_DUMPS_PATH + st + globals.PUS_TAG + globals.AUDIO_DUMP_SUFFIX
-                    audioFile = open(fileName,"wb+")
-                        
-                        
-                number_of_seconds = self.duration
-                        
-                if all(has_audio_adpcm_features):
-                    number_of_notifications = number_of_seconds * globals.NPS_ADPCM
-                elif all(has_audio_opus_features):
-                    number_of_notifications = number_of_seconds * globals.NPS_OPUS
-
-                if number_of_seconds > 0:
-                    # START OF STREAMING
-                    self.timer.start(self.duration*1000)
-                    self.basic.start(1000, self)
-                            
-                    if all(has_audio_adpcm_features):
-                        ###Audio Stream#####################################
-                        stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NONBLOCK,'default')
-                        stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-                        stream.setchannels(globals.CHANNELS)
-                        stream.setrate(globals.SAMPLING_FREQ_ADPCM)
-                        ###Audio Stream#####################################
-                                
-                        #Enabling Notifications
-                        audio_feature_listener = MyFeatureListener()
-                        audio_feature.add_listener(audio_feature_listener)
-                        device.enable_notifications(audio_feature)
-                        audio_sync_feature_listener = MyFeatureListenerSync()
-                        audio_sync_feature.add_listener(audio_sync_feature_listener)
-                        device.enable_notifications(audio_sync_feature)
-                    elif all(has_audio_opus_features):
-                        ###Audio Stream#########################################
-                        #SuppressING warnings.
-                        with warnings.catch_warnings():
-                            warnings.simplefilter("ignore")
-                            stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')
-                            stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-                            stream.setchannels(globals.CHANNELS)
-                            stream.setrate(globals.SAMPLING_FREQ_OPUS)
-                            stream.setperiodsize(160)
-                        ###Audio Stream#########################################
-                                            
-                        #Enabling Notifications
-                        audio_sync_feature_listener = MyFeatureListenerSync()
-                        audio_sync_feature.add_listener(audio_sync_feature_listener)
-                        # Suppressing warnings.
-                        with warnings.catch_warnings():
-                            warnings.simplefilter("ignore")
-                            device.enable_notifications(audio_sync_feature)
-                            audio_feature_listener = MyFeatureListener()
-                            audio_feature.add_listener(audio_feature_listener)
-                            device.enable_notifications(audio_feature)
-                            
-                    n_idx = 0
-                    while n_idx < number_of_notifications:
-                        device.wait_for_notifications(0.05)
-                                    
-
-                        
-                    # END OF STREAMING 
-
-                    # Disabling notifications.
-                    device.disable_notifications(audio_feature)
-                    audio_feature.remove_listener(audio_feature_listener)
-                    device.disable_notifications(audio_sync_feature)
-                    audio_sync_feature.remove_listener(audio_sync_feature_listener)
-                            
-                    ###Save Audio File##################################
-                    if save_audio_flag == 1:
-                        audioFile.close()
-                    ###Save Audio File##################################
-                    ###Audio Stream#####################################
-                    stream.close()
-                    ###Audio Stream#####################################
-                        
-            
-
-        
-
-    
-    
 
 
 class Form(QtWidgets.QWidget, Ui_Form):
@@ -556,8 +526,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.worker.moveToThread(self.thread)
         # Connect signals and slots
         self.thread.started.connect(self.worker.run)
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
+        #self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.quit)
         self.thread.finished.connect(self.thread.deleteLater)
         self.worker.textlabel.connect(self.progress)
         # Step 6: Start the thread
@@ -592,6 +562,15 @@ class Form(QtWidgets.QWidget, Ui_Form):
         super().timerEvent(event)
 
     def get_data(self, r):
+        ##Save##
+        global save_audio_flag
+        ###Audio Stream###
+        global audio_stream_flag
+        ###Audio Stream###     
+
+        # duration
+        global duration
+
         self.data = r
         r = r.split(",") #stream, save, duration
         if r[0] == "0":
@@ -603,6 +582,11 @@ class Form(QtWidgets.QWidget, Ui_Form):
         else:
             self.save = "Yes"
         self.duration = int(r[2])
+
+        audio_stream_flag = int(r[0])
+        save_audio_flag = int(r[1])
+        duration = self.duration
+
 
     def progress(self, text):
         _translate = QtCore.QCoreApplication.translate
