@@ -39,16 +39,7 @@ def main():
 		print("Exit code: ", p.returncode)
 		sys.exit(p.returncode)
 
-	var = p.stdout
-	
-
-	sys.exit(0)
-
-	# return_vals = list(async_result.get().values())
-	# data = ",".join([str(ele) for ele in return_vals])
-
-	# async_result = pool.apply_async(example_ble_5.main, args=(1,))
-	data = 0
+	data = p.stdout
 
 	q = subprocess.run(["python3", "recording_logic.py", data])
 

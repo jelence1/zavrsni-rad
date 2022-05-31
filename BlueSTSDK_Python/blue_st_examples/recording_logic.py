@@ -164,11 +164,11 @@ class Form(QtWidgets.QWidget, Ui_Form):
     def get_data(self, r):
         self.data = r
         r = r.split(",") #stream, save, duration
-        if int(r[0]) == 0:
+        if r[0] == "0":
             self.stream = "No"
         else:
             self.stream = "Yes"
-        if int(r[1]) == 0:
+        if r[1] == "0":
             self.save = "No"
         else:
             self.save = "Yes"
