@@ -375,6 +375,8 @@ class Worker(QObject):
                     device.remove_listener(node_listener)
                     manager.reset_discovery()
 
+                    self.finished.emit()
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
