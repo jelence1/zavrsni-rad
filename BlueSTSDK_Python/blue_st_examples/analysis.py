@@ -17,7 +17,10 @@ if file_path == "":
      sys.exit(0)
 
 # read the audio file 
-if file_path.endswith("raw"):
+if file_path == "":
+     import sys
+     sys.exit(0)
+elif file_path.endswith("raw"):
      samples, sampling_rate = sf.read(file_path, channels=globals.CHANNELS, samplerate=globals.SAMPLE_RATE,
                            subtype=globals.SUBTYPE)
 else:
