@@ -32,7 +32,7 @@ mngr.set_window_title(f"Audio Analysis of {file_path}")
 plot1 = plt.subplot2grid((4, 4), (0,0),rowspan=2, colspan=4)
 plot1.plot(samples)
 plot1.set_title("Audio")
-plot1.set_xlabel("Time (s)")
+plot1.set_xlabel("Sample")
 plot1.set_ylabel("Amplitude")
 
 n = len(samples)
