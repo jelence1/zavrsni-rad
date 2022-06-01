@@ -142,7 +142,7 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.recordBtn.setText(_translate("Form", "RECORD"))
-        self.editBtn.setText(_translate("Form", "EDIT AUDIO"))
+        self.editBtn.setText(_translate("Form", "ANALYSE AUDIO"))
         self.exitBtn.setText(_translate("Form", "X"))
 
     def exit(self):
