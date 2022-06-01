@@ -531,7 +531,6 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.thread.start()
 
         self.recordBtn.setEnabled(False)
-        return
         
         self.timer = QTimer()
         self.timer.timeout.connect(self.finished)
@@ -539,6 +538,8 @@ class Form(QtWidgets.QWidget, Ui_Form):
 
         self.timer.start(self.duration*1000)
         self.basic.start(1000, self)
+
+        return
 
     def terminate(self):
         
