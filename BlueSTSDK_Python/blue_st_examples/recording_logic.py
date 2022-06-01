@@ -371,6 +371,9 @@ class Worker(QObject):
                     ###Audio Stream#####################################
                     stream.close()
                     ###Audio Stream#####################################
+                    device.disconnect()
+                    device.remove_listener(node_listener)
+                    manager.reset_discovery()
 
 
 class Ui_Form(object):
@@ -527,11 +530,13 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.worker.finished.connect(lambda: self.recordBtn.setEnabled(True))
         self.thread.finished.connect(self.thread.deleteLater)
         self.worker.textlabel.connect(self.progress)
+        self.worker.stream.connect(self.set_timer)
         # Step 6: Start the thread
         self.thread.start()
 
         self.recordBtn.setEnabled(False)
         
+    def set_timer(self):
         self.timer = QTimer()
         self.timer.timeout.connect(self.finished)
         self.basic = QBasicTimer()
@@ -539,10 +544,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.timer.start(self.duration*1000)
         self.basic.start(1000, self)
 
-        return
-
     def terminate(self):
-        
         time.sleep(5)
         sys.exit(0)
 
