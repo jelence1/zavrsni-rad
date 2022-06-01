@@ -555,7 +555,10 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.label.setText(_translate("Form", '''<html><head/><body><p>Streaming has started!</p>
         <p>Streaming enabled: {}</p>
         <p>Audio will be saved: {}</p>
-        <p>Time left: {} seconds</p></body></html>'''.format(self.stream, self.save, self.timer.remainingTime()//1000)))
+        <p>Time left: {} hours {} minutes {} seconds</p></body></html>'''.format(self.stream, self.save, 
+        self.timer.remainingTime()//1000 // 60 // 60, 
+        self.timer.remainingTime()//1000 // 60 - (self.timer.remainingTime()//1000 // 60 // 60)*60, 
+        self.timer.remainingTime()//1000 - (self.timer.remainingTime()//1000 // 60 // 60)*60*60 - (self.timer.remainingTime()//1000 // 60 - (self.timer.remainingTime()//1000 // 60 // 60)*60)*60)))
 
     def finished(self):
         self.basic.stop()
