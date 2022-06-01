@@ -194,8 +194,6 @@ class MyFeatureListenerBeam(FeatureListener):
         return
 
 
-# label text
-label_text = ""
 
 class Worker(QObject):
     # Class for running BLE 
@@ -224,8 +222,6 @@ class Worker(QObject):
 
         #duration #
         global duration 
-        # text label
-        global label_text
 
         # Creating Bluetooth Manager.
         manager = Manager.instance()
