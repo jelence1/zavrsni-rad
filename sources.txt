@@ -21,3 +21,8 @@ https://www.flaticon.com/free-icons/audio Audio icons created by Freepik - Flati
 pixabay.com
 
 https://towardsdatascience.com/understanding-audio-data-fourier-transform-fft-spectrogram-and-speech-recognition-a4072d228520
+http://struna.ihjj.hr/naziv/teorem-uzorkovanja/49822/
+https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
+https://www.qlight.com/productdata/techdata/en/08_Intensity_of_Sound.pdf
+https://www.quora.com/Why-does-my-recorded-audio-show-up-with-negative-dB-amplitude-on-Audacity-Silence-seems-to-be-at-around-60db
+https://en.wikipedia.org/wiki/DBFS
