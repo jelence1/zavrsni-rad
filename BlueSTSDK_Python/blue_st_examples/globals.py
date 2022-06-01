@@ -21,3 +21,8 @@ SAMPLING_FREQ_OPUS = 16000
 
 # Bluetooth Scanning time in seconds (optional).
 SCANNING_TIME_s = 5
+
+# Params for Audio Analysis
+SAMPLE_RATE = 16000
+CHANNELS = 1
+SUBTYPE = "PCM_16"
