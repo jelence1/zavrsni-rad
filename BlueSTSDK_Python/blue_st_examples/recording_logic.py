@@ -296,7 +296,7 @@ class Worker(QObject):
                     if all(has_audio_adpcm_features):
                         fileName = globals.AUDIO_DUMPS_PATH + st + globals.ADPCM_TAG + globals.AUDIO_DUMP_SUFFIX
                     elif all(has_audio_opus_features):
-                        fileName = globals.AUDIO_DUMPS_PATH + st + globals.PUS_TAG + globals.AUDIO_DUMP_SUFFIX
+                        fileName = globals.AUDIO_DUMPS_PATH + st + globals.OPUS_TAG + globals.AUDIO_DUMP_SUFFIX
                     audioFile = open(fileName,"wb+")
                         
                         
