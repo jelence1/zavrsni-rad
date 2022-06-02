@@ -4,7 +4,7 @@ import soundfile as sf
 from matplotlib import pyplot as plt
 from scipy.fft import fft
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 
 import globals
 
@@ -13,18 +13,17 @@ root.withdraw()
 
 file_path = filedialog.askopenfilename()
 
-if file_path == "":
+try:
+     if file_path == "":
+          sys.exit(0)
+     elif file_path.endswith("raw"):
+          samples, sampling_rate = sf.read(file_path, channels=globals.CHANNELS, samplerate=globals.SAMPLE_RATE,
+                              subtype=globals.SUBTYPE)
+     else:
+          samples, sampling_rate = sf.read(file_path)
+except RuntimeError:
+     messagebox.showerror("Invalid file format. Please select an audio file, such as .raw or .wav.")
      sys.exit(0)
-
-# read the audio file 
-if file_path == "":
-     import sys
-     sys.exit(0)
-elif file_path.endswith("raw"):
-     samples, sampling_rate = sf.read(file_path, channels=globals.CHANNELS, samplerate=globals.SAMPLE_RATE,
-                           subtype=globals.SUBTYPE)
-else:
-     samples, sampling_rate = sf.read(file_path)
 
 mngr = plt.get_current_fig_manager()
 mngr.set_window_title(f"Audio Analysis of {file_path}")

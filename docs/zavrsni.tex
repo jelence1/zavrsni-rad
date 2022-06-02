@@ -1,10 +1,15 @@
 \documentclass[times, utf8, zavrsni]{fer}
+
 \usepackage{booktabs}
+\usepackage{listings}
+\usepackage{minted}
+
+\newtheorem{code}{Isječak koda}[chapter]
 
 \begin{document}
 
 % TODO: Navedite broj rada.
-\thesisnumber{438}
+\thesisnumber{1}
 
 % TODO: Navedite naslov rada.
 \title{Bežični prijenos audio signala putem BLE sučelja razvojnog sustava STM32WB5MM-DK}
@@ -15,19 +20,27 @@
 \maketitle
 
 % Ispis stranice s napomenom o umetanju izvornika rada. Uklonite naredbu \izvornik ako želite izbaciti tu stranicu.
-\izvornik
+%\izvornik
 
 % Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
 \zahvala{}
 
 \tableofcontents
 
+\begingroup
+\renewcommand*\listfigurename{Indeks slika}
+\renewcommand*\lstlistlistingname{Indeks odsječaka koda}
+\listoffigures
+\lstlistoflistings
+\endgroup
+
+
 \include{Uvod}
 \include{STM32}
 \include{Korisnicko_Sucelje}
 \include{Zakljucak}
 
-\bibliography{literatura}
+\bibliography{literatura}{}
 \bibliographystyle{fer}
 
 \begin{sazetak}
