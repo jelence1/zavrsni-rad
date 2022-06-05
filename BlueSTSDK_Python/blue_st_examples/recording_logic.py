@@ -479,7 +479,7 @@ class Ui_Form(object):
 
         self.exitBtn.clicked.connect(self.exit)
 
-        #self.labeltext = "<html><head/><body><p>Trying to connect to the STM32...</p><p>Please do not exit the application.</p></body></html>"
+        self.widget.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0))
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
