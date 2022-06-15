@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: zavrsni.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+A level-1 auxiliary file: Uvod.aux
+Reallocating 'name_of_file' (item size: 1) to 10 items.
+A level-1 auxiliary file: STM32.aux
+Reallocating 'name_of_file' (item size: 1) to 23 items.
+A level-1 auxiliary file: Korisnicko_Sucelje.aux
+Reallocating 'name_of_file' (item size: 1) to 14 items.
+A level-1 auxiliary file: Zakljucak.aux
+Reallocating 'name_of_file' (item size: 1) to 11 items.
+Reallocating 'name_of_file' (item size: 1) to 4 items.
+The style file: fer.bst
+Database file #1: literatura.bib
+Warning--empty journal in signalprocessing
+Warning--empty year in signalprocessing
+Warning--empty year in signalprocessing
+You've used 1 entry,
+            2773 wiz_defined-function locations,
+            602 strings with 5193 characters,
+and the built_in function-call counts, 343 in all, are:
+= -- 26
+> -- 10
+< -- 1
++ -- 4
+- -- 3
+* -- 23
+:= -- 59
+add.period$ -- 3
+call.type$ -- 1
+change.case$ -- 4
+chr.to.int$ -- 1
+cite$ -- 5
+duplicate$ -- 19
+empty$ -- 31
+format.name$ -- 4
+if$ -- 63
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 1
+newline$ -- 13
+num.names$ -- 4
+pop$ -- 14
+preamble$ -- 1
+purify$ -- 3
+quote$ -- 0
+skip$ -- 11
+stack$ -- 0
+substring$ -- 2
+swap$ -- 0
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 11
+warning$ -- 3
+while$ -- 3
+width$ -- 0
+write$ -- 18
+(There were 3 warnings)

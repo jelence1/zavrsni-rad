@@ -1,0 +1,85 @@
+\documentclass[times, utf8, zavrsni, numeric]{fer}
+
+\usepackage{booktabs}
+\usepackage{listings}
+
+\usepackage{xcolor}
+
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+
+\lstdefinestyle{mystyle}{
+	frame=single,   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\renewcommand*{\lstlistingname}{Isječak koda}
+
+\begin{document}
+
+% TODO: Navedite broj rada.
+\thesisnumber{1}
+
+% TODO: Navedite naslov rada.
+\title{Bežični prijenos audio signala putem BLE sučelja razvojnog sustava STM32WB5MM-DK}
+
+% TODO: Navedite vaše ime i prezime.
+\author{Jelena Gavran}
+
+\maketitle
+
+% Ispis stranice s napomenom o umetanju izvornika rada. Uklonite naredbu \izvornik ako želite izbaciti tu stranicu.
+%\izvornik
+
+% Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
+\zahvala{}
+
+\tableofcontents
+
+\begingroup
+\renewcommand*\listfigurename{Indeks slika}
+\renewcommand*\lstlistlistingname{Indeks isječaka koda}
+\listoffigures
+\lstlistoflistings
+\endgroup
+
+
+
+\include{Uvod}
+\include{STM32}
+\include{Korisnicko_Sucelje}
+\include{Zakljucak}
+
+\bibliography{literatura}{}
+\bibliographystyle{fer}
+
+\begin{sazetak}
+Sažetak na hrvatskom jeziku.
+
+\kljucnerijeci{STM32WB5MM-DK, BLE, MEMS mikrofon, korisničko sučelje, obrada signala}
+\end{sazetak}
+
+% TODO: Navedite naslov na engleskom jeziku.
+\engtitle{Audio Signal Transmission Using BLE Interface of STM32WB5MM-DK Development Kit}
+\begin{abstract}
+English abstract. 
+
+\keywords{STM32WB5MM-DK, BLE, MEMS microphone, user interface, signal processing}
+\end{abstract}
+
+\end{document}
