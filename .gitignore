@@ -17,3 +17,5 @@ documentation/*.blg
 documentation/*.log
 documentation/*.gz
 documentation/*.toc
+documentation/*.lof
+documentation/*.lol
