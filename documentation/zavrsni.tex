@@ -29,6 +29,7 @@
 \lstset{style=mystyle}
 
 \renewcommand*{\lstlistingname}{Isječak koda}
+\renewcommand*\lstlistlistingname{Indeks isječaka koda}
 
 \begin{document}
 
@@ -53,16 +54,19 @@
 
 \begingroup
 \renewcommand*\listfigurename{Indeks slika}
-\renewcommand*\lstlistlistingname{Indeks isječaka koda}
 \listoffigures
+\addcontentsline{toc}{chapter}{\lstlistlistingname}
 \lstlistoflistings
 \endgroup
 
 
 
+
 \include{Uvod}
 \include{STM32}
+\include{Povezivanje_s_PC}
 \include{Korisnicko_Sucelje}
+\include{Obrada_Signala}
 \include{Zakljucak}
 
 \bibliography{literatura}{}

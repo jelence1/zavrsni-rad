@@ -22,7 +22,7 @@ Stvaranje i uređivanje grafičkih elemenata (engl. \textit{widgets}) omogućeno
 
 \section{Implementacija korisničkog sučelja}
 
-Pri pokretanju aplikacije, u glavnom prozoru prikazuje se izbornik s gumbima \textit{Record} i \textit{Analyse Audio}. \textit{Record} gumb vodi na sučelje za podešavanje parametara snimanja, dok \textit{Analyse Audio} otvara meni za odabir audio datoteke za analizu.
+Pri pokretanju aplikacije, u glavnom prozoru prikazuje se izbornik s gumbima \textit{Record} i \textit{Analyse Audio}. \textit{Record} gumb vodi na sučelje za podešavanje parametara snimanja, dok \textit{Analyse Audio} otvara meni za odabir audio datoteke nad kojom će se provesti obrada signala.
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{imgs/intro_form}
@@ -30,24 +30,6 @@ Pri pokretanju aplikacije, u glavnom prozoru prikazuje se izbornik s gumbima \te
 	\label{fig:intro_form}
 \end{figure}
 
-Nakon otvaranja audio datoteke, vrši se obrada zvučnog signala. Audio biblioteka \textit{SoundFile} koristi se za učitavanje audio datoteke te, pozivom 
-\begin{lstlisting}
-	sf.read(file_path)
-\end{lstlisting}	
-dobivaju se matrica amplituda i frekvencija uzorkovanja. Dobivena matrica reprezentacija je audio signala u vremenskoj domeni, odnosno prikazuje glasnoću (amplitudu) zvuka dok se mijenja u vremenu. Amplituda jednaka nuli označava tišinu.
-
-Za analizu odnosa amplitude i frekvencije signala potrebno transformirati signal u frekvencijsku domenu kako bi se prikazalo koje frekvencije se nalaze u signalu. Fourierovom transformacijom signal se dekomponira u odgovarajuće frekvencije. \textit{Scipy} biblioteka sadrži ugrađenu funkciju za brzu Fourierovu transformaciju.
-
-\lstinputlisting[language=Python, firstline=53, lastline=56, caption=Fourierova transformacija]{./../BlueSTSDK_Python/blue_st_examples/analysis.py}
-
-
-Dobivene matrice iscrtavaju se grafički pomoću biblioteke \textit{matplotlib}. Ograničen je prikaz frekvencija na 2000 Hz...
-
-\begin{figure}[ht]
-	\includegraphics[width=\linewidth]{imgs/analyse_example}
-	\caption{Primjer prikaza analize audiozapisa}
-	\label{fig:analyse_example}
-\end{figure}
 
 Ovdje će biti tekst koji govori o odabiru parametara.
 

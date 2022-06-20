@@ -2,6 +2,13 @@ Bluetooth Low Energy and Sensors Technology Software Development Kit (SDK)
 --> https://www.st.com/content/st_com/en/products/embedded-software/wireless-connectivity-software/bluest-sdk.html
 --> https://github.com/STMicroelectronics/BlueSTSDK_Python
 
+--> https://eu.mouser.com/new/stmicroelectronics/stm-stm32wb5mm-dk-kit/ _DA_
+--> https://www.st.com/en/microcontrollers-microprocessors/stm32wbx5.html _DA_
+--> https://www.st.com/resource/en/user_manual/dm00766322-.pdf _DA_
+
+--> https://www.link-labs.com/blog/bluetooth-vs-bluetooth-low-energy __DA__
+--> BLE fajl iz Karlinog foldera __DA__
+
 Quick Start Guide For BLE Function Pack
 --> https://www.st.com/content/ccc/resource/sales_and_marketing/presentation/product_presentation/group0/9d/a0/bf/3f/ca/bd/42/88/FP-AUD-BVLINKWB1_QUICK_START_GUIDE/files/fp-aud-bvlinkwb1_quick_start_guide.pdf/jcr:content/translations/en.fp-aud-bvlinkwb1_quick_start_guide.pdf
 
@@ -10,9 +17,6 @@ FP-AUD-BVLINKWB1 (Function Pack)
 
 DISCO-WB5MMG Page (kad spojis plocicu to iskoci)
 --> https://os.mbed.com/platforms/DISCO-WB5MMG/#ble-fw-update
-
-Guide to Pyzmq (za TCP)
---> https://zguide.zeromq.org/
 
 + svi oni pdfovi iz Karlinog foldera
 
