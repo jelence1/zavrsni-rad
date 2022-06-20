@@ -1,9 +1,0 @@
-\babel@toc {croatian}{}\relax 
-\contentsline {chapter}{Indeks slika}{v}{}%
-\contentsline {chapter}{\numberline {1}Uvod}{1}{}%
-\contentsline {chapter}{\numberline {2}STM32WB5MM-DK razvojni sustav}{2}{}%
-\contentsline {chapter}{\numberline {3}Programska potpora za korisničko sučelje}{3}{}%
-\contentsline {section}{\numberline {3.1}Razvojni alat PyQt}{3}{}%
-\contentsline {section}{\numberline {3.2}Implementacija korisničkog sučelja}{4}{}%
-\contentsline {chapter}{\numberline {4}Zaključak}{7}{}%
-\contentsline {chapter}{Literatura}{8}{}%
