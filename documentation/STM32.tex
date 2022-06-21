@@ -33,7 +33,7 @@ Upravljač se sastoji od fizičkog sloja i sloja veze. Host uključuje protokol 
 
 \subsection{Upravljač}
 \subsubsection{Fizički sloj}
-Fizički sloj je radio brzine od 1 Mbps koji prenosi informacije GFSK (\textit{ Gaussian Frequency Shift Keying}) frekvencijskom modulacijom. Radi u 2,4 GHz ISM pojasu bez licence na 2400-2483,5 MHz. 
+Fizički sloj je radio brzine od 1 Mbps koji prenosi informacije GFSK (\textit{Gaussian Frequency Shift Keying}) frekvencijskom modulacijom. Radi u 2,4 GHz ISM pojasu bez licence na 2400-2483,5 MHz. 
 BLE sustav koristi 40 RF kanala (0-39), s razmakom od 2 MHz. Postoje dvije vrste kanala:
 \begin{enumerate}
 	\item Kanali za oglašavanje koji koriste tri fiksna RF kanala (37, 38 i 39) za
@@ -121,3 +121,46 @@ U kontekstu GAP-a definirana su dva temeljna koncepta:
 Istovremeno se mogu koristiti različiti načini otkrivanja i povezivanja.
 
 \section{MEMS mikrofon}
+
+MEMS (\textit{Micro-Electro-Mechanical Systems}) mikrofon je elektroakustični pretvornik koji sadrži MEMS senzor i aplikacijski specifičan integrirani sklop (ASIC). MEMS mikrofoni se uglavnom temelje na elektretskim kapsulama i obično imaju ugrađena pretpojačala i analogno-digitalne pretvornike. MEMS mikrofoni su također poznati kao mikrofonski čipovi ili silikonski mikrofoni.
+
+Svi mikrofoni detektiraju akustične valove pomoću fleksibilne membrane, odnosno dijafragme. Membrana se pomiče pod pritiskom induciranih akustičnih valova. Danas većina MEMS mikrofona na tržištu koristi kapacitivnu tehnologiju za mjerenje zvuka. Kapacitivni MEMS mikrofoni mjere kapacitet između fleksibilne mikromembrane i fiksne stražnje ploče. Promjene tlaka zraka koje stvaraju zvučni valovi uzrokuju pomicanje membrane. Stražnja ploča je perforirana kako bi kroz nju mogao strujati zrak i dizajnirana je da ostane kruta budući da zrak prolazi kroz njezine perforacije. Kako se membrana pomiče, kapacitet se mijenja između pokretne membrane i fiksne stražnje ploče (budući da se udaljenost između njih mijenja), a ta se promjena može analizirati i zabilježiti.
+
+Dizajn digitalnog MEMS mikrofona obično ima dodatni CMOS čip kao analogno-digitalni pretvornik. Ovi čipovi učinkovito preuzimaju pojačane analogne audio signale i pretvaraju ih u digitalne podatke. Također omogućuju lakšu integraciju digitalnih MEMS mikrofona s digitalnim proizvodima.
+
+Najčešći format za digitalno kodiranje unutar MEMS mikrofona je modulacija trajanja impulsa (PDM). PDM omogućuje komunikaciju jednom podatkovnom linijom i satom. Prijemnici PDM signala, kao i sami MEMS mikrofoni, jeftini su i lako dostupni.
+
+\subsection{MEMS tehnologija}
+Mikroelektromehanički sustavi ili MEMS je tehnologija koja se definira kao sustav minijaturiziranih mehaničkih i elektromehaničkih elemenata (tj. uređaja i struktura) koji su izrađeni mikrotvorničkim tehnikama. Fizičke dimenzije MEMS uređaja mogu varirati od znatno ispod jednog mikrometra pa sve do nekoliko milimetara. Isto tako, tipovi MEMS uređaja mogu varirati od relativno jednostavnih struktura bez pokretnih elemenata, do iznimno složenih elektromehaničkih sustava s više pokretnih elemenata pod kontrolom integrirane mikroelektronike. Jedan glavni kriterij MEMS-a je da postoje barem neki elementi koji imaju neku vrstu mehaničke funkcionalnosti bez obzira na to mogu li se ti elementi kretati ili ne.
+
+Dok su funkcionalni elementi MEMS-a minijaturizirane strukture, senzori, aktuatori i mikroelektronika, najznačajniji elementi su mikrosenzori i mikroaktuatori. Oni su  kategorizirani kao pretvornici energije iz jednog oblika u drugi - primjerice mikrosenzor, koji obično pretvara izmjereni mehanički signal u električni.
+
+Stvarni potencijal MEMS-a ostvaruje se kada se minijaturizirani senzori, aktuatori i strukture spoje na silicijsku podlogu zajedno s integriranim krugovima, odnosno mikroelektronikom. Dok se elektronika proizvodi pomoću sekvenci procesa integriranog kruga (npr. CMOS, bipolarni ili BICMOS procesi), mikromehaničke komponente proizvode se korištenjem kompatibilnih \textit{micromachining} procesa koji selektivno urezuju dijelove silikonske pločice ili dodaju nove strukturne slojeve kako bi formirali mehaničke i elektromehaničke uređaje. Još je kompleksnije ako se MEMS može spojiti ne samo s mikroelektronikom, već i s drugim tehnologijama kao što su fotonika, nanotehnologija itd. To se ponekad naziva heterogenom integracijom. Dok su složenije razine integracije budući trend MEMS tehnologije, sadašnja je tehnologija skromnija i obično uključuje jedan diskretni mikrosenzor, jedan diskretni mikroaktuator, jedan mikrosenzor integriran s elektronikom, mnoštvo identičnih mikrosenzora integriranih s elektronikom, jedan mikroaktuator integriran s elektronikom ili mnoštvo identičnih mikroaktuatora integriranih s elektronikom. 
+ 
+
+\subsection{Rad MEMS mikrofona}
+
+MEMS mikrofon sadrži sljedeće komponente:
+\begin{itemize}
+	\item MEMS pretvornik: sastoji se od membrane, perforirane ploče i ležišta
+	\item Isprintana matična ploča (PCB): uključuje ASIC polarizacijsku jedinicu, mikrofonsko pretpojačalo i AD pretvornik
+	\item Mehanički poklopac
+\end{itemize}
+
+Zvučni valovi ulaze u MEMS mikrofon kroz poklopac i prolaze kroz perforirano kućište i ploču prije nego dođu do membrane. Valovi uzrokuju različiti zvučni tlak na membrani i razliku u tlaku između prednje i stražnje strane membrane. Ova razlika tlaka uzrokuje njeno pomicanje sukladno zvučnim valovima. Međutim, mikrofonski signal se stvara samo ako postoji naboj između vodljive membrane i nepokretne ploče. Ploča i membrana skupa djeluju kao kondenzator koji je potrebno napuniti za ispravan rad. ASIC osigurava ovo punjenje.
+
+Jednom napunjene, ploča i membrana mogu proizvesti napon. Budući da djeluju kao kondenzator, svaka promjena kapaciteta prouzročit će obrnuto proporcionalnu promjenu napona. Kapacitet je funkcija udaljenosti između ploče i membrane, stoga dok membrana oscilira, stvara se izmjenični napon odnosno mikrofonski signal. Ovaj napon treba pojačati da bi bio koristan kao audio signal, stoga odvojeni integrirani krug (poluvodička matrica), uključen u PCB, pojačava signal.
+
+U analognom MEMS mikrofonu, pojačani signal bi se zatim izveo iz MEMS mikrofona i poslao kamo treba ići. Međutim, u digitalnom MEMS mikrofonu postoji dodatni proces u kojem ADC pretvara analogni signal (putem PDM) prije nego što emitira digitalni audio signal.
+
+Kao što se vidi na Slici 2.4., stacionarna ploča je perforirana, što omogućava zraku prolaz do membrane. Na ovom je prikazu ASIC čip pričvršćen na ploču, no to nije slučaj kod svakog MEMS mikrofona. 
+
+Stražnja je komora u ovom primjeru zatvorena, što znači da je MEMS mikrofon tlačni mikrofon - membrana je otvorena samo za zvučne valove s jedne strane, što znači da prima zvuk iz svih smjerova. Stražnja komora također djeluje kao akustični rezonator i tako pomaže pri pravilnom podešavanju mikrofona.
+
+Također je potreban i otvor za ventilaciju kako bi stražnja komora bila pod tlakom okoline.
+
+\begin{figure}[ht]
+	\includegraphics[width=\linewidth]{imgs/mems_mic}
+	\caption{Poprečni presjek MEMS mikrofona}
+	\label{fig:mems-mic}
+\end{figure}
