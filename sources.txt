@@ -1,6 +1,4 @@
-Bluetooth Low Energy and Sensors Technology Software Development Kit (SDK) 
---> https://www.st.com/content/st_com/en/products/embedded-software/wireless-connectivity-software/bluest-sdk.html
---> https://github.com/STMicroelectronics/BlueSTSDK_Python
+
 
 --> https://eu.mouser.com/new/stmicroelectronics/stm-stm32wb5mm-dk-kit/ _DA_
 --> https://www.st.com/en/microcontrollers-microprocessors/stm32wbx5.html _DA_
@@ -13,6 +11,22 @@ Bluetooth Low Energy and Sensors Technology Software Development Kit (SDK)
 --> https://www.coventor.com/blog/explanation-new-mems-microphone-technology-design/ __DA__
 --> https://www.mems-exchange.org/MEMS/what-is.html __DA__
 
+--> https://www.st.com/resource/en/user_manual/um2614-getting-started-with-the-stm32cube-function-pack-for-stm32wb-mcu-featuring-advanced-audio-streaming-over-bluetooth-50-using-opus-codec-stmicroelectronics.pdf 
+	__DA__
+--> https://opus-codec.org/ __DA__
+
+--> https://doc.qt.io/ __DA__
+--> https://riverbankcomputing.com/software/pyqt/ __DA__
+--> https://realpython.com/python-pyqt-qthread/ __DA__
+
+--> https://towardsdatascience.com/understanding-audio-data-fourier-transform-fft-spectrogram-and-speech-recognition-a4072d228520
+	__DA__
+
+
+Bluetooth Low Energy and Sensors Technology Software Development Kit (SDK) 
+--> https://www.st.com/content/st_com/en/products/embedded-software/wireless-connectivity-software/bluest-sdk.html
+--> https://github.com/STMicroelectronics/BlueSTSDK_Python
+
 Quick Start Guide For BLE Function Pack
 --> https://www.st.com/content/ccc/resource/sales_and_marketing/presentation/product_presentation/group0/9d/a0/bf/3f/ca/bd/42/88/FP-AUD-BVLINKWB1_QUICK_START_GUIDE/files/fp-aud-bvlinkwb1_quick_start_guide.pdf/jcr:content/translations/en.fp-aud-bvlinkwb1_quick_start_guide.pdf
 
@@ -24,16 +38,15 @@ DISCO-WB5MMG Page (kad spojis plocicu to iskoci)
 
 + svi oni pdfovi iz Karlinog foldera
 
+--------------
 https://www.flaticon.com/free-icons/audio Audio icons created by Freepik - Flaticon
 <a href="https://www.flaticon.com/free-icons/podcast" title="podcast icons">Podcast icons created by Freepik - Flaticon</a>
 pixabay.com
+--------------
 
-https://towardsdatascience.com/understanding-audio-data-fourier-transform-fft-spectrogram-and-speech-recognition-a4072d228520
+
 http://struna.ihjj.hr/naziv/teorem-uzorkovanja/49822/
 https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
 https://www.qlight.com/productdata/techdata/en/08_Intensity_of_Sound.pdf
 https://www.quora.com/Why-does-my-recorded-audio-show-up-with-negative-dB-amplitude-on-Audacity-Silence-seems-to-be-at-around-60db
 https://en.wikipedia.org/wiki/DBFS
-
-https://riverbankcomputing.com/software/pyqt/
-https://en.wikipedia.org/wiki/Meta-object_System
