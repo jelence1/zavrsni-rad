@@ -15,5 +15,5 @@ Postavke za pokretanje (ili Detect):
 
 ## documentation 
 Direktorij u kojem se nalaze slike i Latex datoteke za završni rad.
-
+Ovdje su također prikazi korisničkog sučelja.
 
