@@ -25,7 +25,11 @@
 
 Bluetooth Low Energy and Sensors Technology Software Development Kit (SDK) 
 --> https://www.st.com/content/st_com/en/products/embedded-software/wireless-connectivity-software/bluest-sdk.html
+	__DA__
+--> https://www.st.com/resource/en/user_manual/um2496-getting-started-with-the-bluest-protocol-and-sdk-stmicroelectronics.pdf
+	__DA__
 --> https://github.com/STMicroelectronics/BlueSTSDK_Python
+	__DA__
 
 Quick Start Guide For BLE Function Pack
 --> https://www.st.com/content/ccc/resource/sales_and_marketing/presentation/product_presentation/group0/9d/a0/bf/3f/ca/bd/42/88/FP-AUD-BVLINKWB1_QUICK_START_GUIDE/files/fp-aud-bvlinkwb1_quick_start_guide.pdf/jcr:content/translations/en.fp-aud-bvlinkwb1_quick_start_guide.pdf

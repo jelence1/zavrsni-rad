@@ -54,8 +54,12 @@ Sloj veze određuje kako dva uređaja mogu koristiti radio za međusoban prijeno
 	\item Oglašavanje: uređaj šalje oglase putem kanala za oglašavanje
 	\item Skeniranje: uređaj traži uređaje oglašivača
 	\item Pokretanje (iniciranje): uređaj pokreće vezu s uređajem oglašivača
-	\item Veza: uređaj inicijatora u glavnoj je ulozi (engl. \textit{master}) - komunicira s uređajem u podređenoj (engl. \textit{slave}) ulozi i definira vrijeme prijenosa
-	\item Uređaj oglašivača je u ulozi podređenog - komunicira s jednim uređajem u glavnoj ulozi 
+	\item Veza: 
+	\begin{itemize}
+		\item Uređaj inicijatora u glavnoj je ulozi (engl. \textit{master}) - komunicira s uređajem u podređenoj (engl. \textit{slave}) ulozi i definira vrijeme prijenosa
+		\item Uređaj oglašivača je u \textit{slave} ulozi - komunicira s jednim \textit{master} uređajem 
+	\end{itemize}
+
 \end{itemize}
 
 \begin{figure}[ht]
@@ -73,38 +77,34 @@ Sloj sučelja glavnog kontrolera (HCI) pruža sredstvo komunikacije između host
 \subsubsection{L2CAP}
 Protokol logičke veze i sloja prilagodbe (L2CAP) podržava multipleksiranje protokola više razine, operacije fragmentacije paketa i ponovnog sastavljanja, te prijenos informacija o kvaliteti usluga.
 
+\subsubsection{SM}
+BLE sloj veze podržava enkripciju i autentifikaciju korištenjem načina brojača s CBC-MAC algoritmom (kod za provjeru autentičnosti lančanih poruka) i 128-bitnu AES blok šifru (AES-CCM). Kada se enkripcija i autentifikacija koriste u vezi, 4-bajtna provjera integriteta poruke (MIC) dodaje se na jedinici podatkovnog protokola (PDU). Enkripcija se primjenjuje i na polja od PDU i MIC. Kada dva uređaja žele šifrirati komunikacije tijekom veze, upravitelj sigurnosti (SM) koristi postupak uparivanja. Ovaj postupak omogućuje provjeru autentičnosti dvaju uređaja razmjenom informacija o njihovu identitetu kako bi se stvorili sigurnosni ključevi koji se mogu koristiti kao osnova za pouzdani odnos ili jednu sigurnu vezu. 
+
 \subsubsection{ATT}
-Protokol atributa (ATT) omogućuje uređaju da prikazuje podatke, koji se nazivaju atributima, drugom uređaju. Uređaj koji prikazuje atribute naziva se poslužiteljem, a uređaj koji ih koristi naziva se klijentom. 
-ATT definira skup metoda za otkrivanje, čitanje i pisanje atributa na drugi uređaj. Implementira \textit{peer-to-peer} protokol između poslužitelja i klijenta tipičnom zahtjev-odgovor strukturom. Poslužitelj i klijent imaju sljedeće uloge: 
+Protokol atributa (ATT) omogućuje uređaju da prikazuje podatke, koji se nazivaju atributima, drugom uređaju. Atributi su adresirani dijelovi informacija koji mogu sadržavati korisničke podatke ili meta-informacije o arhitekturi samih atributa. Uređaj koji prikazuje atribute naziva se poslužiteljem, a uređaj koji ih koristi naziva se klijentom. 
+ATT definira skup metoda za otkrivanje, čitanje i pisanje atributa na drugi uređaj. Implementira \textit{peer-to-peer} protokol između poslužitelja i klijenta tipičnom zahtjev-odgovor strukturom. 
+
+Atributi se sastoje od nekoliko parametara:
 \begin{itemize}
-	\item Poslužitelj
-	\begin{itemize}
-		\item Sadrži sve atribute (baza atributa)
-		\item Prima zahtjeve, šalje odgovore, izvršava naredbe
-		\item Obavijesti o promjeni vrijednosti atributa
-	\end{itemize}
-	\item Klijent
-	\begin{itemize}
-		\item Komunicira s poslužiteljem
-		\item Šalje zahtjeve, čeka na odgovor
-		\item Može čitati i mijenjati podatke uz dopuštenje poslužitelja
-	\end{itemize}
+	\item Ručka (engl. \textit{handle}): jedinstveni 16-bitni identifikator za svaki atribut na određenom poslužitelju; svaki atribut čini adresabilnim i zajamčeno se neće mijenjati
+	\item Tip: 16-, 32- ili 128-bitni univerzalni jedinstveni identifikator (UUID) koji određuje vrstu podataka prisutnih u vrijednosti atributa
+	\item Dopuštenja: meta-podaci koji opisuju dopuštenja za pristup ATT podacima, enkripciju i autorizaciju
+	\item Vrijednost: stvarni sadržaj podataka atributa; dio atributa kojem klijent može pristupiti za čitanje i/ili pisanje
 \end{itemize}
 
-\subsubsection{SM}
-BLE sloj veze podržava enkripciju i autentifikaciju korištenjem načina brojača s CBC-MAC algoritmom (kod za provjeru autentičnosti lančanih poruka) i 128-bitnu AES blok šifru (AES-CCM). Kada se enkripcija i autentifikacija koriste u vezi, 4-bajtna provjera integriteta poruke (MIC) dodaje se korisnom učitavanju podatkovnog kanala PDU. Enkripcija se primjenjuje i na polja od PDU i MIC. Kada dva uređaja žele šifrirati komunikacije tijekom veze, upravitelj sigurnosti (SM) koristi postupak uparivanja. Ovaj postupak omogućuje provjeru autentičnosti dvaju uređaja razmjenom informacija o njihovu identitetu kako bi se stvorili sigurnosni ključevi koji se mogu koristiti kao osnova za pouzdani odnos ili (jednu) sigurnu vezu. 
 
 \subsubsection{GATT}
-Generički atributni profil (GATT) definira okvir za korištenje ATT protokola, a koristi se za usluge, otkrivanje deskriptora, čitanje, pisanje i obavijesti. U GATT kontekstu, kada su dva uređaja povezana, postoje dvije uloge uređaja:
+Generički atributni profil (GATT) definira okvir za korištenje ATT protokola, a koristi se za usluge, otkrivanje deskriptora, čitanje, pisanje i obavijesti. Podaci poslani putem BLE-a organizirani su ovim slojem.
+U GATT kontekstu, kada su dva uređaja povezana, postoje dvije uloge uređaja:
 \begin{itemize}
 	\item GATT klijent: uređaj pristupa podacima na udaljenom GATT poslužitelju putem čitanja, pisanja, obavještavanja 
 	\item  GATT poslužitelj: uređaj pohranjuje podatke lokalno i pruža metode pristupa podacima udaljenom GATT klijentu
 \end{itemize}
 
-Uređaj istovremeno može biti i GATT poslužitelj i GATT klijent.
+Atributi GATT poslužitelja organizirani su kao niz usluga, od kojih svaka počinje atributom deklaracije usluge koji označava njen početak. Svaka usluga grupira jednu ili više karakteristika i svaka karakteristika može uključivati nula ili više deskriptora.
 
 \subsubsection{GAP}
-Bluetooth sustav definira osnovni profil koji implementiraju svi Bluetooth uređaji koji se naziva generički profil pristupa (GAP), koji definira osnovne zahtjeve Bluetooth uređaja. Postoje četiri uloge GAP profila:
+Bluetooth sustav definira osnovni profil koji implementiraju svi Bluetooth uređaji koji se naziva generički profil pristupa (GAP), koji definira osnovne zahtjeve Bluetooth uređaja. Programska potpora mikrokontrolera implementira komunikacijsku paradigmu temeljenu na povezivanju koja pruža trajnu vezu od točke do točke (engl. \textit{point-to-point}) između dva uređaja kojom upravlja GAP sloj. Postoje četiri uloge GAP profila:
 \begin{itemize}
 	\item Emiter: šalje oglase
 	\item Promatrač: prima oglase
@@ -112,13 +112,20 @@ Bluetooth sustav definira osnovni profil koji implementiraju svi Bluetooth uređ
 	\item Centar: nikada ne šalje oglase, uvijek u \textit{master} ulozi
 \end{itemize}
 
-U kontekstu GAP-a definirana su dva temeljna koncepta:
-\begin{itemize}
-	\item GAP načini rada (engl. \textit{modes}): konfigurira uređaj da djeluje na određeni način duži vremenski period. Postoje četiri tipa GAP načina rada: emitiranje, otkrivanje, povezivanje i vezanje
-	\item GAP procedure: konfigurira uređaj da izvrši jednu radnju u ograničenom vremenskom periodu. Postoje četiri tipa GAP postupaka: promatrač, otkrivanje, povezivanje, postupci povezivanja
-\end{itemize}
+Razvijena programska potpora koristi dvije od navedenih uloga, a to su Periferija i Centar. Periferna uloga postavljena je mikrokontroleru jer se ta uloga postavlja uređajima koji podržavaju jednu vezu i smanjenu složenost. Ovi uređaji zahtijevaju samo upravljač koji podržava \textit{slave} ulogu i koristi središnju frekvenciju upravljača za razmjenu podataka. S druge strane, centralna uloga pridružuje se uređaju koja podržava višestruke veze i pokretanje veza s perifernim uređajima. Ovi uređaji zahtijevaju kontroler koji podržava glavnu ulogu sa složenijim funkcijama, što je u ovom slučaju računalo.
 
-Istovremeno se mogu koristiti različiti načini otkrivanja i povezivanja.
+\subsection{BLE komunikacija}
+
+Na Slici 2.4 prikazana je komunikacija između dva uređaja, odnosno računala i mikrokontrolera. Prema BLE specifikaciji, periferija ulazi u način oglašavanja (engl. \textit{Advertisment Mode}) pri pokretanju i šalje pakete oglasa u relativno dugim intervalima. Središnja jedinica ulazi u način otkrivanja (engl. \textit{discovery mode}) i šalje zahtjev za povezivanjem nakon primitka reklamnog paketa od \textit{slave} uređaja. Nakon što je veza uspostavljena, obavijesti koje nose audio podatke periodično šalju od poslužitelja do klijenta, prema odabranom smjeru: periferija-centar, centar-periferija ili istovremeno na oba načina. Dok je mikrokontroler u načinu oglašavanja sve do uspostave veze, računalo je u načinu otkrivanja samo kraći vremenski period te prekida sa skeniranjem dostupnih uređaja nakon zadanog vremenskog intervala.
+
+Mikrokontroler ima \textit{slave} ulogu, dok računalo ima \textit{master} ulogu. 
+
+\begin{figure}[ht]
+	\includegraphics[]{imgs/ble_connection_setup}
+	\caption{Uspostava BLE veze}
+	\label{fig:ble_connection_setup}
+\end{figure}
+
 
 \section{MEMS mikrofon}
 
