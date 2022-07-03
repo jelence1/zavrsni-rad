@@ -1,6 +1,6 @@
-\chapter{STM32WB5MM-DK razvojni sustav}
+\chapter{Razvojni sustav STM32WB5MM-DK}
 
-Razvojni sustav temelji se na STM32WB5MMG modulu tvrtke \textit{STMicroelectronics}, koji je dio linije STM32WBx5 razvojnih sustava. Kao i svi mikrokontroleri iz te skupine, modul sadrži 32-bitni Arm Cortex-M4, aplikacijski procesor koji radi na frekvenciji do 64 MHz, te Cortex-M0+, mrežni procesor s frekvencijom rada do 32 MHz. Modul sadrži 1 MB \textit{Flash} memorije i 256 KB SRAM-a. Budući da je modul RF primopredajnik, podržava protokole Bluetooth, Zigbee, Thread i konkurentne bežične standarde. Sustav također ima 0.96-inčni 128x64 zaslon, RGB LED lampice te senzore za temperaturu, dodir, I2C, \textit{Time-of-Flight} senzor i žiroskop. Od ostale periferije najznačajniji je digitalni MEMS mikrofon. STM32 modul je višeprotokolni, bežični uređaj niske potrošnje energije (engl. \textit{ultra-low-power}) primarno namijenjen razvoju aplikacija koje koriste audio, USB ili \textit{Bluetooth Low Energy} (BLE) protokol. 
+Razvojni sustav temelji se na modulu STM32WB5MMG tvrtke \textit{STMicroelectronics}, koji je dio linije STM32WBx5 razvojnih sustava. Kao i svi mikrokontroleri iz te skupine, modul sadrži 32-bitni aplikacijski procesor ARM Cortex-M4 koji radi na frekvenciji do 64 MHz te mrežni procesor Cortex-M0+ s frekvencijom rada do 32MHz. Modul sadrži 1 MB memorije tipa \textit{Flash} i 256 KB memorije tipa SRAM (\textit{Static random-access memory}). Budući da modul ima funkciju RF primopredajnika, podržava protokole Bluetooth, Zigbee, Thread i konkurentne bežične standarde. Sustav također ima 0.96-inčni 128x64 zaslon, RGB LED lampice te senzore za temperaturu, dodir, \textit{Time-of-Flight} senzor i žiroskop. Od ostale periferije najznačajniji je digitalni MEMS mikrofon. STM32WB5MMG modul je višeprotokolni, bežični uređaj niske potrošnje energije (engl. \textit{ultra-low-power}) primarno namijenjen razvoju aplikacija koje koriste audio, USB ili \textit{Bluetooth Low Energy} (BLE) protokol. 
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{imgs/discovery_kit}
@@ -17,23 +17,23 @@ BLE radi u istom opsegu od 2,4 GHz kao i standardni Bluetooth, no koristi razli�
 
 Arhitektura BLE tehnologije naziva se još i BLE stog zbog slojevite strukture. Stog se sastoji od dvije glavne komponente:
 \begin{itemize}
-	\item Upravljač (engl. \textit{Controller})
-	\item Domaćin (engl. \textit{Host})
+	\item upravljač (engl. \textit{Controller}),
+	\item domaćin (engl. \textit{Host}).
 \end{itemize}
 
-Upravljač se sastoji od fizičkog sloja i sloja veze. Host uključuje protokol kontrole i prilagodbe logičke veze (L2CAP), upravitelja sigurnosti (SM), protokol atributa (ATT), generički profil atributa (GATT) i generički profil pristupa (GAP). Sučelje između komponenti naziva se sučelje host kontrolera (HCI).
+Upravljač se sastoji od fizičkog sloja i sloja veze. Host uključuje protokol kontrole i prilagodbe logičke veze (\textit{Logical Link Control and Adaptation Layer Protocol} - L2CAP), upravitelja sigurnosti (\textit{Security Manager} - SM), protokol atributa (\textit{Attribute Protocol} - ATT), generički profil atributa (\textit{Generic Attribute Protocol} - GATT) i generički profil pristupa (\textit{Generic Attribute Profile} - GAP). Sučelje između komponenti naziva se sučelje između domaćina i upravljača (\textit{Host Controller Interface} - HCI).
 
 
 \begin{figure}[ht]
 		\centering
 		\includegraphics[scale=0.5]{imgs/ble_stack_arch}
-		\caption{BLE arhitektura stoga}
+		\caption{Arhitektura BLE stoga}
 		\label{fig:ble-stack-arch}
 \end{figure}
 
 \subsection{Upravljač}
 \subsubsection{Fizički sloj}
-Fizički sloj je radio brzine od 1 Mbps koji prenosi informacije GFSK (\textit{Gaussian Frequency Shift Keying}) frekvencijskom modulacijom. Radi u 2,4 GHz ISM pojasu bez licence na 2400-2483,5 MHz. 
+Fizički sloj signal u radiofrekvencijskom području brzine od 1 Mbps koji prenosi informacije GFSK (\textit{Gaussian Frequency Shift Keying}) frekvencijskom modulacijom. Radi u 2,4 GHz ISM pojasu bez licence na 2400-2483,5 MHz. 
 BLE sustav koristi 40 RF kanala (0-39), s razmakom od 2 MHz. Postoje dvije vrste kanala:
 \begin{enumerate}
 	\item Kanali za oglašavanje koji koriste tri fiksna RF kanala (37, 38 i 39) za
@@ -45,19 +45,19 @@ BLE sustav koristi 40 RF kanala (0-39), s razmakom od 2 MHz. Postoje dvije vrste
 	\item Podatkovni fizički kanal, koristi ostalih 37 RF kanala za dvosmjernu komunikaciju između povezanih uređaja.
 \end{enumerate}
 
-BLE je tehnologija adaptivnog skakanja frekvencije (AFH) koja može koristiti samo podskup svih dostupnih frekvencija kako bi se izbjegle sve frekvencije koje koriste druge neprilagodljive tehnologije. To omogućuje prelazak s lošeg kanala na poznati dobar kanal korištenjem specifičnog algoritma za skakanje frekvencije, koji određuje sljedeći dobar kanal za korištenje.
+BLE je tehnologija adaptivnog skakanja frekvencije (\textit{Adaptive frequency-hopping} - AFH) koja može koristiti samo podskup svih dostupnih frekvencija kako bi se izbjegle sve frekvencije koje koriste druge neprilagodljive tehnologije. To omogućuje prelazak s lošeg kanala na poznati dobar kanal korištenjem specifičnog algoritma za skakanje frekvencije, koji određuje sljedeći dobar kanal za korištenje.
 
 \subsubsection{Sloj veze}
-Sloj veze određuje kako dva uređaja mogu koristiti radio za međusoban prijenos informacija. Također definira automat s pet stanja:
+Sloj veze određuje kako dva uređaja mogu koristiti signale u radiofrekvencijskom području za međusoban prijenos informacija. Također definira automat s pet stanja:
 \begin{itemize}
-	\item Stanje pripravnosti (engl. \textit{Standby}): uređaj ne šalje niti prima pakete
-	\item Oglašavanje: uređaj šalje oglase putem kanala za oglašavanje
-	\item Skeniranje: uređaj traži uređaje oglašivača
-	\item Pokretanje (iniciranje): uređaj pokreće vezu s uređajem oglašivača
-	\item Veza: 
+	\item stanje pripravnosti (engl. \textit{Standby}): uređaj ne šalje niti prima pakete,
+	\item oglašavanje: uređaj šalje oglase putem kanala za oglašavanje,
+	\item skeniranje: uređaj traži uređaje oglašivača,
+	\item pokretanje (iniciranje): uređaj pokreće vezu s uređajem oglašivača,
+	\item veza: 
 	\begin{itemize}
-		\item Uređaj inicijatora u glavnoj je ulozi (engl. \textit{master}) - komunicira s uređajem u podređenoj (engl. \textit{slave}) ulozi i definira vrijeme prijenosa
-		\item Uređaj oglašivača je u \textit{slave} ulozi - komunicira s jednim \textit{master} uređajem 
+		\item uređaj  koji je inicirao komunikaciju je u ulozi \textit{master}, komunicira sa \textit{slave} uređajem i definira vrijeme prijenosa,
+		\item uređaj oglašivača je u \textit{slave} ulozi, komunicira s jednim \textit{master} uređajem.
 	\end{itemize}
 
 \end{itemize}
@@ -70,7 +70,7 @@ Sloj veze određuje kako dva uređaja mogu koristiti radio za međusoban prijeno
 \end{figure}
 
 \subsubsection{HCI}
-Sloj sučelja glavnog kontrolera (HCI) pruža sredstvo komunikacije između hosta i upravljača  putem softverskog API-ja ili hardverskog sučelja kao što su: SPI, UART ili USB. Dolazi iz standardnih Bluetooth specifikacija, s novim dodatnim naredbama za funkcije specifične uz nisku potrošnju energije.
+Sloj sučelja glavnog kontrolera (HCI) pruža sredstvo komunikacije između domaćina i upravljača  putem softverskog aplikacijskog programskog sučelja (\textit{Application Programming Interface} - API) ili hardverskog sučelja kao što su: SPI, UART ili USB. Dolazi iz standardnih Bluetooth specifikacija, s novim dodatnim naredbama za funkcije specifične uz nisku potrošnju energije.
 
 \subsection{Domaćin}
 
@@ -106,13 +106,13 @@ Atributi GATT poslužitelja organizirani su kao niz usluga, od kojih svaka poči
 \subsubsection{GAP}
 Bluetooth sustav definira osnovni profil koji implementiraju svi Bluetooth uređaji koji se naziva generički profil pristupa (GAP), koji definira osnovne zahtjeve Bluetooth uređaja. Programska potpora mikrokontrolera implementira komunikacijsku paradigmu temeljenu na povezivanju koja pruža trajnu vezu od točke do točke (engl. \textit{point-to-point}) između dva uređaja kojom upravlja GAP sloj. Postoje četiri uloge GAP profila:
 \begin{itemize}
-	\item Emiter: šalje oglase
-	\item Promatrač: prima oglase
-	\item Periferija: uvijek u načinu oglašavanja i u \textit{slave} ulozi 
-	\item Centar: nikada ne šalje oglase, uvijek u \textit{master} ulozi
+	\item emiter: šalje oglase,
+	\item promatrač: prima oglase,
+	\item periferija: uvijek u načinu oglašavanja i u \textit{slave} ulozi, 
+	\item centar: nikada ne šalje oglase, uvijek u \textit{master} ulozi.
 \end{itemize}
 
-Razvijena programska potpora koristi dvije od navedenih uloga, a to su Periferija i Centar. Periferna uloga postavljena je mikrokontroleru jer se ta uloga postavlja uređajima koji podržavaju jednu vezu i smanjenu složenost. Ovi uređaji zahtijevaju samo upravljač koji podržava \textit{slave} ulogu i koristi središnju frekvenciju upravljača za razmjenu podataka. S druge strane, centralna uloga pridružuje se uređaju koja podržava višestruke veze i pokretanje veza s perifernim uređajima. Ovi uređaji zahtijevaju kontroler koji podržava glavnu ulogu sa složenijim funkcijama, što je u ovom slučaju računalo.
+Razvijena programska potpora koristi dvije od navedenih uloga, a to su periferija i centar. Periferna uloga postavljena je mikrokontroleru jer se ta uloga postavlja uređajima koji podržavaju jednu vezu i smanjenu složenost. Ovi uređaji zahtijevaju samo upravljač koji podržava \textit{slave} ulogu i koristi središnju frekvenciju upravljača za razmjenu podataka. S druge strane, centralna uloga pridružuje se uređaju koja podržava višestruke veze i pokretanje veza s perifernim uređajima. Ovi uređaji zahtijevaju upravljač koji podržava glavnu ulogu sa složenijim funkcijama, što je u ovom slučaju računalo.
 
 \subsection{BLE komunikacija}
 
@@ -121,7 +121,8 @@ Na Slici 2.4 prikazana je komunikacija između dva uređaja, odnosno računala i
 Mikrokontroler ima \textit{slave} ulogu, dok računalo ima \textit{master} ulogu. 
 
 \begin{figure}[ht]
-	\includegraphics[]{imgs/ble_connection_setup}
+	\centering
+	\includegraphics[scale=0.7]{imgs/ble_connection_setup}
 	\caption{Uspostava BLE veze}
 	\label{fig:ble_connection_setup}
 \end{figure}
@@ -149,16 +150,16 @@ Stvarni potencijal MEMS-a ostvaruje se kada se minijaturizirani senzori, aktuato
 
 MEMS mikrofon sadrži sljedeće komponente:
 \begin{itemize}
-	\item MEMS pretvornik: sastoji se od membrane, perforirane ploče i kućišta
-	\item Isprintana matična ploča (PCB): uključuje ASIC polarizacijsku jedinicu, mikrofonsko pretpojačalo i AD pretvornik
-	\item Mehanički poklopac
+	\item MEMS pretvornik: sastoji se od membrane, perforirane ploče i kućišta,
+	\item tiskana pločica (\textit{printed circuit board} - PCB): uključuje ASIC polarizacijsku jedinicu, mikrofonsko pretpojačalo i AD pretvornik,
+	\item mehanički poklopac.
 \end{itemize}
 
 Zvučni valovi ulaze u MEMS mikrofon kroz poklopac i prolaze kroz perforirano kućište i ploču prije nego dođu do membrane. Valovi uzrokuju različiti zvučni tlak na membrani i razliku u tlaku između prednje i stražnje strane membrane. Ova razlika tlaka uzrokuje njeno pomicanje sukladno zvučnim valovima. Međutim, mikrofonski signal se stvara samo ako postoji naboj između vodljive membrane i nepokretne ploče. Ploča i membrana skupa djeluju kao kondenzator koji je potrebno napuniti za ispravan rad. ASIC osigurava ovo punjenje.
 
 Jednom napunjene, ploča i membrana mogu proizvesti napon. Budući da djeluju kao kondenzator, svaka promjena kapaciteta prouzročit će obrnuto proporcionalnu promjenu napona. Kapacitet je funkcija udaljenosti između ploče i membrane, stoga dok membrana oscilira, stvara se izmjenični napon odnosno mikrofonski signal. Ovaj napon treba pojačati da bi bio koristan kao audio signal, stoga odvojeni integrirani krug (poluvodička matrica), uključen u PCB, pojačava signal.
 
-U analognom MEMS mikrofonu, pojačani signal bi se zatim izveo iz MEMS mikrofona i poslao kamo treba ići. Međutim, u digitalnom MEMS mikrofonu postoji dodatni proces u kojem ADC pretvara analogni signal (putem PDM) prije nego što emitira digitalni audio signal.
+Ako se koristi analogni MEMS mikrofon, pojačani audio signal bi se u ovom obliku doveo na izlaz MEMS mikrofona.  Međutim, u digitalnom MEMS mikrofonu postoji dodatni proces u kojem ADC pretvara analogni signal (modulacijom trajanja impulsa - \textit{pulse-duration modulation} (PDM)) prije nego što emitira digitalni audio signal.
 
 Kao što se vidi na Slici 2.4., stacionarna ploča je perforirana, što omogućava zraku prolaz do membrane. Na ovom je prikazu ASIC čip pričvršćen na ploču, no to nije slučaj kod svakog MEMS mikrofona. 
 
