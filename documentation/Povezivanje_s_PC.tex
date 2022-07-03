@@ -140,6 +140,23 @@ Korištenjem zajedničkog modela programiranja za podržane platforme, \textit{B
 
 Za razvoj aplikacije odabran je programski jezik Python na operacijskom sustavu Linux, koji nudi mnogobrojne biblioteke za snimanje i obradu zvuka. 
 
+\textit{Manager} je jedinstveni objekt koji pokreće i zaustavlja proces otkrivanja i pohranjuje dohvaćene čvorove. \textit{Manager} obavještava novootkriveni čvor putem klase \textit{ManagerListener}. Svaki povratni poziv (engl. \textit{callback}) izvodi se asinkrono u pozadinskoj dretvi. 
+
+\textit{Node} klasa predstavlja udaljeni uređaj. Prihvaća značajke koje čvor emitira te omogućuje čitanje podataka koje uređaj šalje, kao i slanje podataka na uređaj. Čvor emitira sve značajke čiji je odgovarajući bit postavljen na 1 unutar poruke oglasa. Nakon što se uređaj poveže, moguće je skenirati i omogućiti dostupne karakteristike te razmjenjivati podatke vezane uz te karakteristike. 
+
+Čvor može biti u jednom od sljedećih stanja:
+\begin{itemize}
+	\item \textit{init}: početni status,
+	\item \textit{idle}: čvor čeka vezu i šalje oglasne poruke,
+	\item spajanje: uspostavlja se veza sa čvorom te čvor otkriva karakteristike i usluge uređaja,
+	\item spojen: veza sa čvorom je uspješno uspostavljena, 
+	\item odspajanje: prekidanje veze sa čvorom koji se zatim vraća u \textit{idle} status, 
+	\item izgubljen: uređaj je poslao oglašivačke podatke koji su nedohvatljivi,
+	\item nedohvatljiv: veza sa čvorom je uspostavljena, no ne može se dohvatiti, 
+	\item mrtav: finalni status.
+\end{itemize}
+
+\textit{Feature} klasa predstavlja podatke koje čvor emitira, odnosno jednu značajku. Svaka značajka ima niz objekata polja koji opisuju izvezene podatke. Podaci se primaju iz BLE karakteristike i sadržani su u \textit{Sample} klasi. O novim podacima korisnik je obaviješten putem promatrača.
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{imgs/duplex_chain_2}
