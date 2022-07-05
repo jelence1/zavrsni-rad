@@ -31,7 +31,7 @@ Komponente za obradu funkcijskog paketa \textit{FP-AUD-BVLINKWB1} dizajnirane su
 
 BLE je konfiguriran za slanje paketa s maksimalnom veličinom od 150 bajtova. Ovisno o aplikaciji, kodirani bajtovi mogu biti iznad ovog praga, stoga komprimirani međuspremnik (engl. \textit{buffer}) mora biti podijeljen u više BLE paketa. Štoviše, veličina kodiranog međuspremnika može promijeniti svaki audio okvir i prijamnik mora znati njegovu duljinu da bi ga obnovio; za ovaj opseg implementiran je jednostavan protokol BLE prijenosa.
 
-Na strani odašiljača, zvuk se dobiva digitalnim MEMS mikrofonom kao 1-bitni PDM signal i pretvara se pomoću filtra za pretvorbu PDM-u-PCM u 16-bitni PCM. Svaki put kad je audio okvir spreman, prenosi se u algoritam kompresije: veličina kodiranog međuspremnika koju vraća Opus koder može se značajno promijeniti u skladu s parametrima Opus kodera.
+Na strani odašiljača, zvuk se dobiva digitalnim MEMS mikrofonom kao 1-bitni PDM signal i pretvara se pomoću filtra za pretvorbu PDM-u-PCM u 16-bitni PCM (pulsno-kodna modulacija). Svaki put kad je audio okvir spreman, prenosi se u algoritam kompresije: veličina kodiranog međuspremnika koju vraća Opus koder može se značajno promijeniti u skladu s parametrima Opus kodera.
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{imgs/duplex_chain}
@@ -66,13 +66,13 @@ Audio karakteristike sadrže sljedeće atribute:
 \end{itemize}
 
 Usluga \textit{BlueVoiceOPUS} može implementirati odašiljač, prijamnik ili oboje u slučaju \textit{full-duplex} komunikacije. Za ovu aplikaciju potrebno je implementirati odašiljač odnosno transmiter.
-Za prijenos zvuka, usluga i karakteristike moraju se kreirati pozivanjem \lstinline|BVOPUS_STM_Init()|, što uključuje funkcije \lstinline|BluevoiceOPUS_AddService()| i \lstinline|BluevoiceOPUS_AddChar()|; UUID-ovi su definirani u datoteci \lstinline|bvopus_service_stm.c|.
+Za prijenos zvuka, usluga i karakteristike moraju se kreirati pozivanjem inicijalizacijske funkcije \lstinline|BVOPUS_STM_Init()|, što uključuje funkcije \newline \lstinline|BluevoiceOPUS_AddService()| i \lstinline|BluevoiceOPUS_AddChar()|; UUID-ovi su definirani u datoteci \lstinline|bvopus_service_stm.c|.
 
-Karakteristike se mogu dodati već postojećoj usluzi pozivanjem \lstinline|BluevoiceOPUS_AddChar()| i prosljeđivanjem oznake te određene usluge kao parametra. Ako funkcija vrati \lstinline|BV_OPUS_SUCCESS|, BLE profil je ispravno kreiran.
+Karakteristike se mogu dodati već postojećoj usluzi pozivanjem funkcije \newline \lstinline|BluevoiceOPUS_AddChar()| i prosljeđivanjem oznake te određene usluge kao parametra. Ako funkcija vrati \lstinline|BV_OPUS_SUCCESS|, BLE profil je ispravno kreiran.
 
-Također, potrebno je konfigurirati Opus koder. U skladu sa traženim funkcijama, koder se može kreirati ispunjavanjem relevantne strukture \lstinline|OPUS_IF_ENC_ConfigTypeDef|.
+Također, potrebno je konfigurirati Opus koder. U skladu sa traženim funkcijama, koder se može kreirati ispunjavanjem relevantne strukture: \newline \lstinline|OPUS_IF_ENC_ConfigTypeDef|.
 
-Koder se može inicijalizirati pozivom \lstinline|BVOPUS_CodecEncInit(&EncConfigOpus)|. Ako funkcija vrati \lstinline|BV_OPUS_SUCCESS|, \textit{BlueVoiceOPUS} profil ispravno je konfiguriran. Ako vrati \lstinline|BV_OPUS_INVALID_PARAM|, neki od parametara nisu ispravni. Ovisno o odabranim parametrima, inicijalizacijska funkcija dodjeljuje količinu memorije koju relevantni API vraća interno. 
+Koder se može inicijalizirati pozivom pripadne funkcije, odnosno pozivom \newline \lstinline|BVOPUS_CodecEncInit(&EncConfigOpus)|. Ako je \textit{BlueVoiceOPUS} profil ispravno konfiguriran, funkcija će vratiti \lstinline|BV_OPUS_SUCCESS|. Ako vrati neuspjeh odnosno \lstinline|BV_OPUS_INVALID_PARAM|, neki od parametara nisu ispravni. Ovisno o odabranim parametrima, inicijalizacijska funkcija dodjeljuje količinu memorije koju relevantni API vraća interno. 
 
 Pri inicijalizaciji podržani su sljedeći parametri:
 \begin{itemize}
@@ -97,13 +97,13 @@ Pri inicijalizaciji podržani su sljedeći parametri:
 	EncConfigOpus.sample_freq = AUDIO_IN_SAMPLING_FREQUENCY; 
 \end{lstlisting}
 
-Nakon postavljanja veze, modul koji je otkrio \textit{BlueVoiceOPUS} profil drugog modula mora omogućiti kontrolnu obavijest pozivanjem API-ja \lstinline|BluevoiceOPUS_EnableCtrl_Notif(void)|. Kontrolna se obavijest zatim koristi za zahtjev za pokretanje i zaustavljanje prijenosa.
+Nakon postavljanja veze, modul koji je otkrio \textit{BlueVoiceOPUS} profil drugog modula mora omogućiti kontrolnu obavijest pozivanjem API-ja \newline \lstinline|BluevoiceOPUS_EnableCtrl_Notif(void)|. Kontrolna se obavijest zatim koristi za zahtjev za pokretanje i zaustavljanje prijenosa.
 
-Za početak audio prijenosa, modul odašiljača mora zatražiti od prijamnika da omogući njegovu audio obavijest pozivom \lstinline|BluevoiceOPUS_SendEnableNotifReq()|. Ovaj API šalje obavijest putem kontrolne karakteristike koja sadrži dva bajta (\lstinline|{BV_OPUS_CONTROL, BV_OPUS_ENABLE_NOTIF_REQ}|). Čim čvor primi zahtjev može omogućiti audio obavijest podnositelju zahtjeva pozivom funkcije \lstinline|BluevoiceOPUS_EnableAudio_Notif(void)|. Ako je obavijest ispravno omogućena, modul može započeti prijenos zvuka.
+Za početak audio prijenosa, modul odašiljača mora zatražiti od prijamnika da omogući njegovu audio obavijest pozivom \lstinline|BluevoiceOPUS_SendEnableNotifReq()|. Ovaj API šalje obavijest putem kontrolne karakteristike koja sadrži dva bajta (\lstinline|{BV_OPUS_CONTROL, BV_OPUS_ENABLE_NOTIF_REQ}|). Čim čvor primi zahtjev može omogućiti audio obavijest podnositelju zahtjeva pozivom funkcije \newline \lstinline|BluevoiceOPUS_EnableAudio_Notif(void)|. Ako je obavijest ispravno omogućena, modul može započeti prijenos zvuka.
 
 \textit{BlueVoiceOPUS} profil na ulaz prihvaća količinu PCM uzoraka jednaku veličini audio okvira postavljenoj tijekom Opus konfiguracije. Svaki put kada je audio okvir spreman, treba pozvati API \lstinline|BluevoiceOPUS_SendAudioData()| i on automatski sažima, fragmentira i šalje pakete audio podataka.
 
-Za svaku primljenu zvučnu obavijest potrebno je pozvati \lstinline|BluevoiceOPUS_ParseData()| i provjeriti vraćeni status. U slučaju uspjeha, parametar \lstinline|pcm_samples| pokazuje je li spreman kompletan audio okvir.
+Za svaku primljenu zvučnu obavijest potrebno je pozvati funkciju \newline \lstinline|BluevoiceOPUS_ParseData()| i provjeriti vraćeni status. U slučaju uspjeha, parametar \lstinline|pcm_samples| pokazuje je li spreman kompletan audio okvir.
 
 Prema zadanim postavkama, Opus koder je konfiguriran s promjenjivom brzinom prijenosa: svaki kodirani okvir ima  duljinu prilagođenu brzini prijenosa postavljenoj tijekom faze inicijalizacije. Maksimalna veličina BLE paketa postavljena je na 150 bajtova, a broj BLE paketa može varirati među različitim audio okvirima ili ovisno o konfiguraciji Opusa.
 
@@ -127,9 +127,9 @@ Opus kodek se sastoji od SILK i CELT tehnologija kodiranja. Prvi koristi model t
 
 \section{Programska potpora za računalo}
 
-Glavna zadaća aplikacije na računalu je primiti audio signal Bluetoothom, prikladno ga obraditi te izravno reproducirati i pohraniti. Za računalnu programsku potporu odabrana je \textit{BlueST-SDK} biblioteka koji omogućuje jednostavan pristup podacima koje izvozi BLE uređaj s implementiranim BlueST protokolom. Protokol BlueST lako je proširiv za podršku korisnički definiranih podataka. On već definira različite podatke koji dolaze iz različitih senzora kao što su inercijski senzori, senzori okoliša, informacije o bateriji, te DC i motori. Također implementira serijsku konzolu preko Bluetootha koja omogućuje funkcionalnost \textit{stdint}/\textit{stdout}/\textit{stderr} i definira konfiguracijski servis za kontrolu postavki povezanih ploča. 
+Glavna zadaća aplikacije na računalu je Bluetoothom primiti audio signal, prikladno ga obraditi te izravno reproducirati i pohraniti. Za računalnu programsku potporu odabrana je \textit{BlueST-SDK} biblioteka koji omogućuje jednostavan pristup podacima koje izvozi BLE uređaj s implementiranim \textit{BlueST} protokolom. \textit{BlueST} protokol lako je proširiv za podršku korisnički definiranih podataka. On također prima podatke koji dolaze iz različitih senzora kao što su inercijski senzori, senzori okoliša, informacije o bateriji, te DC i motori. Protokol implementira i serijsku konzolu preko Bluetootha koja omogućuje funkcionalnosti standardnog izlaza i standardnog ulaza te definira konfiguracijski servis za kontrolu postavki povezanih ploča. 
 
-Korištenjem zajedničkog modela programiranja za podržane platforme, \textit{BlueST-SDK} olakšava razvoj aplikacija na Android, iOS i Linux (s instaliranim Python) sustavima i uključuje primjere aplikacija koji demonstriraju korištenje SDK. Python izdanje \textit{BlueST-SDK} biblioteke koristi \textit{bluepy} Python biblioteku dostupnu na Linuxu za povezivanje s BLE uređajima.
+Korištenjem zajedničkog modela programiranja za podržane platforme, \textit{BlueST-SDK} olakšava razvoj aplikacija na Android, iOS i Linux (s instaliranim Python) sustavima i uključuje primjere aplikacija koji demonstriraju korištenje paketa za razvoj programa (\textit{Software development kit} - SDK). Paket za razvoj aplikacija na Linuxu \textit{BlueST-SDK} biblioteke koristi \textit{bluepy} Python biblioteku dostupnu na Linuxu za povezivanje s BLE uređajima.
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{imgs/bluest_stack}
@@ -138,11 +138,86 @@ Korištenjem zajedničkog modela programiranja za podržane platforme, \textit{B
 \end{figure}
 
 
-Za razvoj aplikacije odabran je programski jezik Python na operacijskom sustavu Linux, koji nudi mnogobrojne biblioteke za snimanje i obradu zvuka. 
+Za razvoj aplikacije odabran je programski jezik Python na operacijskom sustavu Linux za lakše povezivanje s grafičkim korisničkim sučeljem, koje je također razvijeno u Pythonu. 
 
-\textit{Manager} je jedinstveni objekt koji pokreće i zaustavlja proces otkrivanja i pohranjuje dohvaćene čvorove. \textit{Manager} obavještava novootkriveni čvor putem klase \textit{ManagerListener}. Svaki povratni poziv (engl. \textit{callback}) izvodi se asinkrono u pozadinskoj dretvi. 
+\subsection{Rad paketa za razvoj programa}
 
-\textit{Node} klasa predstavlja udaljeni uređaj. Prihvaća značajke koje čvor emitira te omogućuje čitanje podataka koje uređaj šalje, kao i slanje podataka na uređaj. Čvor emitira sve značajke čiji je odgovarajući bit postavljen na 1 unutar poruke oglasa. Nakon što se uređaj poveže, moguće je skenirati i omogućiti dostupne karakteristike te razmjenjivati podatke vezane uz te karakteristike. 
+\textit{BlueST-SDK} biblioteka prikazuje samo uređaje s poljem specifičnim za dobavljača formatiranim kao što je prikazano u Tablici 3.1. Polje duljine mora biti veličine 7 ili 13 bajtova. ID uređaja je broj koji identificira tip uređaja te brojevi između 0x80 i 0xFF označavaju STM32 Nucleo razvojne sustave. Maska značajke polje bitova koje daje informaciju o značajkama koje emitira uređaj. Polje je veličine 4 bajta i svaki bit označava jednu značajku. Svaki je bit postavljen u 0 ili 1, ovisno o tome je li značajka emitirana. 
+
+\begin{table}[ht!]
+	\centering
+	\caption{Oblikovanje polja specifično za dobavljača \textit{Blue-SDK} modula}
+	\begin{tabular}{|c| c| c|}
+		\hline
+		\rowcolor{lightblue}  
+		\textbf{Duljina} & \textbf{Naziv} & \textbf{Vrijednost} \\ \hline
+		1 & Duljina & 0x07/0x0D \\ \hline
+		1 & Tip polja & 0xFF \\ \hline
+		1 & Verzija protokola & 0x01 \\ \hline
+		1 & ID uređaja & 0xX \\ \hline
+		4 & Maska značajke & 0xXXXXXX \\ \hline
+		6 & Adresa kontrole pristupa (MAC) uređaja & 0xXXXXXXXXX \\ \hline
+	\end{tabular}
+\end{table}
+
+U Tablici 3.2 nalazi se popis ključnih značajki za ovu aplikaciju i njihove maske bitova. ADPCM označava prilagodljivu diferencijalnu impulsnu kodnu modulaciju, što je varijanta diferencijalne impulsne kodne modulacije (DPCM) koja mijenja veličinu koraka kvantizacije kako bi se omogućilo daljnje smanjenje potrebne širine opsega podataka za dani omjer signal-šum. 
+
+\begin{table}[ht!]
+	\centering
+	\caption{Maske bitova i pripadne karakteristike u modulu \textit{BlueST-SDK}}
+	\begin{tabular}{|c| c|}
+		\hline
+		\rowcolor{lightblue}  
+		\textbf{Duljina} & \textbf{Naziv}  \\ \hline
+		26 & Razina mikrofona \\ \hline
+		27 & ADPCM Audio \\ \hline
+		28 & Smjer dolaska \\ \hline
+		29 & \textit{Switch} \\ \hline
+		30 & ADPCM sinkronizacija  \\ \hline
+	\end{tabular}
+\end{table}
+
+Karakteristike kojima upravlja SDK moraju imati navedeni UUID:
+\newline \texttt{XXXXXXXX-0001-11e1-ac36-0002a5d5c51}. 
+
+SDK skenira sve usluge, tražeći karakteristike koje odgovaraju uzorku. Prvi dio UUID-a ima bitove postavljene na 1 za svaku značajku koju karakteristika izvozi. U slučaju više značajki mapiranih u jednu karakteristiku, podaci moraju biti u istom redoslijedu kao maska bitova. Podaci se trebaju formatirati kao što je prikazano u Tablici 3.3.
+
+Prva dva bajta koriste se za slanje vremenske oznake. Ovo je osobito korisno za prepoznavanje bilo kakvog gubitka podataka. Budući da je maksimalna veličina BLE paketa 20 bajtova, maksimalna veličina polja podataka značajke je 18 bajtova.
+
+\begin{table}[ht!]
+	\centering
+	\caption{Karakterističan format podataka u modulu \textit{BlueST-SDK}}
+	\begin{tabular}{|c| c|}
+		\hline
+		\rowcolor{lightblue}  
+		\textbf{Duljina} & \textbf{Naziv}  \\ \hline
+		2 &  Vremenska oznaka \\ \hline
+		>1 & Podatak prve značajke \\ \hline
+		>1 & Podatak druge značajke \\ \hline
+		... & ... \\ \hline
+	\end{tabular}
+\end{table}
+
+Modul \textit{BlueST-SDK}, odnosno \textit{blue\_st\_sdk}, koristi \textit{bluepy} biblioteku za BLE povezivanje na Linuxu. Također, koristi modul \textit{concurrent.futures} za pokretanje skupova dretvi (engl. \textit{pools}) u pozadini, koje poslužuju povratne pozive promatrača. Međutim, zbog ograničenja \textit{bluepy} biblioteke, pri korištenju \textit{BlueST-SDK} modula nije moguće paralelno korištenje starih i otkrivanje novih uređaja. Isto tako, neočekivani prekid veze nije moguće odmah detektirati, nego se otkriva i obavještava putem promatrača pri izvođenju operacija čitanja i pisanja. 
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.8]{imgs/sdk_folder_struct}
+	\caption{Struktura modula \textit{blue\_st\_sdk}}
+	\label{fig:sdk_folder_struct}
+\end{figure}
+
+Od važnijih direktorija unutar modula izdvajaju se \textit{features} i \textit{advertising\_data}. Direktorij \textit{features} sadrži klase koje implementiraju bazno sučelje \textit{Feature} iz datoteke \textit{feature.py} te svaka označava pojedinačnu značajku koju uređaj nudi, primjerice senzori za temperaturu i vlagu. Tu se također nalaze i klase koje implementiraju značajke vezane za prijenos audio signala. Direktorij \textit{advertising\_data} sadrži datoteke u kojima se nalaze klase za obradu i pohranu podataka oglasa koje šalje uređaj. 
+
+
+\subsubsection{\textit{Manager} klasa}
+\textit{Manager} je jedinstveni objekt koji pokreće i zaustavlja proces otkrivanja uređaja i pohranjuje dohvaćene čvorove. \textit{Manager} obavještava novootkriveni čvor putem sučelja \textit{ManagerListener}. Svaki povratni poziv (engl. \textit{callback}) izvodi se asinkrono u pozadinskoj dretvi. Pojam jedinstvenog objekta označava da postoji samo jedna, globalna instanca klase kojoj se ne može pristupiti izravno, nego isključivo putem statičke metode \lstinline|instance()|.
+
+Također, objekt koji implementira sučelje \textit{ManagerListener} promatrač je \textit{Manager} klase, te izvršava određen skup naredbi pri svakoj promjeni \textit{Manager} objekta. Budući da bi na promjenu stanja \textit{ManagerListener} čekao u beskonačnoj petlji, odnosno ne bi obavljao nikakav koristan rad, \textit{Manager} objekt pri svakoj vlastitoj promjeni obavještava sve promatrače koji promatraju njegove promjene, odnosno poziva njihove \lstinline|update()| metode. Time se izbjegava beskonačna petlja u promatračima te izvođenje na zahtjev naredbi vezanih uz promjenu \textit{Manager} objekta.
+
+
+\subsubsection{\textit{Node} klasa}
+\textit{Node} klasa predstavlja udaljeni uređaj. Prihvaća značajke koje čvor odnosno uređaj emitira te omogućuje čitanje poslanih podataka, kao i njihovo slanje na uređaj. Čvor emitira sve značajke čiji je odgovarajući bit postavljen na 1 unutar poruke oglasa. Nakon što se uređaj poveže, moguće je skenirati i omogućiti dostupne karakteristike te razmjenjivati podatke vezane uz te karakteristike. Isto tako, svi promatrači zainteresirani za promjene čvora registriraju se putem \textit{NodeListener} sučelja.
 
 Čvor može biti u jednom od sljedećih stanja:
 \begin{itemize}
@@ -156,10 +231,49 @@ Za razvoj aplikacije odabran je programski jezik Python na operacijskom sustavu 
 	\item mrtav: finalni status.
 \end{itemize}
 
-\textit{Feature} klasa predstavlja podatke koje čvor emitira, odnosno jednu značajku. Svaka značajka ima niz objekata polja koji opisuju izvezene podatke. Podaci se primaju iz BLE karakteristike i sadržani su u \textit{Sample} klasi. O novim podacima korisnik je obaviješten putem promatrača.
+\subsubsection{\textit{Feature} klasa}
+\textit{Feature} klasa predstavlja podatke koje čvor emitira, odnosno jednu značajku. Svaka značajka ima niz objekata polja koji opisuju izvezene podatke. Podaci se primaju iz BLE karakteristike i pohranjuju se u objekt \textit{Sample} klase. \textit{Feature} objekti također obavještavu korisnike o promjeni podataka putem sučelja \textit{FeatureListener}.
+
+
+\subsection{Povezivanje s mikrokontrolerom}
+
+Najprije je potrebno pristupiti globalnoj instanci klase \textit{Manager} za kontrolu i skeniranje Bluetooth uređaja. Također je potrebno kreirati promatrač \textit{Manager} objekta, odnosno stvoriti instancu \textit{ManagerListener} sučelja. Korištenje bilo kojeg sučelja promatrača nije moguće bez prethodnog kreiranja klase koje nasljeđuje sučelje. 
+
+\begin{lstlisting}[language=Python, caption={Pristup \textit{Manager} instanci i skeniranje Bluetooth uređaja}]
+	manager = Manager.instance()
+	manager_listener = MyManagerListener()
+	manager.add_listener(manager_listener)
+	manager.discover(globals.SCANNING_TIME_s)
+	devices = manager.get_nodes()
+\end{lstlisting}
+
+Nakon definiranja objekata pokreće se vremenski ograničeno skeniranje dostupnih Bluetooth uređaja, koji se nakon otkrivanja pohrane u listu otkrivenih čvorova. Budući da je u ovoj aplikaciji potreban samo jedan uređaj, odabire se prvi iz liste uređaja s kojim se \textit{Manager} uređaj spaja. Nakon uspješnog spajanja i dohvata dostupnih značajki započinje snimanje zvuka. Za snimanje se mogu koristiti Opus ili AD značajke, ovisno o tome koju značajku uređaj podržava. Kao što je već ranije opisano, STM32WB5MM-DK modul podržava Opus audio kodek.
+
+Programska podrška za snimanje zvuka je \textit{alsaaudio} modul. \textit{Advanced Linux Sound Architecture}, odnosno ALSA, pruža audio i MIDI (\textit{Musical Instrument Digital Interface}) funkcionalnost za Linux operacijski sustav. Biblioteka sadrži klase omotače (engl. \textit{wrappers}) za pristup ALSA API-ju iz Pythona. 
+
+ALSA se sastoji od sljedećih komponenti:
+\begin{itemize}
+	\item skup jezgrinih upravljačkih programa koji upravljaju hardveru za zvuk iz Linux jezgre,
+	\item API na razini jezgre za upravljanje ALSA uređajima, 
+	\item C biblioteka za pojednostavljeni pristup hardveru za zvuk iz korisničkih aplikacija. 
+\end{itemize}
+
+Putem ALSA biblioteke definira se novi audio tok koji koristi PCM način pretvaranja binarnog zapisa u zvuk kako bi bio kompatibilan s Opus kodekom. Podaci su u 16-bitni s predznakom u \textit{little-endian} obliku, a frekvencija uzorkovanja je 16 kHz. Broj okvira koji će se upisati u pri svakoj iteraciji postavljen je na 160. 
+
+\begin{lstlisting}[language=Python, caption={Postavljanje parametara za dekodiranje audio signala}]
+	stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')
+	stream.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+	stream.setchannels(globals.CHANNELS)
+	stream.setrate(globals.SAMPLING_FREQ_OPUS)
+	stream.setperiodsize(160)
+\end{lstlisting}
+
+Pri svakoj promjeni \textit{Feature} objekta \textit{FeatureListener} promatrač je obaviješten i \textit{Feature} poziva \textit{update()} metodu promatrača. Ta funkcija prima značajku i \textit{Sample} objekt te, ovisno o načinu obrade zvuka (ADPCM ili Opus), prikladno se obrađuje primljeni uzorak iz dobivenog \textit{Sample} objekta. Budući da je u ovoj aplikaciji korišten Opus kodek, potrebno je samo dohvatiti bajt podatka iz \textit{Sample} objekta i pohraniti ga u datoteku i/ili ga poslati na audio tok koji preusmjerava zvuk na zvučnike računala. 
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{imgs/duplex_chain_2}
 	\caption{Lanac obrade prijamnika u aplikaciji}
 	\label{fig:duplex_chain_2}
 \end{figure}
+
+Po završetku snimanja zvuka, svi promatrači otkazuju pretplatu na subjekte koje su promatrali te se zatvore audio tokovi. \textit{Manager} objekt se odspaja od čvora i postavlja se u početno stanje.

@@ -14,6 +14,7 @@
 --> https://www.st.com/resource/en/user_manual/um2614-getting-started-with-the-stm32cube-function-pack-for-stm32wb-mcu-featuring-advanced-audio-streaming-over-bluetooth-50-using-opus-codec-stmicroelectronics.pdf 
 	__DA__
 --> https://opus-codec.org/ __DA__
+--> https://larsimmisch.github.io/pyalsaaudio/pyalsaaudio.html#what-is-alsa __DA__
 
 --> https://doc.qt.io/ __DA__
 --> https://riverbankcomputing.com/software/pyqt/ __DA__
@@ -30,6 +31,10 @@ Bluetooth Low Energy and Sensors Technology Software Development Kit (SDK)
 	__DA__
 --> https://github.com/STMicroelectronics/BlueSTSDK_Python
 	__DA__
+
+--> https://en.wikipedia.org/wiki/Adaptive_differential_pulse-code_modulation#cite_note-1
+	prva referenca, principles of audio __DA__
+	(za omjer signal-šum rečenicu u Povezivanje_s_PC)
 
 Quick Start Guide For BLE Function Pack
 --> https://www.st.com/content/ccc/resource/sales_and_marketing/presentation/product_presentation/group0/9d/a0/bf/3f/ca/bd/42/88/FP-AUD-BVLINKWB1_QUICK_START_GUIDE/files/fp-aud-bvlinkwb1_quick_start_guide.pdf/jcr:content/translations/en.fp-aud-bvlinkwb1_quick_start_guide.pdf
