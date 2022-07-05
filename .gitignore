@@ -19,3 +19,4 @@ documentation/*.gz
 documentation/*.toc
 documentation/*.lof
 documentation/*.lol
+documentation/*.lot
