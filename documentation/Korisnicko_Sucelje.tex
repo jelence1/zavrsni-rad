@@ -4,9 +4,9 @@ Za bolje korisničko iskustvo kreirano je grafičko korisničko sučelje (engl. 
 
 \section{Razvojni alat PyQt} 
 Aplikacija je izrađena korištenjem razvojnog alata PyQt temeljenog na programskom
-jeziku Python i pripadnih biblioteka za razvoj grafičkih korisničkih sučelja. PyQt je priključak (engl. \textit{plug-in}) za Python - mostna biblioteka između Pythona i razvojnog alata Qt, koji podržava programski jezik C++. Korištena je inačica \textit{PyQt5}, koja je kompatibilna s Python 3 verzijom.
+jeziku Python i pripadnih biblioteka za razvoj grafičkih korisničkih sučelja. PyQt je priključak (engl. \textit{plug-in}) za Python - mostna biblioteka između Pythona i razvojnog alata Qt, koji podržava programski jezik C++. Korištena je inačica \textit{PyQt5}, koja je kompatibilna s Python 3 verzijom. \cite{pyqt} 
 
-Osnova \textit{Qt} aplikacija je objektni model koji, koristeći sustav \textit{Meta Object} i klasu \textit{QObject}, proširuje funkcionalnost standardnog programskog jezika C++ i time omogućuje razvoj grafičkih korisničkih sučelja. \textit{PyQt} enkapsulira funkcionalnosti \textit{Qt} radnog okvira te ih prilagođava programskom jeziku Python, odnosno kombinira kompleksnost alata za razvoj grafičkog sučelja i jednostavnost programskog jezika.
+Osnova \textit{Qt} aplikacija je objektni model koji, koristeći sustav \textit{Meta Object} i klasu \textit{QObject}, proširuje funkcionalnost standardnog programskog jezika C++ i time omogućuje razvoj grafičkih korisničkih sučelja. \textit{PyQt} enkapsulira funkcionalnosti \textit{Qt} radnog okvira te ih prilagođava programskom jeziku Python, odnosno kombinira kompleksnost alata za razvoj grafičkog sučelja i jednostavnost programskog jezika. \cite{qt}
 
 Osnovna klasa je \textit{QObject} koja pruža sljedeće funkcionalnosti:
 \begin{itemize}
@@ -80,7 +80,7 @@ Snimanje je moguće pokrenuti ponovno pritiskom na gumb \textit{Start}, ali s ra
 %%
 
 
-Glavni prozor i ostali elementi korisničkog sučelja konfiguriraju se u klasi \textit{Ui\_Form}, odnosno u njezinoj funkciji \lstinline|setupUi()|, koja kao parametar prima \textit{Form} objekt. Taj objekt nasljeđuje dvije klase - \textit{QWidget}, kao glavni prozor s grafičkim komponentama, i samu \textit{Ui\_Form} klasu, kako bi se glavni prozor mogao pomicati povlačenjem miša. 
+Glavni prozor i ostali elementi korisničkog sučelja konfiguriraju se u klasi \textit{Ui\_Form}, odnosno u njezinoj funkciji \lstinline|setupUi()|, koja kao parametar prima objekt \textit{Form}. Taj objekt nasljeđuje dvije klase - \textit{QWidget}, kao glavni prozor s grafičkim komponentama, i samu klasu \textit{Ui\_Form}, kako bi se glavni prozor mogao pomicati povlačenjem miša. 
 
 \begin{lstlisting}[caption={Definicija klase \textit{Form} i njezin konstruktor}, language=Python]
 	class Form(QtWidgets.QWidget, Ui_Form):
@@ -96,7 +96,7 @@ Također, definiraju se dva objekta za praćenje vremena:
 	\item \textit{QBasicTimer}: služi za osvježavanje grafičkog prikaza svake sekunde. Zaustavlja se istekom vremena postavljenog objektom \textit{QTimer}, odnosno aktiviranjem metode \lstinline|finished()|. Povezan je signalima s funkcijom \lstinline|timerEvent()| koja poziva metodu \lstinline|update_gui()| za ponovno iscrtavanje sučelja.
 \end{enumerate}
 
-Za pokretanje korisničkog sučelja potrebno je najprije napraviti instancu objekta \textit{QApplication} koja upravlja glavnim postavkama i tokom kontrole GUI aplikacije. \textit{QApplication} sadrži glavnu petlju događaja, gdje se obrađuju i šalju svi događaji iz prozorskog sustava i drugih izvora. Također upravlja inicijalizacijom, finalizacijom aplikacije i pruža upravljanje sesijom. Osim toga, \textit{QApplication} obrađuje većinu postavki za cijeli sustav i aplikaciju. Za bilo koju GUI aplikaciju koja koristi \textit{Qt}, postoji točno jedan \textit{QApplication} objekt, bez obzira na broj prozora. 
+Za pokretanje korisničkog sučelja potrebno je najprije napraviti instancu objekta \textit{QApplication} koja upravlja glavnim postavkama i tokom kontrole GUI aplikacije. \textit{QApplication} sadrži glavnu petlju događaja, gdje se obrađuju i šalju svi događaji iz prozorskog sustava i drugih izvora. Također upravlja inicijalizacijom, finalizacijom aplikacije i pruža upravljanje sesijom. Osim toga, \textit{QApplication} obrađuje većinu postavki za cijeli sustav i aplikaciju. Za bilo koju GUI aplikaciju koja koristi \textit{Qt}, postoji točno jedan objekt \textit{QApplication}, bez obzira na broj prozora. 
 
 Metoda \lstinline|exec_()| pokreće glavnu petlju događaja i čeka dok se ne pozove \lstinline|exit| funkcija. Potrebno je pozvati ovu funkciju za početak rukovanja događajima. Glavna petlja događaja prima događaje iz prozorskog sustava i šalje ih widgetima aplikacije. Glavna petlja događaja prima događaje iz prozorskog sustava i šalje ih elementima  aplikacije.
 
@@ -118,16 +118,16 @@ U ovoj aplikaciji prikaz sučelja i programska potpora koja obavlja povezivanje 
 PyQt aplikacije imaju dvije vrste dretvi:
 \begin{itemize}
 	\item Glavna dretva
-	\item \textit{Worker} dretve
+	\item dretve \textit{Worker}
 \end{itemize}
 
-Glavna dretva aplikacije uvijek postoji te se još naziva i GUI dretva. S druge strane, \textit{worker} dretve ovise o potrebama aplikacije i može ih biti proizvoljno mnogo. One su sekundarne dretve koje se mogu koristiti za rasterećivanje glavnog programa i odvajanje dugotrajnih zadataka iz glavne dretve, čime se sprječava smrzavanje korisničkog sučelja. 
+Glavna dretva aplikacije uvijek postoji te se još naziva i GUI dretva. S druge strane, dretve tipa \textit{worker} ovise o potrebama aplikacije i može ih biti proizvoljno mnogo. One su sekundarne dretve koje se mogu koristiti za rasterećivanje glavnog programa i odvajanje dugotrajnih zadataka iz glavne dretve, čime se sprječava smrzavanje korisničkog sučelja. 
 
-Svaki \textit{QThread} objekt upravlja jednom dretvom unutar programa i njihov rad započinje metodom \lstinline|run|. Ta metoda pokreće petlju događaja unutar dretve pozivanjem funkcije \lstinline|exec|. Važno je naglasiti da \textit{QThread} objekt nije dretva sam po sebi, nego je omotač oko dretve operacijskog sustava. Prava dretva kreira se pozivom funkcije \lstinline|QThread.start()|.
+Svaki objekt \textit{QThread} upravlja jednom dretvom unutar programa i njihov rad započinje metodom \lstinline|run|. Ta metoda pokreće petlju događaja unutar dretve pozivanjem funkcije \lstinline|exec|. Važno je naglasiti da objekt \textit{QThread} nije dretva sam po sebi, nego je omotač oko dretve operacijskog sustava. Prava dretva kreira se pozivom funkcije \lstinline|QThread.start()|.
 
-\textit{Worker} klasa nasljeđuje \textit{QObject} klasu i u nju je smještena programska potpora za povezivanje računala s mikrokontrolerom. Također su definirana tri signala koja komuniciraju s glavnom dretvom - jedan koji signalizira kraj izvođenja procesa, drugi za ažuriranje tekstualnog prikaza, i treći koji signalizira početak snimanja zvuka. Svaki od signala pozivom metode \lstinline|emit()| emitira signal glavnoj petlji o vlastitoj promjeni. 
+Klasa \textit{Worker} nasljeđuje klasu \textit{QObject} i u nju je smještena programska potpora za povezivanje računala s mikrokontrolerom. Također su definirana tri signala koja komuniciraju s glavnom dretvom - jedan koji signalizira kraj izvođenja procesa, drugi za ažuriranje tekstualnog prikaza, i treći koji signalizira početak snimanja zvuka. Svaki od signala pozivom metode \lstinline|emit()| emitira signal glavnoj petlji o vlastitoj promjeni. 
 
-\begin{lstlisting}[caption={\textit{Worker} klasa}, language=Python]
+\begin{lstlisting}[caption={Klasa \textit{Worker}}, language=Python]
 	class Worker(QObject):
 		# Class for running BLE 
 		finished = pyqtSignal()
@@ -140,11 +140,11 @@ Svaki \textit{QThread} objekt upravlja jednom dretvom unutar programa i njihov r
 			return
 \end{lstlisting}
 
-Isječak koda 4.4 prikazuje princip povezivanja glavne, GUI dretve s \textit{worker} dretvom koja povezuje rad mikrokontrolera i računala.
+Isječak koda 4.4 prikazuje princip povezivanja glavne, GUI dretve s dretvom tipa \textit{worker} koja povezuje rad mikrokontrolera i računala.
 
-Za početak je potrebno stvoriti instance \textit{QThread} i \textit{Worker} klase. Nakon toga, funkcijom \lstinline|moveToThread()| funkcionalnost \textit{Worker} klase prebacuje se u \textit{QThread} objekt koji će se izvršavati neovisno o GUI dretvi. Zatim je potrebno povezati signale dretve s funkcijama koje će se izvršiti pri emisiji signala. Naposljetku, izvršavanje dretve započinje pokretanjem metode \lstinline|start()| nad \textit{QThread} objektom, što ujedno i emitira \lstinline|started| signal koji je povezan s metodom \lstinline|run()| objekta \textit{Worker}. Time je započet rad te klase u odvojenoj dretvi bez ikakve ovisnosti o glavnoj dretvi s korisničkim sučeljem.
+Za početak je potrebno stvoriti instance klasa \textit{QThread} i \textit{Worker}. Nakon toga, funkcijom \lstinline|moveToThread()| funkcionalnost klase \textit{Worker} prebacuje se u objekt \textit{QThread} koji će se izvršavati neovisno o GUI dretvi. Zatim je potrebno povezati signale dretve s funkcijama koje će se izvršiti pri emisiji signala. Naposljetku, izvršavanje dretve započinje pokretanjem metode \lstinline|start()| nad objektom \textit{QThread}, što ujedno i emitira \lstinline|started| signal koji je povezan s metodom \lstinline|run()| objekta \textit{Worker}. Time je započet rad te klase u odvojenoj dretvi bez ikakve ovisnosti o glavnoj dretvi s korisničkim sučeljem.
 
-\begin{lstlisting}[caption={Povezivanje glavne dretve s \textit{worker} dretvom}, language=Python]
+\begin{lstlisting}[caption={Povezivanje glavne dretve s dretvom tipa \textit{worker}}, language=Python]
 	# Step 1: Create a QThread object
 	self.thread = QThread()
 	# Step 2: Create a worker object

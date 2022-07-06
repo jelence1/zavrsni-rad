@@ -5,7 +5,20 @@
 
 \usepackage{xcolor}
 \usepackage{color, colortbl}
+\usepackage{pgfplotstable}
+\usepackage{pgfplots}
 
+\usepackage{url}
+\def\UrlBreaks{\do/\do-}
+\usepackage{breakurl}
+\usepackage[breaklinks]{hyperref}
+
+\hypersetup{
+	colorlinks,
+	linkcolor={black},
+	citecolor={black},
+	urlcolor={black}
+}
 
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -76,17 +89,17 @@
 \bibliographystyle{fer}
 
 \begin{sazetak}
-Sažetak na hrvatskom jeziku.
+U ovom radu implementiran je sustav za prijam, prikaz i obradu audio signala korištenjem razvojnog sustava STM32WB5MM-DK. Korištene su biblioteke koje omogućavaju snimanje zvuka MEMS mikrofonom na razvojnom sustavu. Korišteno je BLE sučelje za prijenos audio signala s razvojnog sustava na računalo. Razvijeno je grafičko korisničko sučelje za snimanje zvuka i vizualizaciju ranije snimljenih podataka korištenjem razvojnog alata \textit{PyQt}. Aplikacija se izvodi na operacijskom sustavu Linux. Provedena je analiza zvučnih zapisa hrkanja snimljenih razvijenim sustavom. 
 
-\kljucnerijeci{STM32WB5MM-DK, BLE, MEMS mikrofon, korisničko sučelje, obrada audio signala}
+\kljucnerijeci{STM32WB5MM-DK, BLE, MEMS mikrofon, korisničko sučelje, obrada audio signala, hrkanje}
 \end{sazetak}
 
 % TODO: Navedite naslov na engleskom jeziku.
 \engtitle{Audio Signal Transmission Using BLE Interface of STM32WB5MM-DK Development Kit}
 \begin{abstract}
-English abstract. 
+This thesis describes an implementation of a system for receiving, displaying and analysis of audio signal using STM32WB5MM-DK development board. Libraries that enable audio recording with a MEMS microphone on the development board have been used. BLE interface is used for signal transfer from the STM32WB5MM-DK to the computer. A graphical user interface has been developed for audio recording and audio signal visualization, using \textit{PyQt} development tools. The application runs on the Linux operating system. Analysis of snoring audio recorded with the developed system has been performed. 
 
-\keywords{STM32WB5MM-DK, BLE, MEMS microphone, user interface, audio signal processing}
+\keywords{STM32WB5MM-DK, BLE, MEMS microphone, user interface, audio signal processing, snoring}
 \end{abstract}
 
 \end{document}

@@ -1,8 +1,7 @@
 
 
---> https://eu.mouser.com/new/stmicroelectronics/stm-stm32wb5mm-dk-kit/ _DA_
---> https://www.st.com/en/microcontrollers-microprocessors/stm32wbx5.html _DA_
---> https://www.st.com/resource/en/user_manual/dm00766322-.pdf _DA_
+--> https://www.st.com/en/microcontrollers-microprocessors/stm32wbx5.html __DA__ ne!!
+--> https://www.st.com/resource/en/user_manual/dm00766322-.pdf __DA__
 
 --> https://www.link-labs.com/blog/bluetooth-vs-bluetooth-low-energy __DA__
 --> BLE fajl iz Karlinog foldera __DA__
@@ -14,6 +13,7 @@
 --> https://www.st.com/resource/en/user_manual/um2614-getting-started-with-the-stm32cube-function-pack-for-stm32wb-mcu-featuring-advanced-audio-streaming-over-bluetooth-50-using-opus-codec-stmicroelectronics.pdf 
 	__DA__
 --> https://opus-codec.org/ __DA__
+--> https://www.lifewire.com/what-makes-an-audio-format-lossy-2438561 __DA__
 --> https://larsimmisch.github.io/pyalsaaudio/pyalsaaudio.html#what-is-alsa __DA__
 
 --> https://doc.qt.io/ __DA__
@@ -22,7 +22,8 @@
 
 --> https://towardsdatascience.com/understanding-audio-data-fourier-transform-fft-spectrogram-and-speech-recognition-a4072d228520
 	__DA__
-
+--> https://www.allaboutcircuits.com/technical-articles/nyquist-shannon-theorem-understanding-sampled-systems/
+	__DA__
 
 Bluetooth Low Energy and Sensors Technology Software Development Kit (SDK) 
 --> https://www.st.com/content/st_com/en/products/embedded-software/wireless-connectivity-software/bluest-sdk.html

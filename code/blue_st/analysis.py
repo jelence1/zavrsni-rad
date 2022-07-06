@@ -38,7 +38,7 @@ try:
      else:
           samples, sampling_rate = sf.read(file_path)
 except RuntimeError:
-     messagebox.showerror("Invalid file format. Please select an audio file, such as .raw or .wav.")
+     messagebox.showerror(title="Invalid file format", message="Please select an audio file, such as .raw or .wav.")
      sys.exit(0)
 
 mngr = plt.get_current_fig_manager()

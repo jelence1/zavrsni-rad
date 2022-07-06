@@ -1,2 +1,7 @@
 \chapter{Zaključak}
 
+Na razvojnom sustavu STM32WB5MM-DK implementiran je sustav za prijam i prijenos audio signala. Audio signal snima se MEMS mikrofonom ugrađenim u razvojni sustav te se snimljeni signal prenosi putem BLE sučelja na računalo. Na računalu je razvijena aplikacija koja povezuje razvojni sustav i računalo. Korištenje aplikacije pojednostavljeno je kreiranjem korisničkog grafičkog sučelja. Aplikacija i korisničko sučelje izvode se u operacijskom sustavu Linux. Neovisan rad korisničkog sučelja i dijela aplikacije koje komunicira s razvojnim sustavom STM32WB5MM-DK omogućen je višedretvenim izvođenjem procesa. Korisničko sučelje za interakciju s korisnikom i snimanje zvuka razvijeno je kao \textit{PyQt} aplikacija. Razvojni alat \textit{PyQt} pruža mogućnosti za razvoj korisničkih sučelja namijenjenih za različite platforme, uključujući operacijski sustav Linux. Detaljnom analizom zvučnih zapisa hrkanja ispitana je povezanost frekvencije i mjesta nastajanja hrkanja, kao i ovisnost intenziteta zvuka o udaljenosti izvora zvuka. 
+
+Konfiguracija sustava opisana ovim završnim radom predstavlja alat za snimanje zvuka koji je moguće koristiti u kliničkom okruženju i ostalim ograničenim okruženjima gdje mikrofon i korisnik aplikacije ne mogu biti u istom prostoru. Također, njime je omogućena jednostavna analiza zvučnih zapisa. 
+
+\eject
