@@ -20,3 +20,4 @@ documentation/*.toc
 documentation/*.lof
 documentation/*.lol
 documentation/*.lot
+documentation/*.out
