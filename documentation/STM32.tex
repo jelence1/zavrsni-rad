@@ -21,7 +21,7 @@ Arhitektura BLE tehnologije naziva se još i BLE stog zbog slojevite strukture. 
 	\item domaćin (engl. \textit{host}).
 \end{itemize}
 
-Upravljač se sastoji od fizičkog sloja i sloja veze. Host uključuje protokol kontrole i prilagodbe logičke veze (\textit{Logical Link Control and Adaptation Layer Protocol} - L2CAP), upravitelja sigurnosti (\textit{Security Manager} - SM), protokol atributa (\textit{Attribute Protocol} - ATT), generički profil atributa (\textit{Generic Attribute Protocol} - GATT) i generički profil pristupa (\textit{Generic Attribute Profile} - GAP). Sučelje između komponenti naziva se sučelje između domaćina i upravljača (\textit{Host Controller Interface} - HCI). \cite{blemanual}
+Upravljač se sastoji od fizičkog sloja i sloja veze. Host uključuje protokol kontrole i prilagodbe logičke veze (engl. \textit{Logical Link Control and Adaptation Layer Protocol} - L2CAP), upravitelja sigurnosti (engl. \textit{Security Manager} - SM), protokol atributa (\textit{Attribute Protocol} - ATT), generički profil atributa (engl. \textit{Generic Attribute Protocol} - GATT) i generički profil pristupa (engl. \textit{Generic Attribute Profile} - GAP). Sučelje između komponenti naziva se sučelje između domaćina i upravljača (engl. \textit{Host Controller Interface} - HCI) \cite{blemanual}. 
 
 
 \begin{figure}[ht]
@@ -44,10 +44,10 @@ Atributi se sastoje od nekoliko parametara:
 
 \subsection{Upravljač}
 \subsubsection{Fizički sloj}
-Fizički sloj signal u radiofrekvencijskom području brzine od 1 Mbps koji prenosi informacije GFSK (\textit{Gaussian Frequency Shift Keying}) frekvencijskom modulacijom. Radi u 2,4 GHz ISM pojasu bez licence na 2400-2483,5 MHz. 
+Fizički sloj signal u radiofrekvencijskom području brzine od 1 Mbps koji prenosi informacije GFSK (engl. \textit{Gaussian Frequency Shift Keying}) frekvencijskom modulacijom. Radi u 2,4 GHz ISM pojasu bez licence na 2400-2483,5 MHz. 
 BLE sustav koristi 40 RF kanala (0-39), s razmakom od 2 MHz. Postoje dvije vrste kanala:
 \begin{enumerate}
-	\item Kanali za oglašavanje koji koriste tri fiksna RF kanala (37, 38 i 39) za
+	\item Kanali za oglašavanje koji koriste tri fiksna RF kanala (37, 38 i 39) za sljedeće tipove paketa:
 	\begin{enumerate}
 		\item Pakete kanala za oglašavanje
 		\item Pakete korištene za otkrivanje ili povezivanje
@@ -56,16 +56,16 @@ BLE sustav koristi 40 RF kanala (0-39), s razmakom od 2 MHz. Postoje dvije vrste
 	\item Podatkovni fizički kanal, koristi ostalih 37 RF kanala za dvosmjernu komunikaciju između povezanih uređaja.
 \end{enumerate}
 
-BLE je tehnologija adaptivnog skakanja frekvencije (\textit{Adaptive frequency-hopping} - AFH) koja može koristiti samo podskup svih dostupnih frekvencija kako bi se izbjegle sve frekvencije koje koriste druge neprilagodljive tehnologije. To omogućuje prelazak s lošeg kanala na poznati dobar kanal korištenjem specifičnog algoritma za skakanje frekvencije, koji određuje sljedeći dobar kanal za korištenje.
+BLE je tehnologija adaptivnog skakanja frekvencije (engl. \textit{Adaptive frequency-hopping} - AFH) koja može koristiti samo podskup svih dostupnih frekvencija kako bi se izbjegle sve frekvencije koje koriste druge neprilagodljive tehnologije. To omogućuje prelazak s lošeg kanala na poznati dobar kanal korištenjem specifičnog algoritma za skakanje frekvencije, koji određuje sljedeći dobar kanal za korištenje.
 
 \subsubsection{Sloj veze}
 Sloj veze određuje kako dva uređaja mogu koristiti signale u radiofrekvencijskom području za međusoban prijenos informacija. Također definira automat s pet stanja:
 \begin{itemize}
-	\item stanje pripravnosti (engl. \textit{Standby}): uređaj ne šalje niti prima pakete,
-	\item oglašavanje: uređaj šalje oglase putem kanala za oglašavanje,
-	\item skeniranje: uređaj traži uređaje oglašivača,
-	\item pokretanje (iniciranje): uređaj pokreće vezu s uređajem oglašivača,
-	\item veza: 
+	\item stanje pripravnosti (engl. \textit{standby}): uređaj ne šalje niti prima pakete,
+	\item oglašavanje (engl. \textit{advertisement}): uređaj šalje oglase putem kanala za oglašavanje,
+	\item skeniranje (engl. \textit{scaanning}): uređaj traži uređaje oglašivača,
+	\item pokretanje (engl. \textit{initiating}): uređaj pokreće vezu s uređajem oglašivača,
+	\item veza (engl. \textit{connection}): 
 	\begin{itemize}
 		\item uređaj  koji je inicirao komunikaciju je u ulozi \textit{master}, komunicira sa  \textit{slave} uređajem i definira vrijeme prijenosa,
 		\item uređaj oglašivača je u ulozi \textit{slave}, komunicira s jednim \textit{master} uređajem.
@@ -81,7 +81,7 @@ Sloj veze određuje kako dva uređaja mogu koristiti signale u radiofrekvencijsk
 \end{figure}
 
 \subsubsection{HCI}
-Sučelje između domaćina i upravljača (HCI) pruža sredstvo komunikacije putem softverskog aplikacijskog programskog sučelja (\textit{Application Programming Interface} - API) ili hardverskog sučelja kao što su: SPI, UART ili USB. Dolazi iz standardnih Bluetooth specifikacija, s novim dodatnim naredbama za funkcije koje osiguravaju nisku potrošnju energije.
+Sučelje između domaćina i upravljača (HCI) pruža sredstvo komunikacije putem softverskog aplikacijskog programskog sučelja (engl. \textit{Application Programming Interface} - API) ili hardverskog sučelja kao što su: SPI, UART ili USB. Dolazi iz standardnih Bluetooth specifikacija, s novim dodatnim naredbama za funkcije koje osiguravaju nisku potrošnju energije.
 
 \subsection{Domaćin}
 
@@ -125,27 +125,27 @@ Mikrokontroler ima ulogu \textit{slave}, dok računalo ima ulogu \textit{master}
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.7]{imgs/ble_connection_setup}
-	\caption{Uspostava BLE veze \cite{fpaudbvlink}}}
+	\caption{Uspostava BLE veze \cite{fpaudbvlink}}
 	\label{fig:ble_connection_setup}
 \end{figure}
 
 
 \section{MEMS mikrofon}
 
-MEMS (\textit{Micro-Electro-Mechanical Systems}) mikrofon je elektroakustični pretvornik koji sadrži MEMS senzor i aplikacijski specifičan integrirani sklop (ASIC). MEMS mikrofoni se uglavnom temelje na elektretskim kapsulama i obično imaju ugrađena pretpojačala i analogno-digitalne pretvornike. MEMS mikrofoni su također poznati kao mikrofonski čipovi ili silikonski mikrofoni. \cite{whatismems}
+MEMS (engl. \textit{Micro-Electro-Mechanical Systems}) mikrofon je elektroakustični pretvornik koji sadrži MEMS senzor i aplikacijski specifičan integrirani sklop (ASIC). MEMS mikrofoni se uglavnom temelje na elektretskim kapsulama i obično imaju ugrađena pretpojačala i analogno-digitalne pretvornike. MEMS mikrofoni su također poznati kao mikrofonski čipovi ili silikonski mikrofoni. \cite{whatismems}
 
 Svi mikrofoni detektiraju akustične valove pomoću fleksibilne membrane, odnosno dijafragme. Membrana se pomiče pod pritiskom induciranih akustičnih valova. Danas većina MEMS mikrofona na tržištu koristi kapacitivnu tehnologiju za prikupljanje zvučnih signala. Kapacitivni MEMS mikrofoni mjere kapacitet između fleksibilne mikromembrane i fiksne stražnje ploče. Promjene tlaka zraka koje stvaraju zvučni valovi uzrokuju pomicanje membrane. Stražnja ploča je perforirana kako bi kroz nju mogao strujati zrak i dizajnirana je da ostane kruta budući da zrak prolazi kroz njezine perforacije. Kako se membrana pomiče, kapacitet se mijenja između pokretne membrane i fiksne stražnje ploče (budući da se udaljenost između njih mijenja), a ta se promjena može analizirati i zabilježiti.
 
 Dizajn digitalnog MEMS mikrofona obično ima dodatni CMOS čip kao analogno-digitalni pretvornik. Ovi čipovi učinkovito preuzimaju pojačane analogne audio signale i pretvaraju ih u digitalne podatke. Također omogućuju lakšu integraciju digitalnih MEMS mikrofona s digitalnim proizvodima.
 
-Najčešći format za digitalno kodiranje unutar MEMS mikrofona je modulacija trajanja impulsa (\textit{pulse-duration modulation} - PDM). PDM omogućuje komunikaciju jednom podatkovnom linijom i satom. Prijamnici PDM signala, kao i sami MEMS mikrofoni, jeftini su i lako dostupni.
+Najčešći format za digitalno kodiranje unutar MEMS mikrofona je modulacija trajanja impulsa (engl. \textit{pulse-duration modulation} - PDM). PDM omogućuje komunikaciju jednom podatkovnom linijom i satom. Prijamnici PDM signala, kao i sami MEMS mikrofoni, jeftini su i lako dostupni.
 
 \subsection{MEMS tehnologija}
 Mikroelektromehanički sustavi ili MEMS je tehnologija koja se definira kao sustav minijaturiziranih mehaničkih i elektromehaničkih elemenata (tj. uređaja i struktura) koji su izrađeni mikrotvorničkim tehnikama. Fizičke dimenzije MEMS uređaja mogu varirati od znatno ispod jednog mikrometra pa sve do nekoliko milimetara. Isto tako, tipovi MEMS uređaja mogu varirati od relativno jednostavnih struktura bez pokretnih elemenata, do iznimno složenih elektromehaničkih sustava s više pokretnih elemenata pod kontrolom integrirane mikroelektronike. Jedan glavni kriterij MEMS-a je da postoje barem neki elementi koji imaju neku vrstu mehaničke funkcionalnosti bez obzira na to mogu li se ti elementi kretati ili ne.
 
 Dok su funkcionalni elementi MEMS-a minijaturizirane strukture, senzori, aktuatori i mikroelektronika, najznačajniji elementi su mikrosenzori i mikroaktuatori. Oni su  kategorizirani kao pretvornici energije iz jednog oblika u drugi - primjerice mikrosenzor, koji obično pretvara izmjereni mehanički signal u električni.
 
-Stvarni potencijal MEMS-a ostvaruje se kada se minijaturizirani senzori, aktuatori i strukture spoje na silicijsku podlogu zajedno s integriranim krugovima, odnosno mikroelektronikom. Dok se elektronika proizvodi pomoću sekvenci procesa integriranog kruga (npr. CMOS, bipolarni ili BICMOS procesi), mikromehaničke komponente proizvode se korištenjem kompatibilnih \textit{micromachining} procesa koji selektivno urezuju dijelove silikonske pločice ili dodaju nove strukturne slojeve kako bi formirali mehaničke i elektromehaničke uređaje. Još je kompleksnije ako se MEMS može spojiti ne samo s mikroelektronikom, već i s drugim tehnologijama kao što su fotonika, nanotehnologija itd. Ovakve konfiguracije ponekad se nazivaju heterogenom integracijom. Dok su složenije razine integracije budući trend MEMS tehnologije, sadašnja je tehnologija skromnija i obično uključuje jedan diskretni mikrosenzor, jedan diskretni mikroaktuator, jedan mikrosenzor integriran s elektronikom, mnoštvo identičnih mikrosenzora integriranih s elektronikom, jedan mikroaktuator integriran s elektronikom ili mnoštvo identičnih mikroaktuatora integriranih s elektronikom. \cite{whatismems_tech}
+Stvarni potencijal MEMS-a ostvaruje se kada se minijaturizirani senzori, aktuatori i strukture spoje na silicijsku podlogu zajedno s integriranim krugovima, odnosno mikroelektronikom. Mikromehaničke komponente proizvode se korištenjem kompatibilnih \textit{micromachining} procesa koji selektivno urezuju dijelove silikonske pločice ili dodaju nove strukturne slojeve kako bi formirali mehaničke i elektromehaničke uređaje. Još je kompleksnije ako se MEMS može spojiti ne samo s mikroelektronikom, već i s drugim tehnologijama kao što su fotonika, nanotehnologija itd. Ovakve konfiguracije ponekad se nazivaju heterogenom integracijom. Dok su složenije razine integracije budući trend MEMS tehnologije, sadašnja je tehnologija skromnija i obično uključuje jedan diskretni mikrosenzor, jedan diskretni mikroaktuator, jedan mikrosenzor integriran s elektronikom, mnoštvo identičnih mikrosenzora integriranih s elektronikom, jedan mikroaktuator integriran s elektronikom ili mnoštvo identičnih mikroaktuatora integriranih s elektronikom \cite{whatismems_tech}. 
  
 
 \subsection{Način rada MEMS mikrofona}
@@ -153,11 +153,13 @@ Stvarni potencijal MEMS-a ostvaruje se kada se minijaturizirani senzori, aktuato
 MEMS mikrofon sadrži sljedeće komponente:
 \begin{itemize}
 	\item MEMS pretvornik: sastoji se od membrane, perforirane ploče i kućišta,
-	\item tiskana pločica (\textit{printed circuit board} - PCB): uključuje ASIC polarizacijsku jedinicu, mikrofonsko pretpojačalo i AD pretvornik,
+	\item tiskana pločica (engl. \textit{printed circuit board} - PCB): uključuje ASIC polarizacijsku jedinicu, mikrofonsko pretpojačalo i A/D pretvornik,
 	\item mehanički poklopac.
 \end{itemize}
 
-Zvučni valovi ulaze u MEMS mikrofon kroz poklopac i prolaze kroz perforirano kućište i ploču prije nego dođu do membrane. Valovi uzrokuju različiti zvučni tlak na membrani i razliku u tlaku između prednje i stražnje strane membrane. Ova razlika tlaka uzrokuje njeno pomicanje sukladno zvučnim valovima. Međutim, mikrofonski signal se stvara samo ako postoji naboj između vodljive membrane i Pripadajući integrirani sklop (ASIC) osigurava ovo punjenje.
+Zvučni valovi ulaze u MEMS mikrofon kroz poklopac i prolaze kroz perforirano kućište i ploču prije nego dođu do membrane. Valovi uzrokuju razliku u tlaku između prednje i stražnje strane membrane. Ova razlika tlaka uzrokuje njeno pomicanje sukladno zvučnim valovima. Međutim, mikrofonski signal se stvara samo ako postoji naboj između vodljive membrane i stražnje ploče. 
+Ploča i membrana zajedno djeluju kao kondenzator koji je potrebno napuniti za ispravan
+rad. Pripadajući integrirani sklop (ASIC) osigurava ovo punjenje.
 
 Jednom napunjene, ploča i membrana mogu proizvesti napon. Budući da djeluju kao kondenzator, svaka promjena kapaciteta prouzročit će obrnuto proporcionalnu promjenu napona. Kapacitet je funkcija udaljenosti između ploče i membrane, stoga dok membrana oscilira, stvara se izmjenični napon odnosno mikrofonski signal. Ovaj napon treba pojačati da bi bio koristan kao audio signal, stoga odvojeni integrirani krug (poluvodička matrica), uključen u PCB, pojačava signal.
 
