@@ -8,17 +8,14 @@ Računalo i STM32WB5MM-DK razvojni sustav dva su odvojena sustava koja moraju me
 
 \section{Programska potpora za mikrokontroler}
 
-Dvije glavne funkcionalnosti koje mikrokontroler mora sadržavati su snimanje zvuka i njegov prijenos BLE komunikacijskim sučeljem. Za rad mikrokontrolera odabran je paket funkcija \textit{FP-AUD-BVLINKWB1} iz alata \textit{STM32Cube} koji je razvila tvrtka \textit{STMicroeletronics}. Ovaj \textit{firmware} omogućava potpuni dvosmjerni prijenos zvuka koji se prenosi BLE sučeljem koristeći Opus algoritam za kompresiju. Aplikacija sadrži upravljačke programe i posrednički softver (engl. \textit{middleware}) za BLE i digitalne MEMS mikrofone. Također uključuje kompletan Opus audio kodek kao \textit{middleware} za izvođenje dvosmjernog i simultanog prijenosa zvuka između dva STM32WB mikrokontrolera. 
+Dvije glavne funkcionalnosti koje mikrokontroler mora sadržavati su snimanje zvuka i njegov prijenos BLE komunikacijskim sučeljem. Za rad mikrokontrolera odabran je paket funkcija \textit{FP-AUD-BVLINKWB1} iz alata \textit{STM32Cube} koji je razvila tvrtka \textit{STMicroeletronics}. Ovaj \textit{firmware} omogućava potpuni dvosmjerni prijenos zvuka koji se prenosi BLE sučeljem koristeći Opus algoritam za kompresiju. Aplikacija sadrži upravljačke programe i posrednički softver (engl.~\textit{middleware}) za BLE i digitalne MEMS mikrofone. Također uključuje kompletan Opus audio kodek kao \textit{middleware} za izvođenje dvosmjernog i simultanog prijenosa zvuka između dva STM32WB mikrokontrolera. 
 
 \subsection{Arhitektura programske potpore za mikrokontroler}
 
 Programska potpora za mikrokontroler temelji se na sloju apstrakcije hardvera HAL za STM32 mikrokontroler. Paket funkcija opremljen je skupom \textit{middleware} komponenti za prijam audio signala, kompresiju i
 dekompresiju, prijenos podataka preko BLE sučelja i USB-a.
 
-Aplikacija sadrži dva sloja softvera - STM32Cube HAL sloj i sloj paketa podrške za razvojni sustav (BSP).
-
-STM32Cube HAL sloj pruža jednostavan i modularan skup generičkih i proširenih API-ja za interakciju s gornjim slojevima aplikacije i bibliotekama. Ovi su API-ji izgrađeni na zajedničkoj arhitekturi te je moguće na njih dodavati slojeve (primjerice specifični \textit{middleware}) bez obzira na sklopovske značajke mikrokontrolera.
- 
+Aplikacija sadrži dva sloja softvera - STM32Cube HAL sloj i sloj paketa podrške za razvojni sustav (BSP). STM32Cube HAL sloj pruža jednostavan i modularan skup generičkih i proširenih API-ja za interakciju s gornjim slojevima aplikacije i bibliotekama. Ovi su API-ji izgrađeni na zajedničkoj arhitekturi te je moguće na njih dodavati slojeve (primjerice specifični \textit{middleware}) bez obzira na sklopovske značajke mikrokontrolera.
 Sloj paketa podrške za razvojni sustav (BSP) je skup API-ja koji pruža programsko sučelje za periferne uređaje specifične za razvojni sustav kao što su SPI, ADC, LED i korisnički gumbi \cite{fpaudbvlink}. 
 
 \begin{figure}[ht]
@@ -31,7 +28,7 @@ Komponente za obradu funkcijskog paketa \textit{FP-AUD-BVLINKWB1} dizajnirane su
 
 BLE je konfiguriran za slanje paketa s maksimalnom veličinom od 150 bajtova. Ovisno o aplikaciji, kodirani bajtovi mogu biti iznad ovog praga, stoga komprimirani međuspremnik (engl. \textit{buffer}) mora biti podijeljen u više BLE paketa. Štoviše, veličina kodiranog međuspremnika može promijeniti svaki audio okvir i prijamnik mora znati njegovu duljinu da bi ga obnovio; za ovaj opseg implementiran je jednostavan protokol BLE prijenosa.
 
-Na strani odašiljača, zvuk se dobiva digitalnim MEMS mikrofonom kao 1-bitni PDM signal i pretvara se pomoću filtra za pretvorbu u 16-bitni PCM signal (engl. \textit{pulse-code modulation}). Svaki put kad je audio okvir spreman, prenosi se u algoritam kompresije: veličina kodiranog međuspremnika koju vraća Opus koder može se značajno promijeniti u skladu s parametrima Opus kodera.
+Na strani odašiljača, zvuk se dobiva digitalnim MEMS mikrofonom kao 1-bitni PDM signal i pretvara se pomoću filtra za pretvorbu u 16-bitni PCM signal (engl. \textit{pulse-code modulation}). Prijam zvuka je konfiguriran s frekvencijom uzorkovanja od 16 kHz. Svaki put kad je audio okvir spreman, prenosi se u algoritam kompresije: veličina kodiranog međuspremnika koju vraća Opus koder može se značajno promijeniti u skladu s parametrima Opus kodera.
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{imgs/duplex_chain}
@@ -83,7 +80,7 @@ Pri inicijalizaciji su podržani sljedeći parametri:
 
 Nakon postavljanja veze, modul koji je otkrio profil \textit{BlueVoiceOPUS} drugog modula mora omogućiti kontrolnu obavijest pozivanjem funkcije \newline \lstinline|BluevoiceOPUS_EnableCtrl_Notif()|. Kontrolna se obavijest zatim koristi za zahtjev za pokretanje i zaustavljanje prijenosa.
 
-Za početak audio prijenosa, modul odašiljača mora zatražiti od prijamnika da omogući njegovu audio obavijest pozivom \\\lstinline|BluevoiceOPUS_SendEnableNotifReq()|. Ova funkcija šalje obavijest putem kontrolne karakteristike koja sadrži dva bajta (\lstinline|{BV_OPUS_CONTROL, BV_OPUS_ENABLE_NOTIF_REQ}|). Čim čvor primi zahtjev, može omogućiti audio obavijest podnositelju zahtjeva pozivom funkcije \newline \lstinline|BluevoiceOPUS_EnableAudio_Notif()|. Ako je obavijest ispravno omogućena, modul može započeti prijenos zvuka.
+Za početak audio prijenosa, modul odašiljača mora zatražiti od prijamnika da omogući njegovu audio obavijest pozivom \lstinline|BluevoiceOPUS_SendEnableNotifReq()|. Ova funkcija šalje obavijest putem kontrolne karakteristike koja sadrži dva bajta (\lstinline|{BV_OPUS_CONTROL, BV_OPUS_ENABLE_NOTIF_REQ}|). Čim čvor primi zahtjev, može omogućiti audio obavijest podnositelju zahtjeva pozivom funkcije \newline \lstinline|BluevoiceOPUS_EnableAudio_Notif()|. Ako je obavijest ispravno omogućena, modul može započeti prijenos zvuka.
 
 Profil \textit{BlueVoiceOPUS} na ulaz prihvaća količinu PCM uzoraka jednaku veličini audio okvira postavljenoj tijekom Opus konfiguracije. Svaki put kada je audio okvir spreman, treba pozvati API \lstinline|BluevoiceOPUS_SendAudioData()| i on automatski sažima, fragmentira i šalje pakete audio podataka.
 
@@ -102,7 +99,7 @@ Bajt zaglavlja može uključivati jednu od sljedećih vrijednosti:
 \end{itemize}
 
 Protokol prijenosa u potpunosti je obrađen u usluzi \textit{BlueVoiceOPUS}.
-\subsection{Opus}
+\subsection{Programski okvir Opus}
 Opus je programski okvir otvorenog koda i audio kodek koji se može koristiti za različite vrste aplikacija kao što su \textit{streaming} govora i glazbe ili komprimiranje i pohrana audio signala. Skalabilnost, od uskopojasnog govora niske brzine prijenosa pri 6 kbit/s do stereo glazbe pri 510 kbit/s niske složenosti, čini ga pogodnim za širok raspon interaktivnih aplikacija.
 
 Sastoji se od dva sloja: jedan se temelji na linearnom predviđanju (LP), a drugi se temelji na modificiranoj diskretnoj kosinusnoj transformaciji (MDCT). Opus ima mogućnost komprimiranja zvučnih signala sa gubitcima i bez njih. Kompresijom zvučnog signala bez gubitaka u potpunosti je očuvan izvorni oblik signala, no novodobiveni zapis zauzima veću količinu memorije. S druge strane, kompresija s gubitcima ograničava frekvencijski spektar, čime se gubi značajna količina izvornog signala, no dobiveni zvučni zapis zauzima značajno manju količinu memorije. Opus kodek kombinira rezultate obje kompresije kako bi postigao balans između zauzeća memorije i gubitka izvornih informacija \cite{opus}. 
@@ -126,7 +123,7 @@ Za razvoj aplikacije odabran je programski jezik Python na operacijskom sustavu 
 
 \subsection{Opis razvojnog okvira \textit{BlueST-SDK}}
 
-Biblioteka \textit{BlueST-SDK} prikazuje samo uređaje s poljem specifičnim za dobavljača formatiranim kao što je prikazano u Tablici \ref{table:formatting}. Polje \textit{Duljina} mora biti veličine 7 ili 13 bajtova. ID uređaja je broj koji identificira tip uređaja te brojevi između 0x80 i 0xFF označavaju STM32 Nucleo razvojne sustave. Polje bitova gdje je svaki bit maska neke značajke daje informaciju o značajkama koje emitira uređaj. Polje je veličine 4 bajta i svaki bit označava jednu značajku. Svaki je bit postavljen u 0 ili 1, ovisno o tome je li značajka emitirana. 
+Biblioteka \textit{BlueST-SDK} prikazuje samo uređaje s poljem specifičnim za dobavljača formatiranim kao što je prikazano u tablici \ref{table:formatting}. Polje \textit{Duljina} mora biti veličine 7 ili 13 bajtova. ID uređaja je broj koji identificira tip uređaja te brojevi između 0x80 i 0xFF označavaju STM32 Nucleo razvojne sustave. Polje bitova gdje je svaki bit maska neke značajke daje informaciju o značajkama koje emitira uređaj. Polje je veličine 4 bajta i svaki bit označava jednu značajku. Svaki je bit postavljen u 0 ili 1, ovisno o tome je li značajka emitirana. 
 
 \begin{table}[ht!]
 	\centering
@@ -145,7 +142,7 @@ Biblioteka \textit{BlueST-SDK} prikazuje samo uređaje s poljem specifičnim za 
 	\label{table:formatting}
 \end{table}
 
-U Tablici \ref{table:masks} nalazi se popis ključnih značajki za ovu aplikaciju i njihove maske bitova. ADPCM označava prilagodljivu diferencijalnu impulsnu kodnu modulaciju, što je varijanta diferencijalne impulsne kodne modulacije (DPCM) koja mijenja veličinu koraka kvantizacije kako bi se omogućilo daljnje smanjenje potrebne širine opsega podataka za dani omjer signala i šuma (SNR). 
+U tablici \ref{table:masks} nalazi se popis ključnih značajki za ovu aplikaciju i njihove maske bitova. ADPCM označava prilagodljivu diferencijalnu impulsnu kodnu modulaciju, što je varijanta diferencijalne impulsne kodne modulacije (DPCM) koja mijenja veličinu koraka kvantizacije kako bi se omogućilo daljnje smanjenje potrebne širine opsega podataka za dani omjer signala i šuma (SNR). 
 
 \begin{table}[ht!]
 	\centering
@@ -166,7 +163,7 @@ U Tablici \ref{table:masks} nalazi se popis ključnih značajki za ovu aplikacij
 Karakteristike kojima upravlja SDK moraju imati navedeni UUID:
 \newline \texttt{XXXXXXXX-0001-11e1-ac36-0002a5d5c51}. 
 
-SDK skenira sve usluge, tražeći karakteristike koje odgovaraju uzorku. Prvi dio UUID-a ima bitove postavljene na 1 za svaku značajku koju karakteristika definira. U slučaju više značajki mapiranih u jednu karakteristiku, podaci moraju biti u istom redoslijedu kao maska bitova. Podaci se trebaju formatirati kao što je prikazano u Tablici \ref{table:data_format}.
+SDK skenira sve usluge, tražeći karakteristike koje odgovaraju uzorku. Prvi dio UUID-a ima bitove postavljene na 1 za svaku značajku koju karakteristika definira. U slučaju više značajki mapiranih u jednu karakteristiku, podaci moraju biti u istom redoslijedu kao maska bitova. Podaci se trebaju formatirati kao što je prikazano u tablici \ref{table:data_format}.
 
 Prva dva bajta koriste se za slanje vremenske oznake. Ovo je osobito korisno za prepoznavanje bilo kakvog gubitka podataka. Budući da je maksimalna veličina BLE paketa 20 bajtova, maksimalna veličina polja podataka značajke je 18 bajtova.
 
@@ -245,7 +242,7 @@ ALSA se sastoji od sljedećih komponenti:
 	\item C biblioteka za pojednostavljeni pristup hardveru za zvuk iz korisničkih aplikacija. 
 \end{itemize}
 
-Putem ALSA biblioteke definira se novi audio tok koji koristi PCM način pretvaranja binarnog zapisa u zvuk kako bi bio kompatibilan s Opus kodekom. Podaci su 16-bitni s predznakom u \textit{little-endian} obliku, a frekvencija uzorkovanja je 16 kHz. Broj okvira koji će se upisati u pri svakoj iteraciji postavljen je na 160. 
+Putem ALSA biblioteke definira se novi audio tok koji koristi PCM način pretvaranja binarnog zapisa u zvuk kako bi bio kompatibilan s Opus kodekom. Podaci su 16-bitni s predznakom u \textit{little-endian} obliku, a budući da mikrokontroler ima konfiguriranu frekvenciju uzorkovanja od 16 kHz, ista frekvencija korištena je i ovdje. Broj okvira koji će se upisati u pri svakoj iteraciji postavljen je na 160. 
 
 \begin{lstlisting}[language=Python, caption={Postavljanje parametara za dekodiranje audio signala}]
 	stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')

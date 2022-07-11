@@ -1,14 +1,23 @@
 \chapter{Uvod}
 
+Završni rad izrađen je kao jedna od aktivnosti provedenih u okviru znanstvenog istraživanja koje se bavi analizom spavanja. Cilj rada bio je izraditi tehničko rješenje koje će znanstvenicima omogućiti da se na efikasan i neinvazivan način prikupljaju zvučni zapisi hrkanja promatranih ispitanika u stvarnim uvjetima. Budući da se istraživanje i snimanja provode u kliničkom okruženju, gdje postoje ograničenja na uređaje koji nadziru i snimaju pacijente, potrebno je razviti rješenje koje će biti u skladu sa zahtjevima i ograničenjima koja se očekuju u takvom okruženju. Razvijeno je sklopovsko i programsko rješenje koje omogućuje snimanje i slanje podataka na računalo smješteno u blizini sklopovlja za snimanje.
 
-Ovaj završni rad dio je istraživanja koji se bavi analizom spavanja. U okviru ovog rada, razvijen je sustav za prikupljanje zvučnih zapisa hrkanja koji će se koristiti pri analizi. Budući da se istraživanje i snimanje provode u kliničkom okruženju, gdje postoje ograničenja nad uređajima koji nadziru i snimaju pacijente, potrebno je razviti neinvazivno softversko i hardversko rješenje koje će snimati i slati podatke na udaljenu lokaciju. Kao uređaj za snimanje zvuka odabran je razvojni sustav STM32WB5MM-DK koji će snimati zvučne zapise hrkanja i slati ih putem Bluetooth sučelja na računalo.  
+Fokus rada bio je na programskom rješenju, stoga se koristio gotov razvojni sustav koji na sebi sadrži sve ključne komponente potrebne za realizaciju rješenja. Sklopovsko rješenje temeljeno je na razvojnom sustavu STM32WB5MM-DK koji na sebi sadrži mikrofon, mikrokontrole i bežično sučelje za Bluetooth komunikaciju.
 
-U okviru ovog završnog rada razvijena je programska potpora za mikrokontroler STM32WB5M te je uspostavljeno BLE komunikacijsko sučelje između razvojnog sustava i osobnog računala s operacijskim sustavom Linux. Sučeljem se prenosi zvučni signal sniman MEMS mikrofonom s mikrokontrolera na računalo. Također je i razvijeno korisničko sučelje za pokretanje komunikacije, prijam i pohranu signala. Blok shema sustava prikazana je na Slici \ref{fig:shema}. 
+Rad je podijeljen u cjeline kako slijedi.
+% opisat ću ujedno i kako mislim da je dobro nazvati sva poglavlja
+% vidite za ove navodnike jel to dobro formatira LaTeX
 
-\begin{figure}[ht]
-	\includegraphics[width=\linewidth]{imgs/shema}
-	\caption{Blok shema sustava}
-	 \label{fig:shema}
-\end{figure}
+U drugom poglavlju „Opis sustava i tehničkih zahtjeva“ prikazana je sklopovska i programska arhitektura rješenja te su navedeni zahtjevi koje je trebalo ostvariti. U trećem poglavlju „Razvojni sustav STM32WB5MM-DK“ opisane su osnovne značajke korištenog razvojnog sustava kao ciljane hardverske platforme, zatim su opisane najvažnije značajke BLE protokola te je opisan korišteni MEMS mikrofon. U četvrtom poglavlju „Povezivanje razvojnog sustava i računala“ opisana je programska potpora za mikrokontroler i dio programske potpore za osobno računalo koje služi za povezivanje s ugradbenim sustavom preko BLE veze. U petom poglavlju „Programska potpora za korisničko sučelje“ opisana je aplikacija za osobno računalo razvijena u programskom jeziku Python (\textit{PyQt} radni okvir). U šestom poglavlju „Obradba audio signala“ opisani su algoritmi za digitalnu obradbu audio signala i ostvareni rezultati.
+
+% dio koji slijedi treba prebaciti u novo drugo poglavlje; u tom poglavlju predlažem da napravite dva dijela: 
+%(2.1) "Opis problematike hrkanja kao zdravstvenog pr2oblema"
+% - tu možete doslovno c/p poglavlje 5.2 i 5.2.1; to će dati motivaciju zašto uopće ste radili ovakav sustav
+%(2.2) "Zahtjevi na sustav i opis predloženog rješenja"
+% - napišite što se sve trebalo napraviti - hardver s mikrofonom, koja frekvencija uzorkovanja, kakva okolina
+% blok shema sustava itd.; dakle sve što se tiče ulaznih zahtjeva i opisa high level sustava na razini blok sheme 
+% pri čemu možete malo prširiti ovo što imate oko blok sheme
+% prvi dio posvetiti kratkom opisu općih zahtjeva na sustav koji se htio postići, a 
+
 
 \eject

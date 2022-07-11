@@ -6,7 +6,7 @@ Za bolje korisničko iskustvo kreirano je grafičko korisničko sučelje (engl. 
 Aplikacija je izrađena korištenjem razvojnog alata PyQt temeljenog na programskom
 jeziku Python i pripadnih biblioteka za razvoj grafičkih korisničkih sučelja. PyQt je priključak (engl. \textit{plug-in}) za Python - mostna biblioteka između Pythona i razvojnog alata Qt, koji podržava programski jezik C++. Korištena je inačica \textit{PyQt5}, koja je kompatibilna s Python 3 verzijom \cite{pyqt}. 
 
-Osnova \textit{Qt} aplikacija je objektni model koji, koristeći sustav \textit{Meta Object} i klasu \textit{QObject}, proširuje funkcionalnost standardnog programskog jezika C++ i time omogućuje razvoj grafičkih korisničkih sučelja. \textit{PyQt} enkapsulira funkcionalnosti \textit{Qt} radnog okvira te ih prilagođava programskom jeziku Python, odnosno kombinira kompleksnost alata za razvoj grafičkog sučelja i jednostavnost programskog jezika \cite{qt}. 
+Osnova Qt aplikacija je objektni model koji, koristeći sustav \textit{Meta Object} i klasu \textit{QObject}, proširuje funkcionalnost standardnog programskog jezika C++ i time omogućuje razvoj grafičkih korisničkih sučelja. PyQt enkapsulira funkcionalnosti Qt radnog okvira te ih prilagođava programskom jeziku Python, odnosno kombinira kompleksnost alata za razvoj grafičkog sučelja i jednostavnost programskog jezika \cite{qt}. 
 
 Osnovna klasa je \textit{QObject} koja pruža sljedeće funkcionalnosti:
 \begin{itemize}
@@ -16,7 +16,7 @@ Osnovna klasa je \textit{QObject} koja pruža sljedeće funkcionalnosti:
 	\item upravljanje događajima.
 \end{itemize}
 
-Komunikacija između \textit{Qt} objekata odvija se mehanizmom signala i priključaka (engl. \textit{signals and slots}). Signal se emitira pri promjeni stanja objekta, primjerice pritiskom na gumb unutar korisničkog sučelja. Pri emisiji signala poziva se funkcija priključka s kojom je taj signal povezan te se obrađuje događaj koji je izazvao emisiju. 
+Komunikacija između Qt objekata odvija se mehanizmom signala i priključaka (engl. \textit{signals and slots}). Signal se emitira pri promjeni stanja objekta, primjerice pritiskom na gumb unutar korisničkog sučelja. Pri emisiji signala poziva se funkcija priključka s kojom je taj signal povezan te se obrađuje događaj koji je izazvao emisiju. 
 
 Stvaranje i uređivanje grafičkih elemenata (engl. \textit{widgets}) omogućeno je klasom \textit{QWidget}. Grafički elementi organizirani su hijerarhijski, pri čemu je glavni prozor  „roditelj“ ostalih elemenata. 
 
@@ -96,7 +96,7 @@ Također, definiraju se dva objekta za praćenje vremena:
 	\item \textit{QBasicTimer}: služi za osvježavanje grafičkog prikaza svake sekunde. Zaustavlja se istekom vremena postavljenog objektom \textit{QTimer}, odnosno aktiviranjem metode \lstinline|finished()|. Povezan je signalima s funkcijom \lstinline|timerEvent()| koja poziva metodu \lstinline|update_gui()| za ponovno iscrtavanje sučelja.
 \end{enumerate}
 
-Za pokretanje korisničkog sučelja potrebno je najprije napraviti instancu objekta \textit{QApplication} koja upravlja glavnim postavkama i tokom kontrole GUI aplikacije. \textit{QApplication} sadrži glavnu petlju događaja, gdje se obrađuju i šalju svi događaji iz prozorskog sustava i drugih izvora. Također upravlja inicijalizacijom, finalizacijom aplikacije i pruža upravljanje sesijom. Osim toga, \textit{QApplication} obrađuje većinu postavki za cijeli sustav i aplikaciju. Za bilo koju GUI aplikaciju koja koristi \textit{Qt}, postoji točno jedan objekt \textit{QApplication}, bez obzira na broj prozora. 
+Za pokretanje korisničkog sučelja potrebno je najprije napraviti instancu objekta \textit{QApplication} koja upravlja glavnim postavkama i tokom kontrole GUI aplikacije. \textit{QApplication} sadrži glavnu petlju događaja, gdje se obrađuju i šalju svi događaji iz prozorskog sustava i drugih izvora. Također upravlja inicijalizacijom, finalizacijom aplikacije i pruža upravljanje sesijom. Osim toga, \textit{QApplication} obrađuje većinu postavki za cijeli sustav i aplikaciju. Za bilo koju GUI aplikaciju koja koristi Qt, postoji točno jedan objekt \textit{QApplication}, bez obzira na broj prozora. 
 
 Metoda \lstinline|exec_()| pokreće glavnu petlju događaja i čeka dok se ne pozove \lstinline|exit| funkcija. Potrebno je pozvati ovu funkciju za početak rukovanja događajima. Glavna petlja događaja prima događaje iz prozorskog sustava i šalje ih widgetima aplikacije. Glavna petlja događaja prima događaje iz prozorskog sustava i šalje ih elementima  aplikacije.
 
@@ -113,7 +113,7 @@ Metoda \lstinline|exec_()| pokreće glavnu petlju događaja i čeka dok se ne po
 
 PyQt aplikacije s grafičkim korisničkim sučeljem imaju glavnu dretvu koja pokreće glavnu petlju događaja i GUI. Pokrene li se dugotrajni zadatak u ovoj dretvi, GUI će se zamrznuti sve dok se zadatak ne izvrši. Za to vrijeme korisnik ne može komunicirati s aplikacijom, niti se prikaz sučelja može mijenjati tijekom izvođenja zadatka. Stoga je izvođenje dugotrajnih zadataka potrebno odvojiti od rada korisničkog sučelja.
 
-U ovoj aplikaciji prikaz sučelja i programska potpora koja obavlja povezivanje Bluetoothom i snimanje zvuka izvršavaju se paralelno, stoga ih je potrebno izvoditi simultano u dvjema dretvama koje međusobno komuniciraju. Iako Python u svojoj biblioteci nudi module za rad s dretvama, u ovoj je aplikaciji korištena klasa \textit{QtThread} koja se nalazi u okviru PyQt radi povezivanja rada dretvi sa signalima i događajima.
+U ovoj aplikaciji prikaz sučelja i programska potpora koja obavlja povezivanje Bluetoothom i snimanje zvuka izvršavaju se paralelno, stoga ih je potrebno izvoditi simultano u dvjema dretvama koje međusobno komuniciraju. Iako Python u svojoj biblioteci nudi module za rad s dretvama, u ovoj je aplikaciji korištena klasa \textit{Q\textit{}Thread} koja se nalazi u okviru PyQt radi povezivanja rada dretvi sa signalima i događajima.
 
 PyQt aplikacije imaju dvije vrste dretvi:
 \begin{itemize}
