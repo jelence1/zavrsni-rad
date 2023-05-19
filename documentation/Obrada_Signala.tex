@@ -35,7 +35,7 @@ Provedena je analiza nad 20 zvučnih zapisa i dobivene su vrijednosti grafički 
 		title = {Graf ovisnosti intenziteta zvuka o udaljenosti},
 		xlabel=Udaljenost (cm),
 		ylabel=Intenzitet zvuka (dB),
-		width = \textwidth,
+		width = 0.9\textwidth,
 		height = 0.5\textwidth]
 		\addplot table [y=L, x=$d$]{data.dat};
 	\end{axis}
@@ -73,7 +73,7 @@ Pojasna brana je pojasni filtar koji kroz većinu frekvencija ostane nepromijenj
 	H(s) = \dfrac{s^2 + \omega_0^2}{s^2 + \omega_c s + \omega_0^2}
 \end{equation}
 
-\noindent gdje je \(\omega_0\) središnja frekvencija koju se želi ukloniti, a \(\omega_c\) je širina odbijenog frekvencijskog pojasa.  Funkcija \lstinline|iirnoch()| prima središnju frekvenciju za ukloniti, faktor kvalitete i frekvenciju uzorkovanja. Funkcija vraća dva koeficijenta koje prima funkcija \lstinline|filtfilt()|. Ova funkcija primjenjuje linearni digitalni filtar na ulazni signal. Dobivenim koeficijentima koji služe kao brojnik i nazivnik prijenosne funkcije filtrira ulazni signal i vraća ga u filtriranom obliku nad kojim se dalje može pozvati funkcija za Fourierovu transformaciju \cite{scipy}. 
+\noindent gdje je \(\omega_0\) središnja frekvencija koju se želi ukloniti, a \(\omega_c\) je širina odbijenog frekvencijskog pojasa.  Funkcija \lstinline|iirnotch()| prima središnju frekvenciju za ukloniti, faktor kvalitete i frekvenciju uzorkovanja. Funkcija vraća dva koeficijenta koje prima funkcija \lstinline|filtfilt()|. Ova funkcija primjenjuje linearni digitalni filtar na ulazni signal. Dobivenim koeficijentima koji služe kao brojnik i nazivnik prijenosne funkcije filtrira ulazni signal i vraća ga u filtriranom obliku nad kojim se dalje može pozvati funkcija za Fourierovu transformaciju \cite{scipy}. 
 
 \begin{lstlisting}[language=Python, caption={Primjena \textit{notch} filtra i Fourierove transformacije}]
 	b, a = iirnotch(50, 50/len(samples), sampling_rate)
@@ -82,6 +82,6 @@ Pojasna brana je pojasni filtar koji kroz većinu frekvencija ostane nepromijenj
 	xf = np.linspace(start=0.0, stop=1.0/(2.0*T), num=n//2)
 \end{lstlisting}
 
-Razvojnim sustavom STM32WB5MM-DK snimljeno je 27 zvučnih zapisa hrkanja različitih osoba. Budući da je vrlo malen uzorak, zvučni zapisi podijelit će se isključivo na palatalno i nepalatalno hrkanje. Od snimljenih zvučnih zapisa samo su 4 imala frekvenciju hrkanja 500 Hz ili niže, što znači da nepalatalno hrkanje unutar odabranog uzorka daleko učestalije od palatalnog.
+Razvojnim sustavom STM32WB5MM-DK snimljeno je 27 zvučnih zapisa hrkanja različitih osoba. Budući da je vrlo malen uzorak, zvučni zapisi podijelit će se isključivo na palatalno i nepalatalno hrkanje. Od snimljenih zvučnih zapisa samo su 4 imala frekvenciju hrkanja 500 Hz ili niže, što znači da je nepalatalno hrkanje unutar odabranog uzorka daleko učestalije od palatalnog.
 
-Uzme li se u obzir istraživanje vezano uz nazoendoskopiju, 4 zvučna zapisa su kombinirano hrkanje nepca i jezika, dok njih 11 pripada kategoriji hrkanja u korijenu jezika. Ostali zapisi nemaju frekvencije koje su usporedive s rezultatima ovog istraživanja.
+Uzme li se u obzir istraživanje vezano uz nazendoskopiju, 4 zvučna zapisa su kombinirano hrkanje nepca i jezika, dok njih 11 pripada kategoriji hrkanja u korijenu jezika. Ostali zapisi nemaju frekvencije koje su usporedive s rezultatima ovog istraživanja.

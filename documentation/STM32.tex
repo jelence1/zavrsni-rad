@@ -1,6 +1,6 @@
 \chapter{Razvojni sustav STM32WB5MM-DK}
 
-Razvojni sustav temelji se na modulu STM32WB5MMG tvrtke \textit{STMicroelectronics}, koji je dio linije STM32WBx5 razvojnih sustava. Kao i svi mikrokontroleri iz te skupine, modul sadrži 32-bitni aplikacijski procesor ARM Cortex-M4 koji radi na frekvenciji do 64 MHz te mrežni procesor Cortex-M0+ s frekvencijom rada do 32MHz. Modul sadrži 1 MB memorije tipa \textit{Flash} i 256 KB memorije tipa SRAM (engl. \textit{Static random-access memory}).\cite{stm32manual} Budući da modul ima funkciju RF (engl. \textit{radio frequency}) primopredajnika, podržava protokole Bluetooth, Zigbee, Thread i konkurentne bežične standarde. Sustav također ima 0.96-inčni 128x64 zaslon, RGB LED diode te senzore za temperaturu, dodir, \textit{Time-of-Flight} senzor i žiroskop. Od ostale periferije najznačajniji je digitalni IMP34DT05 MEMS mikrofon. Modul STM32WB5MMG je višeprotokolni, bežični uređaj niske potrošnje energije (engl. \textit{ultra-low-power}) primarno namijenjen razvoju aplikacija koje koriste audio, USB ili \textit{Bluetooth Low Energy} (BLE) protokol. Konfiguracija razvojnog sustava s istaknutim položajem MEMS mikrofona prikazana je na slici \ref{fig:discovery-kit}.
+Razvojni sustav temelji se na modulu STM32WB5MMG tvrtke \textit{STMicroelectronics}, koji je dio porodice mikrokontrolera STM32WBx5. Kao i svi mikrokontroleri iz te skupine, modul sadrži 32-bitni aplikacijski procesor ARM Cortex-M4 koji radi na frekvenciji do 64 MHz te mrežni procesor Cortex-M0+ s frekvencijom rada do 32MHz. Modul sadrži 1 MB memorije tipa \textit{Flash} i 256 KB memorije tipa SRAM (engl. \textit{Static random-access memory}).\cite{stm32manual} Budući da modul ima funkciju RF (engl. \textit{radio frequency}) primopredajnika, podržava protokole Bluetooth, Zigbee, Thread i srodne bežične standarde. Sustav također ima 0.96-inčni 128x64 zaslon, RGB LED diode te senzore za temperaturu, dodir, \textit{Time-of-Flight} senzor i žiroskop. Od ostale periferije najznačajniji je digitalni IMP34DT05 MEMS mikrofon. Modul STM32WB5MMG je višeprotokolni, bežični uređaj niske potrošnje energije (engl. \textit{ultra-low-power}) primarno namijenjen razvoju aplikacija koje koriste audio, USB ili \textit{Bluetooth Low Energy} (BLE) protokol. Konfiguracija razvojnog sustava s istaknutim položajem MEMS mikrofona prikazana je na slici \ref{fig:discovery-kit}.
 
 \begin{figure}[ht]
 	\includegraphics[scale=0.5]{imgs/discovery_kit}
@@ -73,7 +73,7 @@ Sloj veze, također dio upravljača, određuje kako dva uređaja mogu koristiti 
 	\label{fig:ll-state-machine}
 \end{figure}
 
-Sučelje između domaćina i upravljača (HCI) je neovisan međusloj koji povezuje te BLE komponente i pruža sredstvo komunikacije putem softverskog aplikacijskog programskog sučelja (engl. \textit{Application Programming Interface} - API) ili hardverskog sučelja kao što su: SPI, UART ili USB. Dolazi iz standardnih Bluetooth specifikacija, s novim dodatnim naredbama za funkcije koje osiguravaju nisku potrošnju energije.
+Sučelje između domaćina i upravljača (HCI) neovisan je međusloj koji povezuje te BLE komponente i pruža sredstvo komunikacije putem softverskog aplikacijskog programskog sučelja (engl. \textit{Application Programming Interface} - API) ili hardverskog sučelja kao što su: SPI, UART ili USB. Dolazi iz standardnih Bluetooth specifikacija, s novim dodatnim naredbama za funkcije koje osiguravaju nisku potrošnju energije.
 
 Protokol logičke veze i sloja prilagodbe (L2CAP) dio je BLE domaćina koji podržava multipleksiranje protokola više razine, operacije fragmentacije paketa i ponovnog sastavljanja, te prijenos informacija o kvaliteti usluga.
 
@@ -143,7 +143,7 @@ Zvučni valovi ulaze u MEMS mikrofon kroz poklopac i prolaze kroz perforirano ku
 Ploča i membrana zajedno djeluju kao kondenzator koji je potrebno napuniti za ispravan
 rad. Pripadajući integrirani sklop (ASIC) osigurava ovo punjenje.
 
-Jednom napunjene, ploča i membrana mogu proizvesti napon. Budući da djeluju kao kondenzator, svaka promjena kapaciteta prouzročit će obrnuto proporcionalnu promjenu napona. Kapacitet je funkcija udaljenosti između ploče i membrane, stoga dok membrana oscilira, stvara se izmjenični napon odnosno mikrofonski signal. Ovaj napon treba pojačati da bi bio koristan kao audio signal, stoga odvojeni integrirani krug (poluvodička matrica), uključen u PCB, pojačava signal.
+Jednom napunjene, ploča i membrana mogu proizvesti napon. Budući da djeluju kao kondenzator, svaka promjena kapaciteta prouzročit će obrnuto proporcionalnu promjenu napona. Kapacitet je funkcija udaljenosti između ploče i membrane, stoga dok membrana oscilira, stvara se izmjenični napon odnosno mikrofonski signal. Ovaj napon treba pojačati da bi bio koristan kao audio signal, stoga odvojeni integrirani krug pojačava signal.
 
 Ako se koristi analogni MEMS mikrofon, pojačani audio signal bi se u ovom obliku doveo na izlaz MEMS mikrofona.  Međutim, u digitalnom MEMS mikrofonu postoji dodatni proces u kojem ADC pretvara analogni signal PDM metodom prije nego što emitira digitalni audio signal.
 

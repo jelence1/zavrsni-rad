@@ -10,7 +10,8 @@ Iako se hrkanje općenito doživljava kao društvena smetnja, ocjena njegove bu�
 Gornji dišni putovi su područje od nosnica i usana do glasnica. Sastoje se od nosne i usne šupljine, ždrijela i gornjeg dijela grkljana. Ždrijelo je stražnji dio glave i sadrži nekoliko anatomskih orijentira, kao što su meko nepce (velum), nepčani krajnici, korijen jezika i nepčana resica (epiglotis). Epiglotis odvaja ždrijelo od jednjaka i grkljana, koji sadrži glasnice \cite{snoringml}.
 
 \begin{figure}[ht]
-	\includegraphics[width=\linewidth]{imgs/anatomy}
+	\centering
+	\includegraphics[scale=0.7]{imgs/anatomy}
 	\caption{Anatomija gornjih dišnih puteva \cite{snoringml}}
 	\label{fig:anatomy}
 \end{figure}
@@ -39,9 +40,11 @@ Također, visina zvuka hrkanja u niskofrekventnom rasponu (<500 Hz) odgovara osn
 
 \section{Zahtjevi na sustav i opis predloženog rješenja}
 
-Sustav se mora sastojati od dva fizička dijela, odnosno računala i mikrokontrolera. Odabrani mikrokontroler treba sadržavati mikrofon koji može primati audio signal iz svih smjerova. Mikrofon mora primati zvuk na udaljenosti barem jedan metar, stoga je potrebno analizirati ovisnost udaljenosti i intenziteta zvuka snimanjem zvučnih zapisa odabranim hardverom. Isto tako, hardver mora podržavati bežično povezivanje i slanje podataka na računalo. Bežični prijenos treba biti ostvaren BLE sučeljem. Računalna aplikacija mora podržavati prijam podataka putem BLE sučelja te omogućiti njihovu pohranu. Također, mora imati razvijeno grafičko korisničko sučelje putem kojeg se može komunicirati s odabranim mikrokontrolerom, točnije moći pokrenuti snimanje zvuka.
+Sustav za snimanje pacijenata treba omogućiti snimanje zvuka hrkanja u stvarnim uvjetima. Da bi se to postiglo, potrebno je blizu pacijenta postaviti mikrofon koji snima zvuk i omogućiti bežično slanje snimljenog zvuka u stvarnom vremena na računalo na kojem se zvuk snima. Odabrana je arhitektura gdje se mikrokontrolerski razvojni sustav s mikrofonom koristi za snimanje, a preko svojeg ugrađenog BLE bežičnog sučelja šalje zvuk prema osobnom računalu. 
 
-U okviru ovog završnog rada razvijena je programska potpora za mikrokontroler \newline STM32WB5M te je uspostavljeno BLE komunikacijsko sučelje između razvojnog sustava i osobnog računala s operacijskim sustavom Linux. Sučeljem se prenosi zvučni signal sniman MEMS mikrofonom s mikrokontrolera na računalo. Također je i razvijeno korisničko sučelje za pokretanje komunikacije, prijam i pohranu signala. Blok shema sustava prikazana je na slici \ref{fig:shema}. 
+Prilikom odabira mikrokontrolerskog sustava potrebno je voditi računa da na sebi ima ugrađen i mikrofon i BLE sučelje. Važno je također da sadrži mikrofon prikladan za primanje audio signala iz svih smjerova. Mikrofon također mora moći kvalitetno snimati  zvuk na udaljenosti barem jedan metar od ispitanika, a da bi se provjerilo zadovoljava li se taj uvjet, važno je eksperimentalno provjeriti i analizirati ovisnost udaljenosti mikrofona od izvora zvuka i intenziteta zvučnog zapisa dobivenog snimanjem odabranim hardverom. Na računalu je bilo potrebno razviti aplikaciju koja mora korisniku pružiti jednostavno sučelje za upravljanje snimanjem. Glavna uloga aplikacije je podržati prijem zvučnog zapisa putem BLE sučelja te omogućiti pohranu u datoteku. Također, u sklopu grafičkog korisničkog sučelja potrebno je omogućiti jednostavno uspostavljanje komunikacije s odabranim mikrokontrolerom.
+
+Za potrebe završnog rada odabran je razvojni sustav STM32WB5MM-DK budući da zadovoljava postavljene zahtjeve i ima mogućnost jednostavnog razvoja programske potpore  korištenjem programskim biblioteka proizvođača. Na razvojnom sustav nalazi se mikrokontroler STM32WB5M koji ima ugrađeno BLE komunikacijsko sučelje. Na osobnom računalu korišten je operacijski sustav Linux, iako bi se slično rješenje moglo razviti i na drugim operacijskim sustavima. U radu će biti opisano speficičnosti programske potpore razvijene upravo za Linux kao odabranu platformu rješenja na osobnom računalu. Bežičnim sučeljem prenosi se zvučni signal sniman MEMS mikrofonom s mikrokontrolera na računalo. U okviru programske potpore na osobnom računalu razvijeno je korisničko sučelje za pokretanje komunikacije, prijam i pohranu signala. Blok shema sustava prikazana je na slici \ref{fig:shema}. S obzirom da se koristio gotov hardver, u nastavku rada bit će opisane sve komponente programskog rješenja razvijene u okviru rada.
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{imgs/shema}

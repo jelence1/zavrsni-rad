@@ -110,7 +110,7 @@ Opus kodek se sastoji od SILK i CELT tehnologija kodiranja. Prvi koristi model t
 
 Glavna zadaća aplikacije na računalu je primiti audio signal putem sučelja Bluetooth, prikladno ga obraditi te izravno reproducirati i pohraniti. Za računalnu programsku potporu odabrana je biblioteka \textit{BlueST-SDK} koja omogućuje jednostavan pristup podacima dobivenih od BLE uređaja s implementiranim protokolom \textit{BlueST}. Protokol \textit{BlueST} može se na jednostavan način proširiti kako bi se osigurala podrška za korisnički definirane podatke. BLE protokol već sadrži podršku za različite senzore kao što su inercijski senzori, senzori okoliša, informacije o bateriji, te DC i motori. Protokol implementira i serijsku konzolu preko Bluetootha koja omogućuje funkcionalnosti standardnog izlaza i standardnog ulaza te definira konfiguracijski servis za kontrolu postavki povezanih ploča. 
 
-Korištenjem zajedničkog modela programiranja za podržane platforme, \textit{BlueST-SDK} olakšava razvoj aplikacija na Android, iOS i Linux (s instaliranim Python) sustavima i uključuje primjere aplikacija koji demonstriraju korištenje paketa za razvoj programa (engl. \textit{Software development kit} - SDK). Paket za razvoj aplikacija na Linuxu biblioteke \textit{BlueST-SDK} koristi modul \textit{bluepy} dostupan na Linuxu za povezivanje s BLE uređajima \cite{bluest}. 
+Korištenjem zajedničkog modela programiranja za podržane platforme, \textit{BlueST-SDK} olakšava razvoj aplikacija na Android, iOS i Linux (s instaliranim Python jezikom) sustavima i uključuje primjere aplikacija koji demonstriraju korištenje paketa za razvoj programa (engl. \textit{Software development kit} - SDK). Paket za razvoj aplikacija na Linuxu biblioteke \textit{BlueST-SDK} koristi modul \textit{bluepy} dostupan na Linuxu za povezivanje s BLE uređajima \cite{bluest}. 
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{imgs/bluest_stack}
@@ -242,7 +242,7 @@ ALSA se sastoji od sljedećih komponenti:
 	\item C biblioteka za pojednostavljeni pristup hardveru za zvuk iz korisničkih aplikacija. 
 \end{itemize}
 
-Putem ALSA biblioteke definira se novi audio tok koji koristi PCM način pretvaranja binarnog zapisa u zvuk kako bi bio kompatibilan s Opus kodekom. Podaci su 16-bitni s predznakom u \textit{little-endian} obliku, a budući da mikrokontroler ima konfiguriranu frekvenciju uzorkovanja od 16 kHz, ista frekvencija korištena je i ovdje. Broj okvira koji će se upisati u pri svakoj iteraciji postavljen je na 160. 
+Putem ALSA biblioteke definira se novi audio tok koji koristi PCM način pretvaranja binarnog zapisa u zvuk kako bi bio kompatibilan s Opus kodekom. Podaci su 16-bitni s predznakom u \textit{little-endian} obliku, a budući da mikrokontroler ima konfiguriranu frekvenciju uzorkovanja od 16 kHz, ista frekvencija korištena je i ovdje. Broj okvira koji će se upisati u svakoj iteraciji postavljen je na 160. 
 
 \begin{lstlisting}[language=Python, caption={Postavljanje parametara za dekodiranje audio signala}]
 	stream = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, alsaaudio.PCM_NORMAL,'default')
