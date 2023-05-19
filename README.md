@@ -1,5 +1,7 @@
 # zavrsni-rad
-Repozitorij za Završni rad
+Repozitorij za Završni rad.
+
+Link na prezentaciju završnog rada: https://prezi.com/p/2qmupueezihz/?present=1
 
 ## code
 Direktorij u kojem se nalazi izvorni kod.
